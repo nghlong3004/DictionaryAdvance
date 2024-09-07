@@ -1,7 +1,9 @@
 package util;
 
 public class Constants {
-	public static final String REGULAR_EXPRESSIONS = "\\w{4,20}";
+	public static final String REGULAR_EXPRESSIONS = "\\w{2,15}";
+	public static final String REGULAR_PASS_EXPRESSIONS = "[\\w+\\-*&^%$#@!~():?<>';=`]{6,}";
+	public static final String REGULAR_EMAIL_EXPRESSIONS = "^[\\w._%+-]{2,15}@[\\w.-]{1,8}\\.[a-zA-Z]{2,6}$";
 	public static class View{
 		public static final int TILE_DEFAULT_SIZE = 32;
 		public static final int TILES_IN_WIDTH = 26;
@@ -27,7 +29,7 @@ public class Constants {
 	public static class Image{
 		public static final String IMAGE_LOGIN_PATH = "target/image/login.png";
 		public static final String IMAGE_LOGO_LOGIN_PATH = "target/image/logo_login.png";
-		public static final String IMAGE_LOGIN = "target/image/login-bg1.png";
+		public static final String IMAGE_LOGIN_BACKGROUND = "target/image/login-bg1.png";
 		public static final String IMAGE_ID_USER = "target/image/id_user.png";
 		public static final String IMAGE_EXIT_LOGIN = "target/image/exit_login.png";
 		public static final String IMAGE_USER = "target/image/user.png";

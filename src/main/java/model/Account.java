@@ -22,7 +22,8 @@ public class Account {
 	public String getPassword(String username) {
 		return new String(id.get(username));
 	}
-	public void addAccount(String username, String password) {
+	public void addUser(String username, String password) {
 		this.id.put(username, password);
+		ioFile.outputFromFile(Constants.File.FILE_PATH_ID, id);
 	}
 }

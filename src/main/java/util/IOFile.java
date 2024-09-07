@@ -18,7 +18,7 @@ public class IOFile {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile), 1 << 16)) {
 	        for (Map.Entry<String, String> entry : dataFile.entrySet()) {
 	            StringBuilder sb = new StringBuilder();
-	            sb.append(entry.getKey()).append(entry.getValue()).append('\n');
+	            sb.append(entry.getKey() + " <").append(entry.getValue()).append('\n');
 	            writer.write(sb.toString());
 	        }
 	    } catch (IOException e) {
