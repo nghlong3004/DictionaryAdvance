@@ -1,0 +1,15 @@
+Single Responsibility Principle (SRP): Một class chỉ nên có một trách nhiệm duy nhất.
+
+Ví dụ: Một class "User" chỉ nên quản lý thông tin về người dùng, không nên thực hiện các thao tác liên quan đến cơ sở dữ liệu.
+Open-Closed Principle (OCP): Các class nên mở để mở rộng nhưng đóng để sửa đổi.
+
+Ví dụ: Thay vì sửa đổi class hiện có, hãy tạo các lớp con để mở rộng chức năng.
+Liskov Substitution Principle (LSP): Các đối tượng của lớp con phải có thể thay thế được các đối tượng của lớp cha mà không làm hỏng tính đúng đắn của chương trình.
+
+Ví dụ: Nếu một class con kế thừa từ một class cha, thì các đối tượng của class con phải có thể sử dụng ở bất cứ nơi nào mà các đối tượng của class cha được sử dụng.
+Interface Segregation Principle (ISP): Nhiều interface chuyên biệt tốt hơn một interface tổng quát.
+
+Ví dụ: Thay vì tạo một interface lớn chứa tất cả các phương thức, hãy chia nhỏ thành các interface nhỏ hơn, mỗi interface chỉ chứa các phương thức liên quan đến một nhóm chức năng cụ thể.
+Dependency Inversion Principle (DIP): Các module cấp cao không nên phụ thuộc vào các module cấp thấp. Cả hai nên phụ thuộc vào các abstraction.   
+
+Ví dụ: Thay vì một class trực tiếp phụ thuộc vào một class khác, cả hai nên phụ thuộc vào một interface chung.
