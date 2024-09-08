@@ -1,4 +1,4 @@
-package view;
+package view.login;
 
 import static util.HelpMethod.*;
 
@@ -20,15 +20,15 @@ import com.formdev.flatlaf.FlatClientProperties;
 
 import net.miginfocom.swing.MigLayout;
 
-public class SignUpPanel extends JPanel{
+public class RegisterPanel extends JPanel{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5368538115377511397L;
 	
-	private SignInPanel signIn;
-	private SignUpFrame window;
+	private LoginPanel signIn;
+	private RegisterWindow window;
 	
 	private JTextField textEmail;
 	private JTextField textUsername;
@@ -46,12 +46,12 @@ public class SignUpPanel extends JPanel{
 	private JButton buttonRegister;
 	private JButton buttonExit;
 	
-	public SignUpPanel(SignInPanel signIn, SignUpFrame window) {
+	public RegisterPanel(LoginPanel signIn, RegisterWindow window) {
 		super();
 		this.window = window;
 		setting(signIn);
 	}
-	private void setting(SignInPanel signIn) {
+	private void setting(LoginPanel signIn) {
 		this.signIn = signIn;
 		setLayout(new MigLayout("fill, insets 10", "[center]", "[center]"));
 		initialization();
@@ -140,7 +140,7 @@ public class SignUpPanel extends JPanel{
 				JOptionPane.showMessageDialog(this, "Mật khẩu mới không khớp");
 			}
 			else if(!isValidUsername(username, signIn.getAccount())) {
-				JOptionPane.showMessageDialog(this, "Tài đăng nhập không hợp lệ hoặc đã tồn tại");
+				JOptionPane.showMessageDialog(this, "Tên đăng nhập không hợp lệ hoặc đã tồn tại");
 			}
 			else if(isValidUsername(username, signIn.getAccount()) && isValidPassword(password) && !gender.isEmpty()) {
 				signIn.setUsername(username);
@@ -152,7 +152,7 @@ public class SignUpPanel extends JPanel{
 				window.dispose();
 			}
 			else {
-				JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không hợp lệ");
+				JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không hợp lệ");
 			}
 		});
 		ItemListener itemListener = e -> {

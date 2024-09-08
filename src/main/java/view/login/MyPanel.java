@@ -1,4 +1,4 @@
-package view;
+package view.login;
 
 import java.awt.Color;
 import java.awt.Graphics;

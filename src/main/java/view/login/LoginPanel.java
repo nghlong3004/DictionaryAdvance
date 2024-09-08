@@ -1,10 +1,14 @@
-package view;
+package view.login;
 
 import static util.Constants.Image.*;
+
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ItemEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,30 +25,34 @@ import controller.SignInController;
 import model.Account;
 import model.User;
 import net.miginfocom.swing.MigLayout;
+import view.DictionaryMainFrame;
 
-public class SignInPanel extends JPanel{
+public class LoginPanel extends JPanel{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 9112353425595838469L;
 	// view ---call--> controller
-	private SignInController signInController = new SignInController();
-	private Account account;
+	private final SignInController signInController = new SignInController();
 	// info
 	private JTextField textUsername;
 	private JPasswordField textPassword;
+	
 	private JCheckBox remember;
+	private boolean flagRemember = false;
+	
 	private JButton clickLogin;
 	private ImageIcon icon;
-	private LoginMainFrame loginFrame;
-	public SignInPanel(LoginMainFrame loginFrame) {
+	private LoginWindow loginFrame;
+	
+	public LoginPanel(LoginWindow loginFrame) {
 		super();
 		this.loginFrame = loginFrame;
 		setting();
 	}
 	private void setting() {
-		setLayout(new MigLayout("fill, insets 30", "[right]", "[center]"));
+		setLayout(new MigLayout("fill, insets 20", "[right]", "[center]"));
 		initialization();
 		JPanel panel = new JPanel(new MigLayout("wrap, fillx, insets 35 45 30 45", "fill, 250:280"));
 		JLabel title = new JLabel("Đăng nhập");
@@ -71,50 +79,88 @@ public class SignInPanel extends JPanel{
 															"borderWidth: 0;" +
 															"focusWidth: 0;"  +
 															"innerFocusWidth: 0");
-		clickLogin.addActionListener(e -> {
-			User user = new User();
-			user.name(textUsername.getText());
-			user.password(new String(textPassword.getPassword()));
-			if(login(account,user)) {
-				new DictionaryMainFrame().setVisible(true);
-				loginFrame.dispose();
-			}
-			else {
-				JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không chính xác!");
-			}
-		});
+		action();
 		panel.add(title);
 		panel.add(description);
 		
 		panel.add(new JLabel("Tài khoản"), "gapy 8");
 		panel.add(textUsername);
 		
-		panel.add(new JLabel("mật khẩu"), "gapy 8");
+		panel.add(new JLabel("Mật khẩu"), "gapy 8");
 		panel.add(textPassword);
 		
 		panel.add(remember, "grow 0");
 		panel.add(clickLogin, "gapy 10");
+		panel.add(forgotPass(),"center, grow 0, gapy 10");
+		panel.add(callFBandGG(), "gapy 10");
 		panel.add(callSignUp(), "gapy 10");	
 		add(panel);
 	}
+	private ImageIcon getIcon(String path) {
+		ImageIcon icon = new ImageIcon(path);
+		Image scaledImage = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		return new ImageIcon(scaledImage);
+	}
+	private Component callFBandGG() {
+		JButton buttonFb = new JButton(getIcon(IMAGE_FACEBOOK));
+		JButton buttonGg = new JButton(getIcon(IMAGE_GOOGLE));
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+		buttonFb.setFocusPainted(false);
+		buttonGg.setFocusPainted(false);
+		buttonFb.setBackground(Color.decode("#A9A9A9"));
+		buttonGg.setBackground(Color.decode("#A9A9A9"));
+		buttonFb.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		buttonGg.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		panel.add(buttonFb);
+		panel.add(buttonGg);
+		return panel;
+	}
+	
+	private void action() {
+		
+		remember.addItemListener(e ->{
+			if(e.getStateChange() == ItemEvent.SELECTED) {
+				flagRemember = !flagRemember;
+			}
+		});
+		
+		clickLogin.addActionListener(e -> {
+			User user = new User();
+			user.name(textUsername.getText());
+			user.password(new String(textPassword.getPassword()));
+			if(login(user)) {
+				new DictionaryMainFrame().setVisible(true);
+				if(!flagRemember) {
+					user.name(null);
+					user.password(null);
+				}
+				signInController.saveDataUserCur(user);
+				loginFrame.dispose();
+			}
+			else {
+				JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không chính xác!");
+			}
+		});
+		
+	}
+	private Component forgotPass() {
+		MyButton clickForgotP = new MyButton("Quên mật khẩu?", "white", "red", false);
+		return clickForgotP;
+	}
 	
 	private Component callSignUp() {
-		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-		JButton clickRegister = new JButton("<html><a href = \"#\">Đăng ký ngay</a></html>");
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 0));
+		MyButton clickRegister = new MyButton("Đăng ký ngay", "green", "red", true);
 		JLabel label = new JLabel("Bạn chưa có tài khoản ?");
 		panel.putClientProperty(FlatClientProperties.STYLE, "" +
 															"background:null");
-		clickRegister.putClientProperty(FlatClientProperties.STYLE, "" +
-															"border:3, 3, 3, 3");
 		label.putClientProperty(FlatClientProperties.STYLE, "" +
 															"[light]foreground:darken(@foreground, 30%);" +
 															"[dark]foreground:lighten(@foreground, 30%);");
-		clickRegister.setContentAreaFilled(false);
-		clickRegister.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		clickRegister.addActionListener(e -> {
 	        loginFrame.setOverlay();
 	        loginFrame.setEnabled(false);
-			new SignUpFrame(this).setVisible(true);
+			new RegisterWindow(this).setVisible(true);
 		});
 		panel.add(label);
 		panel.add(clickRegister);
@@ -122,15 +168,21 @@ public class SignInPanel extends JPanel{
 	}
 	
 	private void initialization() {
-		textUsername = new JTextField();
+		String name = signInController.getUser().getName();
+		String pass = signInController.getUser().getPassword();
+		if(name.equals("null")) {
+			name = "";
+		}
+		if(pass.equals("null")) {
+			pass = "";
+		}
+		textUsername = new JTextField(name);
 		
-		textPassword = new JPasswordField();
+		textPassword = new JPasswordField(pass);
 		
 		clickLogin = new JButton("Đăng nhập");
 		
 		remember = new JCheckBox("Nhớ mật khẩu");
-		
-		account = new Account();
 		
 		icon = new ImageIcon(IMAGE_LOGIN_BACKGROUND);
 	}
@@ -150,15 +202,14 @@ public class SignInPanel extends JPanel{
 			this.textUsername.setText(message);
 		}
 	}
-	public LoginMainFrame getLoginFrame() {
+	public LoginWindow getLoginFrame() {
 		return this.loginFrame;
 	}
-	public boolean login(Account account, User user) {
+	public boolean login(User user) {
 		// call check user
-		return signInController.login(account, user);
+		return signInController.login(user);
 	}
 	public Account getAccount() {
-		return account;
+		return signInController.getAccount();
 	}
 }
-

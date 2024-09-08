@@ -1,29 +1,32 @@
-package view;
+package view.login;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
-public class LoginMainFrame extends JFrame{
+public class LoginWindow extends JFrame{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4045164794757628053L;
-	private SignInPanel signIn;
+	private LoginPanel signIn;
 	private MyPanel overlay;
-	public LoginMainFrame(){
+	public LoginWindow(){
 		super();
 		setting();
-		;
 	}
 	private void setting() {
 		setTitle("Login");
-		signIn = new SignInPanel(this);
+		initialization();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(851, 512));
 		setLocationRelativeTo(null);
 		setContentPane(signIn);
-		overlay = new MyPanel();
 		setGlassPane(overlay);
+	}
+	private void initialization() {
+		signIn = new LoginPanel(this);
+		overlay = new MyPanel();
+		
 	}
 	public void setOverlay() {
 		if (!overlay.isVisible()) {

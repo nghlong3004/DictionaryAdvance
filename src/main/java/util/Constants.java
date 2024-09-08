@@ -35,6 +35,8 @@ public class Constants {
 		public static final String IMAGE_USER = "target/image/user.png";
 		public static final String IMAGE_PASS = "target/image/pass.png";
 		public static final String IMAGE_HIDE = "target/image/hide.png";
+		public static final String IMAGE_FACEBOOK = "target/image/fb.png";
+		public static final String IMAGE_GOOGLE = "target/image/gg.png";
 	}
 	
 	public static class File{
@@ -42,6 +44,8 @@ public class Constants {
 		public static final String OUTPUT_FILE_PATH = "target/datastoge/newData.txt";
 		
 		public static final String FILE_PATH_ID = "target/datastoge/dataAccount.txt";
+		
+		public static final String USER_PATH_ID = "target/datastoge/dataUser.txt";
 	}
 	
 }

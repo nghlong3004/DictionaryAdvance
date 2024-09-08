@@ -6,11 +6,12 @@ import util.HelpMethod;
 
 public class SignInService {
 	
-
+	private static Account account = new Account();
+	
 	public SignInService() {
 		
 	}
-	public boolean login(Account account, User user) {
+	public boolean login(User user) {
 		if(HelpMethod.isRegExp(user.getName(), user.getPassword()) == false) {
 			return false;
 		}
@@ -20,6 +21,15 @@ public class SignInService {
 			}
 		}
 		return false;
+	}
+	public void saveDataUserCur(User user) {
+		account.saveDataUserCur(user);
+	}
+	public Account getAccount() {
+		return account;
+	}
+	public User getUser() {
+		return account.getUser();
 	}
 	
 	
