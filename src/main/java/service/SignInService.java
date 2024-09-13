@@ -6,7 +6,7 @@ import util.HelpMethod;
 
 public class SignInService {
 	
-	private static Account account = new Account();
+	private Account account = new Account();
 	
 	public SignInService() {
 		

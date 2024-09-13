@@ -11,6 +11,7 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 
 import view.login.LoginWindow;
 
+
 public class MainClass {
 
 	public static void main(String[] args) {

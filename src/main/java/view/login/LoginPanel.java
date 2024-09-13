@@ -130,11 +130,12 @@ public class LoginPanel extends JPanel{
 			user.password(new String(textPassword.getPassword()));
 			if(login(user)) {
 				new DictionaryMainFrame().setVisible(true);
-				if(!flagRemember) {
-					user.name(null);
-					user.password(null);
+				if(remember.isSelected()) {
+					signInController.saveDataUserCur(user);
 				}
-				signInController.saveDataUserCur(user);
+				else {
+					signInController.saveDataUserCur(null);
+				}
 				loginFrame.dispose();
 			}
 			else {
@@ -170,12 +171,7 @@ public class LoginPanel extends JPanel{
 	private void initialization() {
 		String name = signInController.getUser().getName();
 		String pass = signInController.getUser().getPassword();
-		if(name.equals("null")) {
-			name = "";
-		}
-		if(pass.equals("null")) {
-			pass = "";
-		}
+		
 		textUsername = new JTextField(name);
 		
 		textPassword = new JPasswordField(pass);
@@ -183,6 +179,9 @@ public class LoginPanel extends JPanel{
 		clickLogin = new JButton("Đăng nhập");
 		
 		remember = new JCheckBox("Nhớ mật khẩu");
+		if(name != null) {
+			remember.setSelected(true);
+		}
 		
 		icon = new ImageIcon(IMAGE_LOGIN_BACKGROUND);
 	}
