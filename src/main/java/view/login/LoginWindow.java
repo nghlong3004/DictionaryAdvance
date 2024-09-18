@@ -11,11 +11,10 @@ public class LoginWindow extends JFrame{
 	private LoginPanel signIn;
 	private MyPanel overlay;
 	public LoginWindow(){
-		super();
+		super("Login");
 		setting();
 	}
 	private void setting() {
-		setTitle("Login");
 		initialization();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(851, 512));

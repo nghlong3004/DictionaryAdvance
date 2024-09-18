@@ -4,7 +4,22 @@
   <artifactId>DictionaryAdvanve</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Dictionary</name>
+  <packaging>jar</packaging>
+  <properties>
+    <swing-glasspane-popup-systemPath>${basedir}/libs/swing-glasspane-popup-1.5.1.jar</swing-glasspane-popup-systemPath>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<maven.compiler.source>17</maven.compiler.source>
+	<maven.compiler.target>17</maven.compiler.target>
+	<exec.mainClass>main.MainClass</exec.mainClass>
+  </properties>
   <description>Using api google and microsoft</description>
+  <repositories>
+   <repository>
+      <id>any_name</id>
+      <name>Any Name</name>
+      <url>file://${project.basedir}\lib\popup\swing-glasspane-popup\</url>
+   </repository>
+</repositories>
   
   <dependencies>
 	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
@@ -22,12 +37,12 @@
     <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.2.1</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf-extras</artifactId>
-            <version>3.2.1</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>com.formdev</groupId>
@@ -44,6 +59,11 @@
      	<artifactId>jlayer</artifactId>
      	<version>1.0.1-1</version>
      </dependency>
+     <dependency>
+    <groupId>popup</groupId>
+    <artifactId>swing-glasspane-popup</artifactId>
+    <version>1</version>
+	</dependency>
 
 
   </dependencies>

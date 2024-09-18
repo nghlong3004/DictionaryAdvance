@@ -25,7 +25,7 @@ import controller.SignInController;
 import model.Account;
 import model.User;
 import net.miginfocom.swing.MigLayout;
-import view.DictionaryMainFrame;
+import view.dictionary.DictionaryMainFrame;
 
 public class LoginPanel extends JPanel{
 
