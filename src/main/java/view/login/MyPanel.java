@@ -20,7 +20,7 @@ public class MyPanel extends JPanel{
 		setOpaque(false);
 		fadeInTimer = new Timer(20, new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	            if (opacity < 0.8f) { // Giới hạn opacity tối đa
+	            if (opacity < 0.8f) { 
 	                opacity += 0.05f;
 	                repaint();
 	            } else {

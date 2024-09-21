@@ -51,7 +51,6 @@ public class PanelSlider extends JLayeredPane {
             add(component);
             if (transition != null) {
                 doLayout();
-               // SwingUtilities.updateComponentTreeUI(component);
                 SwingUtilities.invokeLater(() -> {
                     Image oldImage = createImage(oldComponent);
                     Image newImage = createImage(component);

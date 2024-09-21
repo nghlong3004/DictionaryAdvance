@@ -1,5 +1,7 @@
 package model;
 
+import static util.Constants.File.*;
+
 import java.util.TreeMap;
 
 public class Account {
@@ -39,16 +41,16 @@ public class Account {
 		}
 		return new String(this.id.get(username));
 	}
-	public void addUser(String username, String password) {
-		this.id.put(username, password);
-		repository.save(username, this);
+	public void addUser(User user) {
+		this.id.put(user.getName(), user.getPassword());
+		repository.save(OUTPUT_FILE_PATH, this);
 	}
 	public void saveDataUserCur(User user) {
 		String idName = "";
 		if(user != null) {
 			idName = user.getName();
 		}
-		repository.save("user.txt", idName);
+		repository.save(USER_PATH_ID, idName);
 	}
 	public User getUser() {
 		return this.user;

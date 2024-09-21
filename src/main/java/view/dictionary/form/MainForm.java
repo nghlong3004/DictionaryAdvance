@@ -19,6 +19,13 @@ public class MainForm extends JPanel {
 	 */
 	private static final long serialVersionUID = 297278067487648468L;
 	private final boolean undecorated;
+	
+	private JPanel header;
+    private JButton cmdMenu;
+    private JButton cmdUndo;
+    private JButton cmdRedo;
+    private JButton cmdRefresh;
+    private PanelSlider panelSlider;
 
     public MainForm(boolean undecorated) {
         this.undecorated = undecorated;
@@ -50,7 +57,7 @@ public class MainForm extends JPanel {
         panel.putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:null");
 
-        cmdMenu = createButton(new FlatSVGIcon("image\\menu.svg"));
+        cmdMenu = createButton(new FlatSVGIcon("image\\menu.svg", 2f));
         cmdUndo = createButton(new FlatSVGIcon("image\\undo.svg"));
         cmdRedo = createButton(new FlatSVGIcon("image\\redo.svg"));
         cmdRefresh = createButton(new FlatSVGIcon("image\\refresh.svg"));
@@ -106,11 +113,4 @@ public class MainForm extends JPanel {
         cmdRedo.setEnabled(FormManager.getForms().isRedoAble());
         cmdRefresh.setEnabled(FormManager.getForms().getCurrent() != null);
     }
-
-    private JPanel header;
-    private JButton cmdMenu;
-    private JButton cmdUndo;
-    private JButton cmdRedo;
-    private JButton cmdRefresh;
-    private PanelSlider panelSlider;
 }

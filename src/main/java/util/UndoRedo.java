@@ -4,7 +4,6 @@ import java.util.Stack;
 
 /**
  *
- * @author Raven
  * @param <E>
  */
 public class UndoRedo<E> implements Iterable<E> {
@@ -18,7 +17,16 @@ public class UndoRedo<E> implements Iterable<E> {
     }
 
     public void add(E item) {
-        stack1.push(item);
+        boolean flag = true;
+        for (E e : stack1) {
+			if(e.getClass().equals(item.getClass())) {
+				flag = false;
+				break;
+			}
+		}
+        if(flag) {
+        	stack1.push(item);
+        }
         stack2.clear();
     }
 

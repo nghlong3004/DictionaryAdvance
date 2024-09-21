@@ -32,5 +32,8 @@ public class DataSource {
 	public String getFilePath() {
 		return properties.getProperty("file.path");
 	}
+	public String getImagePath() {
+		return properties.getProperty("image.path");
+	}
 	
 }

@@ -2,22 +2,17 @@ package view.dictionary;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
-import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.formdev.flatlaf.util.UIScale;
 
 import raven.popup.GlassPanePopup;
 import view.dictionary.form.BackgroundForm;
 import view.dictionary.form.FormManager;
-import view.dictionary.form.ReadForm;
+import view.dictionary.form.HomeForm;
+import view.login.LoginPanel;
 
 public class DictionaryMainFrame extends JFrame{
 	
@@ -34,7 +29,7 @@ public class DictionaryMainFrame extends JFrame{
 
     private void init() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(UIScale.scale(new Dimension(1366, 768)));
+        setSize(UIScale.scale(new Dimension(1200, 700)));
         setLocationRelativeTo(null);
         if (UNDECORATED) {
             setUndecorated(UNDECORATED);
@@ -45,17 +40,8 @@ public class DictionaryMainFrame extends JFrame{
         setContentPane(new BackgroundForm(UNDECORATED));
         GlassPanePopup.install(this);
         FormManager.install(this, UNDECORATED);
-        FormManager.showForm(new ReadForm());
-        FormManager.logout();
+        FormManager.showForm(new HomeForm());
+        FormManager.login(new LoginPanel());
     }
-	public static void main(String[] args) {
-		FlatRobotoFont.install();
-		FlatLaf.registerCustomDefaultsSource("themes");
-		UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-		FlatMacLightLaf.setup();
-		SwingUtilities.invokeLater(() -> 
-		new DictionaryMainFrame().setVisible(true)
-		);
-	}
 	
 }

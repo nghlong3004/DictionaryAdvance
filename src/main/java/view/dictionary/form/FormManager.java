@@ -8,9 +8,11 @@ import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 
 import model.User;
 import view.dictionary.menu.Menu;
-import view.dictionary.menu.MyDrawerBuilder;
+import view.dictionary.menu.MenuDrawerBuilder;
 import view.dictionary.swing.PanelSlider;
 import view.dictionary.swing.SimpleTransition;
+import view.login.LoginPanel;
+import view.login.RegisterPanel;
 import util.UndoRedo;
 
 public class FormManager {
@@ -18,7 +20,7 @@ public class FormManager {
     private static FormManager instance;
     private final JFrame frame;
 
-    private final UndoRedo<SimpleForm> forms = new UndoRedo<>();
+    private final UndoRedo<BaseForm> forms = new UndoRedo<>();
 
     private boolean menuShowing = true;
     private final PanelSlider panelSlider;
@@ -34,7 +36,7 @@ public class FormManager {
         this.frame = frame;
         panelSlider = new PanelSlider();
         mainForm = new MainForm(undecorated);
-        menu = new Menu(new MyDrawerBuilder());
+        menu = new Menu(new MenuDrawerBuilder());
         this.undecorated = undecorated;
     }
 
@@ -43,7 +45,7 @@ public class FormManager {
         instance.panelSlider.addSlide(instance.menu, SimpleTransition.getShowMenuTransition(instance.menu.getDrawerBuilder().getDrawerWidth(), instance.undecorated));
     }
 
-    public static void showForm(SimpleForm component) {
+    public static void showForm(BaseForm component) {
         if (isNewFormAble()) {
             instance.forms.add(component);
             if (instance.menuShowing == true) {
@@ -58,20 +60,28 @@ public class FormManager {
         }
     }
 
-    public static void logout() {
+    public static void login(LoginPanel loginPanel) {
         FlatAnimatedLafChange.showSnapshot();
         instance.frame.getContentPane().removeAll();
-        instance.frame.getContentPane().add(instance.panelSlider);
+        instance.frame.getContentPane().add(loginPanel);
+        instance.frame.repaint();
+        instance.frame.revalidate();
+        FlatAnimatedLafChange.hideSnapshotWithAnimation();
+    }
+    
+    public static void register(LoginPanel loginPanel) {
+    	FlatAnimatedLafChange.showSnapshot();
+        instance.frame.getContentPane().removeAll();
+        instance.frame.getContentPane().add(new RegisterPanel(loginPanel));
         instance.frame.repaint();
         instance.frame.revalidate();
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
     }
 
-    public static void login(User user) {
+    public static void loginSuccessfully(User user) {
         FlatAnimatedLafChange.showSnapshot();
         instance.frame.getContentPane().removeAll();
         instance.frame.getContentPane().add(instance.panelSlider);
-        // set new user and rebuild menu for user role
         instance.frame.repaint();
         instance.frame.revalidate();
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
@@ -106,7 +116,7 @@ public class FormManager {
         }
     }
 
-    public static UndoRedo<SimpleForm> getForms() {
+    public static UndoRedo<BaseForm> getForms() {
         return instance.forms;
     }
 
@@ -115,7 +125,7 @@ public class FormManager {
     }
 
     public static void updateTempFormUI() {
-        for (SimpleForm f : instance.forms) {
+        for (BaseForm f : instance.forms) {
             SwingUtilities.updateComponentTreeUI(f);
         }
     }

@@ -7,9 +7,9 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
-import view.login.LoginWindow;
+import view.dictionary.DictionaryMainFrame;
 
 
 public class MainClass {
@@ -18,9 +18,9 @@ public class MainClass {
 		FlatRobotoFont.install();
 		FlatLaf.registerCustomDefaultsSource("themes");
 		UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-		FlatMacDarkLaf.setup();
+		FlatMacLightLaf.setup();
 		SwingUtilities.invokeLater(() -> 
-		new LoginWindow().setVisible(true)
+		new DictionaryMainFrame().setVisible(true)
 		);
 	}
 

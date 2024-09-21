@@ -15,7 +15,7 @@ public class DatabaseRepository implements Repository<String>{
 		this.dbPassword = dbPassword;
 		this.dbUsername = dbUsername;
 	}
-
+	
 	@Override
 	public void save(String data, Account account) {
 		// TODO Auto-generated method stub

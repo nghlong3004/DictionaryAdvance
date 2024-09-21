@@ -18,7 +18,7 @@ public class FileRepository implements Repository<String>{
 	
 	@Override
 	public void save(String data, Account account) {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(data), 1 << 16)) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(startPath + data), 1 << 16)) {
 			for (Map.Entry<String, String> entry : account.getId().entrySet()) {
 	            StringBuilder sb = new StringBuilder();
 	            sb.append(entry.getKey() + " <").append(entry.getValue()).append('\n');
@@ -64,7 +64,7 @@ public class FileRepository implements Repository<String>{
 	public String loadUser() {
 		String idUser = null;
 		ArrayList<String> array = new ArrayList<String>();
-		try (Stream<String> lines = Files.lines(Paths.get("target/file/user.txt"))) {
+		try (Stream<String> lines = Files.lines(Paths.get(startPath + "user.txt"))) {
 	        lines.forEach(line -> {
 	            array.add(line);
 	        });

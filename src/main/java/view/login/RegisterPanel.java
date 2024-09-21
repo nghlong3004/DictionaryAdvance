@@ -18,7 +18,9 @@ import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import model.User;
 import net.miginfocom.swing.MigLayout;
+import view.dictionary.form.FormManager;
 
 public class RegisterPanel extends JPanel{
 
@@ -28,7 +30,6 @@ public class RegisterPanel extends JPanel{
 	private static final long serialVersionUID = 5368538115377511397L;
 	
 	private LoginPanel signIn;
-	private RegisterWindow window;
 	
 	private JTextField textEmail;
 	private JTextField textUsername;
@@ -46,9 +47,8 @@ public class RegisterPanel extends JPanel{
 	private JButton buttonRegister;
 	private JButton buttonExit;
 	
-	public RegisterPanel(LoginPanel signIn, RegisterWindow window) {
+	public RegisterPanel(LoginPanel signIn) {
 		super();
-		this.window = window;
 		setting(signIn);
 	}
 	private void setting(LoginPanel signIn) {
@@ -128,14 +128,13 @@ public class RegisterPanel extends JPanel{
 
 	private void action() {
 		buttonExit.addActionListener(e -> {
-			signIn.getLoginFrame().setOverlay();
-			signIn.getLoginFrame().setEnabled(true);
-			window.dispose();
+			FormManager.login(signIn);
 		});
 		buttonRegister.addActionListener(e -> {
 			String username = textUsername.getText();
 			String password = new String(textPassword.getPassword());
 			String rePassword = new String(textRePassword.getPassword());
+			String fullname = textFullname.getText();
 			if(!password.equals(rePassword)) {
 				JOptionPane.showMessageDialog(this, "Mật khẩu mới không khớp");
 			}
@@ -146,10 +145,9 @@ public class RegisterPanel extends JPanel{
 				signIn.setUsername(username);
 				signIn.setPassword(password);
 				JOptionPane.showMessageDialog(this, "Đăng ký thành công");
-				signIn.getLoginFrame().setEnabled(true);
-				signIn.getLoginFrame().setOverlay();
-				signIn.getAccount().addUser(username, password);
-				window.dispose();
+				User user = new User(username, password, fullname, gender);
+				signIn.getAccount().addUser(user);
+				FormManager.login(signIn);
 			}
 			else {
 				JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không hợp lệ");

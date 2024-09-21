@@ -27,25 +27,25 @@ public class Constants {
 		
 	}
 	public static class Image{
-		public static final String IMAGE_LOGIN_PATH = "target/image/login.png";
-		public static final String IMAGE_LOGO_LOGIN_PATH = "target/image/logo_login.png";
-		public static final String IMAGE_LOGIN_BACKGROUND = "target/image/login-bg1.png";
-		public static final String IMAGE_ID_USER = "target/image/id_user.png";
-		public static final String IMAGE_EXIT_LOGIN = "target/image/exit_login.png";
-		public static final String IMAGE_USER = "target/image/user.png";
-		public static final String IMAGE_PASS = "target/image/pass.png";
-		public static final String IMAGE_HIDE = "target/image/hide.png";
-		public static final String IMAGE_FACEBOOK = "target/image/fb.png";
-		public static final String IMAGE_GOOGLE = "target/image/gg.png";
+		public static final String IMAGE_LOGIN_PATH = "login.png";
+		public static final String IMAGE_LOGO_LOGIN_PATH = "logo_login.png";
+		public static final String IMAGE_LOGIN_BACKGROUND = "login-bg1.png";
+		public static final String IMAGE_ID_USER = "id_user.png";
+		public static final String IMAGE_EXIT_LOGIN = "exit_login.png";
+		public static final String IMAGE_USER = "user.png";
+		public static final String IMAGE_PASS = "pass.png";
+		public static final String IMAGE_HIDE = "hide.png";
+		public static final String IMAGE_FACEBOOK = "fb.png";
+		public static final String IMAGE_GOOGLE = "gg.png";
 	}
 	
 	public static class File{
-		public static final String INPUT_FILE_PATH = "target/datastoge/data.txt";
-		public static final String OUTPUT_FILE_PATH = "target/datastoge/newData.txt";
+		public static final String INPUT_FILE_PATH = "account.txt";
+		public static final String OUTPUT_FILE_PATH = "account.txt";
 		
-		public static final String FILE_PATH_ID = "target/datastoge/dataAccount.txt";
+		public static final String ACCOUNT_PATH_ID = "account.txt";
 		
-		public static final String USER_PATH_ID = "target/datastoge/dataUser.txt";
+		public static final String USER_PATH_ID = "user.txt";
 	}
 	
 }

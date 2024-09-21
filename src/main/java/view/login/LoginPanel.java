@@ -25,7 +25,7 @@ import controller.SignInController;
 import model.Account;
 import model.User;
 import net.miginfocom.swing.MigLayout;
-import view.dictionary.DictionaryMainFrame;
+import view.dictionary.form.FormManager;
 
 public class LoginPanel extends JPanel{
 
@@ -44,11 +44,10 @@ public class LoginPanel extends JPanel{
 	
 	private JButton clickLogin;
 	private ImageIcon icon;
-	private LoginWindow loginFrame;
+	private String systemPath = signInController.getAccount().getDataSource().getImagePath();
 	
-	public LoginPanel(LoginWindow loginFrame) {
+	public LoginPanel() {
 		super();
-		this.loginFrame = loginFrame;
 		setting();
 	}
 	private void setting() {
@@ -102,8 +101,8 @@ public class LoginPanel extends JPanel{
 		return new ImageIcon(scaledImage);
 	}
 	private Component callFBandGG() {
-		JButton buttonFb = new JButton(getIcon(IMAGE_FACEBOOK));
-		JButton buttonGg = new JButton(getIcon(IMAGE_GOOGLE));
+		JButton buttonFb = new JButton(getIcon(systemPath + IMAGE_FACEBOOK));
+		JButton buttonGg = new JButton(getIcon(systemPath + IMAGE_GOOGLE));
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
 		buttonFb.setFocusPainted(false);
 		buttonGg.setFocusPainted(false);
@@ -125,18 +124,15 @@ public class LoginPanel extends JPanel{
 		});
 		
 		clickLogin.addActionListener(e -> {
-			User user = new User();
-			user.name(textUsername.getText());
-			user.password(new String(textPassword.getPassword()));
+			User user = new User(textUsername.getText(),new String(textPassword.getPassword()));
 			if(login(user)) {
-				new DictionaryMainFrame().setVisible(true);
 				if(remember.isSelected()) {
 					signInController.saveDataUserCur(user);
 				}
 				else {
 					signInController.saveDataUserCur(null);
 				}
-				loginFrame.dispose();
+				
 			}
 			else {
 				JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không chính xác!");
@@ -145,7 +141,7 @@ public class LoginPanel extends JPanel{
 		
 	}
 	private Component forgotPass() {
-		MyButton clickForgotP = new MyButton("Quên mật khẩu?", "white", "red", false);
+		MyButton clickForgotP = new MyButton("Quên mật khẩu?", "black", "red", false);
 		return clickForgotP;
 	}
 	
@@ -159,9 +155,7 @@ public class LoginPanel extends JPanel{
 															"[light]foreground:darken(@foreground, 30%);" +
 															"[dark]foreground:lighten(@foreground, 30%);");
 		clickRegister.addActionListener(e -> {
-	        loginFrame.setOverlay();
-	        loginFrame.setEnabled(false);
-			new RegisterWindow(this).setVisible(true);
+	        FormManager.register(this);
 		});
 		panel.add(label);
 		panel.add(clickRegister);
@@ -183,13 +177,13 @@ public class LoginPanel extends JPanel{
 			remember.setSelected(true);
 		}
 		
-		icon = new ImageIcon(IMAGE_LOGIN_BACKGROUND);
+		icon = new ImageIcon(systemPath + IMAGE_LOGIN_BACKGROUND);
 	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(icon.getImage(), 0, 0, null);
+		g.drawImage(icon.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
 	}
 	public void setPassword(String message) {
 		if(message != null) {
@@ -201,8 +195,8 @@ public class LoginPanel extends JPanel{
 			this.textUsername.setText(message);
 		}
 	}
-	public LoginWindow getLoginFrame() {
-		return this.loginFrame;
+	public User getUser() {
+		return signInController.getUser();
 	}
 	public boolean login(User user) {
 		// call check user

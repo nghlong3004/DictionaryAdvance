@@ -7,14 +7,14 @@ import javax.swing.JPanel;
  *
  * @author Raven
  */
-public class SimpleForm extends JPanel {
+public class BaseForm extends JPanel {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 105360554531203908L;
 
-	public SimpleForm() {
+	public BaseForm() {
         init();
     }
 

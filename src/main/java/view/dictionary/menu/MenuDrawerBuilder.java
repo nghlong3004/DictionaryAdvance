@@ -24,13 +24,16 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import view.dictionary.form.FormManager;
+import view.dictionary.form.SearchForm;
+import view.login.LoginPanel;
 import view.themes.DarkLightControl;
 
-public class MyDrawerBuilder extends SimpleDrawerBuilder {
+public class MenuDrawerBuilder extends SimpleDrawerBuilder {
 	
     private final DarkLightControl control;
 
-    public MyDrawerBuilder() {
+    public MenuDrawerBuilder() {
     	control = new DarkLightControl();
     }
 
@@ -119,8 +122,11 @@ public class MyDrawerBuilder extends SimpleDrawerBuilder {
             @Override
             public void selected(MenuAction action, int[] index) {
             		for (int id : index) {
+            			if(id == 0) {
+            				FormManager.showForm(new SearchForm());
+            			}
 						if(id == 6) {
-							System.exit(0);
+							FormManager.login(new LoginPanel());
 						}
 					}
             }
