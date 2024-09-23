@@ -21,11 +21,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
-import controller.SignInController;
-import model.Account;
-import model.User;
+import model.account.User;
 import net.miginfocom.swing.MigLayout;
-import view.dictionary.form.FormManager;
+import util.ObjectContainer;
+import view.dictionary.Dictionary;
 
 public class LoginPanel extends JPanel{
 
@@ -33,19 +32,16 @@ public class LoginPanel extends JPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = 9112353425595838469L;
-	// view ---call--> controller
-	private final SignInController signInController = new SignInController();
-	// info
+	private static final ObjectContainer OBJECTCONTAINER = new ObjectContainer();
 	private JTextField textUsername;
 	private JPasswordField textPassword;
+	private User user;
 	
 	private JCheckBox remember;
 	private boolean flagRemember = false;
 	
 	private JButton clickLogin;
 	private ImageIcon icon;
-	private String systemPath = signInController.getAccount().getDataSource().getImagePath();
-	
 	public LoginPanel() {
 		super();
 		setting();
@@ -65,6 +61,7 @@ public class LoginPanel extends JPanel{
 		title.putClientProperty(FlatClientProperties.STYLE, "" +
 															"font:bold +10");
 		description.putClientProperty(FlatClientProperties.STYLE, "" + 
+															
 															"[light]foreground:darken(@foreground, 30%);" +
 															"[dark]foreground:lighten(@foreground, 30%);");
 		clickLogin.putClientProperty(FlatClientProperties.STYLE, "" + 
@@ -101,8 +98,8 @@ public class LoginPanel extends JPanel{
 		return new ImageIcon(scaledImage);
 	}
 	private Component callFBandGG() {
-		JButton buttonFb = new JButton(getIcon(systemPath + IMAGE_FACEBOOK));
-		JButton buttonGg = new JButton(getIcon(systemPath + IMAGE_GOOGLE));
+		JButton buttonFb = new JButton(getIcon(IMAGE_PATH + IMAGE_FACEBOOK));
+		JButton buttonGg = new JButton(getIcon(IMAGE_PATH + IMAGE_GOOGLE));
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
 		buttonFb.setFocusPainted(false);
 		buttonGg.setFocusPainted(false);
@@ -124,15 +121,12 @@ public class LoginPanel extends JPanel{
 		});
 		
 		clickLogin.addActionListener(e -> {
-			User user = new User(textUsername.getText(),new String(textPassword.getPassword()));
-			if(login(user)) {
-				if(remember.isSelected()) {
-					signInController.saveDataUserCur(user);
-				}
-				else {
-					signInController.saveDataUserCur(null);
-				}
-				
+			User user = new User();
+			user.setUsername(textUsername.getText());
+			user.setPassword(new String(textPassword.getPassword()));
+			if(OBJECTCONTAINER.getControllerInstance().login(user)) {
+				OBJECTCONTAINER.getControllerInstance().successfully(user.getUsername(), remember.isSelected());
+				Dictionary.open();
 			}
 			else {
 				JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không chính xác!");
@@ -155,7 +149,7 @@ public class LoginPanel extends JPanel{
 															"[light]foreground:darken(@foreground, 30%);" +
 															"[dark]foreground:lighten(@foreground, 30%);");
 		clickRegister.addActionListener(e -> {
-	        FormManager.register(this);
+	        Dictionary.resigter();
 		});
 		panel.add(label);
 		panel.add(clickRegister);
@@ -163,21 +157,21 @@ public class LoginPanel extends JPanel{
 	}
 	
 	private void initialization() {
-		String name = signInController.getUser().getName();
-		String pass = signInController.getUser().getPassword();
 		
-		textUsername = new JTextField(name);
+		user = OBJECTCONTAINER.getControllerInstance().getUser();
 		
-		textPassword = new JPasswordField(pass);
+		textUsername = new JTextField(user.getUsername());
+		
+		textPassword = new JPasswordField(new String(user.getPassword()));
 		
 		clickLogin = new JButton("Đăng nhập");
 		
 		remember = new JCheckBox("Nhớ mật khẩu");
-		if(name != null) {
+		if(user.isRemember()) {
 			remember.setSelected(true);
 		}
 		
-		icon = new ImageIcon(systemPath + IMAGE_LOGIN_BACKGROUND);
+		icon = new ImageIcon(IMAGE_PATH + IMAGE_LOGIN_BACKGROUND);
 	}
 	
 	@Override
@@ -195,14 +189,14 @@ public class LoginPanel extends JPanel{
 			this.textUsername.setText(message);
 		}
 	}
+	public boolean isUsername(String username) {
+		return OBJECTCONTAINER.getControllerInstance().isUsername(username);
+	}
 	public User getUser() {
-		return signInController.getUser();
+		return this.user;
 	}
-	public boolean login(User user) {
-		// call check user
-		return signInController.login(user);
+	public void register(User user) {
+		OBJECTCONTAINER.getControllerInstance().register(user);
 	}
-	public Account getAccount() {
-		return signInController.getAccount();
-	}
+	
 }

@@ -2,8 +2,6 @@ package util;
 
 import static util.Constants.*;
 
-import model.Account;
-
 public class HelpMethod {
 	
 	public static boolean isRegExp(final String ... s) {
@@ -15,11 +13,9 @@ public class HelpMethod {
 		return true;
 	}
 	
-	public static boolean isValidUsername(String username, Account account) {
+	public static boolean isValidUsername(String username) {
+		System.out.println(username);
 		if(username == null) {
-			return false;
-		}
-		if(account.isId(username)) {
 			return false;
 		}
 		if((username.matches(REGULAR_EMAIL_EXPRESSIONS) || username.matches(REGULAR_EXPRESSIONS))) {
@@ -27,6 +23,7 @@ public class HelpMethod {
 		}
 		return false;
 	}
+	
 	public static boolean isValidPassword(String password) {
 		if(password == null) {
 			return false;

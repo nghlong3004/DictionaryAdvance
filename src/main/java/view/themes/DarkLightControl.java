@@ -11,7 +11,6 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import net.miginfocom.swing.MigLayout;
-import view.dictionary.form.FormManager;
 
 import javax.swing.JToggleButton;
 
@@ -26,6 +25,7 @@ public class DarkLightControl extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	private DarkLightSwitchIcon darkLightSwitchIcon;
+	private JToggleButton swIcon;
 
 	// check themes
 	private void changeThemes(boolean dark) {
@@ -35,7 +35,7 @@ public class DarkLightControl extends JPanel{
                     FlatAnimatedLafChange.showSnapshot();
                     FlatMacDarkLaf.setup();
                     FlatLaf.updateUI();
-                    FormManager.updateTempFormUI();
+                    
                     FlatAnimatedLafChange.hideSnapshotWithAnimation();
                 });
             } else {
@@ -43,7 +43,7 @@ public class DarkLightControl extends JPanel{
                     FlatAnimatedLafChange.showSnapshot();
                     FlatMacLightLaf.setup();
                     FlatLaf.updateUI();
-                    FormManager.updateTempFormUI();
+                    
                     FlatAnimatedLafChange.hideSnapshotWithAnimation();
                 });
             }
@@ -59,11 +59,11 @@ public class DarkLightControl extends JPanel{
         panel.putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:999;"
         		+ "background:darken($Drawer.background,5%)");
-		JToggleButton swIcon = new JToggleButton("");
+		swIcon = new JToggleButton("");
 		swIcon.putClientProperty(FlatClientProperties.STYLE, ""
 				+ "arc:999;"
                 + "[dark]background:$Drawer.background;"
-                + "[light]background:null;"
+                + "[light]background:$DrawerLight.background;"
                 + "borderWidth:0;"
                 + "focusWidth:0;"
                 + "innerFocusWidth:0;");
@@ -83,9 +83,14 @@ public class DarkLightControl extends JPanel{
                 }, 200, TimeUnit.MILLISECONDS);
             }
         });
+		swIcon.setSelected(true);
 		panel.add(swIcon);
 		add(panel);
-		
 	}
+	
+	public void setMenuFull(boolean menuFull) {
+        swIcon.setVisible(menuFull);
+    }
+	
 }
 

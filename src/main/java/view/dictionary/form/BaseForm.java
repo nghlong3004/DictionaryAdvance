@@ -3,10 +3,6 @@ package view.dictionary.form;
 import com.formdev.flatlaf.FlatClientProperties;
 import javax.swing.JPanel;
 
-/**
- *
- * @author Raven
- */
 public class BaseForm extends JPanel {
 
     /**

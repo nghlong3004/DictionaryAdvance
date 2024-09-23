@@ -1,6 +1,7 @@
 package view.login;
 
 import static util.HelpMethod.*;
+import static util.Utils.*;
 
 import java.awt.Cursor;
 import java.awt.event.ItemEvent;
@@ -18,9 +19,9 @@ import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
-import model.User;
+import model.account.User;
 import net.miginfocom.swing.MigLayout;
-import view.dictionary.form.FormManager;
+import view.dictionary.Dictionary;
 
 public class RegisterPanel extends JPanel{
 
@@ -29,7 +30,7 @@ public class RegisterPanel extends JPanel{
 	 */
 	private static final long serialVersionUID = 5368538115377511397L;
 	
-	private LoginPanel signIn;
+	private LoginPanel login;
 	
 	private JTextField textEmail;
 	private JTextField textUsername;
@@ -52,7 +53,7 @@ public class RegisterPanel extends JPanel{
 		setting(signIn);
 	}
 	private void setting(LoginPanel signIn) {
-		this.signIn = signIn;
+		this.login = signIn;
 		setLayout(new MigLayout("fill, insets 10", "[center]", "[center]"));
 		initialization();
 		// setup focus to textUsername in first request
@@ -82,10 +83,10 @@ public class RegisterPanel extends JPanel{
 		buttonRegister.putClientProperty(FlatClientProperties.STYLE, "" + 
 										"[light]foreground:darken(@foreground, 30%);" +
 										"[dark]foreground:lighten(@foreground, 30%);");
-		textPassword.putClientProperty(FlatClientProperties.STYLE, "" +
-										"showRevealButton:true");
+		textPassword.putClientProperty(FlatClientProperties.STYLE, "");
 		textRePassword.putClientProperty(FlatClientProperties.STYLE, "" +
-										"showRevealButton:true");
+										
+										"showCapsLock:true");
 		textUsername.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập tên đăng nhập hoặc email");
 		textFullname.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập họ và tên");
 		textEmail.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập email");
@@ -128,7 +129,7 @@ public class RegisterPanel extends JPanel{
 
 	private void action() {
 		buttonExit.addActionListener(e -> {
-			FormManager.login(signIn);
+			Dictionary.login();
 		});
 		buttonRegister.addActionListener(e -> {
 			String username = textUsername.getText();
@@ -136,21 +137,27 @@ public class RegisterPanel extends JPanel{
 			String rePassword = new String(textRePassword.getPassword());
 			String fullname = textFullname.getText();
 			if(!password.equals(rePassword)) {
-				JOptionPane.showMessageDialog(this, "Mật khẩu mới không khớp");
+				JOptionPane.showMessageDialog(this, "Mật khẩu mới không khớp!");
 			}
-			else if(!isValidUsername(username, signIn.getAccount())) {
-				JOptionPane.showMessageDialog(this, "Tên đăng nhập không hợp lệ hoặc đã tồn tại");
+			else if(!isValidUsername(username)) {
+				JOptionPane.showMessageDialog(this, "Tên đăng nhập không hợp lệ!");
 			}
-			else if(isValidUsername(username, signIn.getAccount()) && isValidPassword(password) && !gender.isEmpty()) {
-				signIn.setUsername(username);
-				signIn.setPassword(password);
+			else if(!login.isUsername(username)) {
+				JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại!");
+			}
+			else if(isValidUsername(username) && isValidPassword(password) && login.isUsername(username) && !gender.isEmpty()) {
+				login.setUsername(username);
+				login.setPassword(password);
+			
 				JOptionPane.showMessageDialog(this, "Đăng ký thành công");
-				User user = new User(username, password, fullname, gender);
-				signIn.getAccount().addUser(user);
-				FormManager.login(signIn);
+				User user = new User(username, password, fullname, gender, nowTimeinString(), nowTimeinString(), false);
+				login.register(user);
+				Dictionary.login();
 			}
 			else {
 				JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không hợp lệ");
+				System.out.println(username);
+				System.out.println(password);
 			}
 		});
 		ItemListener itemListener = e -> {

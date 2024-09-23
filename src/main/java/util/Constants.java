@@ -37,6 +37,7 @@ public class Constants {
 		public static final String IMAGE_HIDE = "hide.png";
 		public static final String IMAGE_FACEBOOK = "fb.png";
 		public static final String IMAGE_GOOGLE = "gg.png";
+		public static final String IMAGE_PATH = "src/main/resources/image/";
 	}
 	
 	public static class File{

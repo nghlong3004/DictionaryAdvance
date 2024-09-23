@@ -2,115 +2,196 @@ package view.dictionary.form;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import java.awt.Component;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import net.miginfocom.swing.MigLayout;
-import view.dictionary.swing.PanelSlider;
-import view.dictionary.swing.SimpleTransition;
-import view.dictionary.swing.SliderTransition;
+import com.formdev.flatlaf.util.UIScale;
 
-public class MainForm extends JPanel {
+import view.dictionary.Dictionary;
+import view.dictionary.menu.Menu;
+import view.dictionary.menu.MenuAction;
+import view.login.LoginPanel;
+
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+public class MainForm extends JLayeredPane {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 297278067487648468L;
-	private final boolean undecorated;
-	
-	private JPanel header;
-    private JButton cmdMenu;
-    private JButton cmdUndo;
-    private JButton cmdRedo;
-    private JButton cmdRefresh;
-    private PanelSlider panelSlider;
-
-    public MainForm(boolean undecorated) {
-        this.undecorated = undecorated;
-        init();
+	private static final long serialVersionUID = 3011069027149983587L;
+	private final LoginPanel loginPanel;
+	private static int [][] forms = new int [10][10];
+	public MainForm(LoginPanel loginPanel) {
+		this.loginPanel = loginPanel;
+        init(loginPanel);
     }
 
-    private void init() {
-        if (undecorated) {
-            putClientProperty(FlatClientProperties.STYLE, ""
-                    + "border:5,5,5,5;"
-                    + "arc:30");
-        }
-        setLayout(new MigLayout("wrap,fillx", "[fill]", ""));
-        header = createHeader();
-        panelSlider = new PanelSlider();
-        JScrollPane scroll = new JScrollPane(panelSlider);
-        scroll.putClientProperty(FlatClientProperties.STYLE, ""
-                + "border:0,0,0,0");
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "trackArc:999;"
-                + "width:10");
-        scroll.getVerticalScrollBar().setUnitIncrement(10);
-        add(header);
-        add(scroll);
-    }
-
-    private JPanel createHeader() {
-        JPanel panel = new JPanel(new MigLayout("insets 3"));
-        panel.putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:null");
-
-        cmdMenu = createButton(new FlatSVGIcon("image\\menu.svg", 2f));
-        cmdUndo = createButton(new FlatSVGIcon("image\\undo.svg"));
-        cmdRedo = createButton(new FlatSVGIcon("image\\redo.svg"));
-        cmdRefresh = createButton(new FlatSVGIcon("image\\refresh.svg"));
-        cmdMenu.addActionListener(e -> {
-            FormManager.showMenu();
-        });
-        cmdUndo.addActionListener(e -> {
-            FormManager.undo();
-        });
-        cmdRedo.addActionListener(e -> {
-            FormManager.redo();
-        });
-        cmdRefresh.addActionListener(e -> {
-            FormManager.refresh();
-        });
-
-        panel.add(cmdMenu);
-        panel.add(cmdUndo);
-        panel.add(cmdRedo);
-        panel.add(cmdRefresh);
-        return panel;
-    }
-
-    private JButton createButton(Icon icon) {
-        JButton button = new JButton(icon);
-        button.putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Button.toolbar.background;"
-                + "arc:10;"
-                + "margin:3,3,3,3;"
-                + "borderWidth:0;"
+    private void init(LoginPanel loginPanel) {
+    	removeForms();
+    	forms[0][1] = 1;
+        setBorder(new EmptyBorder(5, 5, 5, 5));
+        setLayout(new MainFormLayout());
+        menu = new Menu(loginPanel.getUser().getFullName(), loginPanel.getUser().getUsername());
+        panelBody = new JPanel(new BorderLayout());
+        initMenuArrowIcon();
+        menuButton.putClientProperty(FlatClientProperties.STYLE, ""
+                + "background:$Menu.button.background;"
+                + "arc:999;"
                 + "focusWidth:0;"
-                + "innerFocusWidth:0");
-        return button;
+                + "borderWidth:0");
+        menuButton.addActionListener((ActionEvent e) -> {
+            setMenuFull(!menu.isMenuFull());
+        });
+        initMenuEvent();
+        setLayer(menuButton, JLayeredPane.POPUP_LAYER);
+        add(menuButton);
+        add(menu);
+        add(panelBody);
+    }
+    private void removeForms() {
+    	for(int i = 0; i < 10; ++i) {
+    		for(int j = 0; j < 10; ++j) {
+    			forms[i][j] = 0;
+    		}
+    	}
+		
+	}
+
+	public void update() {
+    	menu.setHeader(loginPanel.getUser().getFullName(), loginPanel.getUser().getUsername());
     }
 
-    public void showForm(Component component, SliderTransition transition) {
-        checkButton();
-        panelSlider.addSlide(component, transition);
+    @Override
+    public void applyComponentOrientation(ComponentOrientation o) {
+        super.applyComponentOrientation(o);
+        initMenuArrowIcon();
+    }
+
+    private void initMenuArrowIcon() {
+        if (menuButton == null) {
+            menuButton = new JButton();
+        }
+        String icon = (getComponentOrientation().isLeftToRight()) ? "menu_left.svg" : "menu_right.svg";
+        menuButton.setIcon(new FlatSVGIcon("image\\" + icon, 0.8f));
+    }
+
+    private void initMenuEvent() {
+        menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
+            if(index == 0) {
+            	if(subIndex == 1 && forms[index][subIndex] == 0) {
+            		removeForms();
+            		forms[index][subIndex] = 1;
+            		Dictionary.showForm(new SearchForm(loginPanel.getUser().getUsername()));
+            	}
+            }
+            else if(index == 6) {
+            	if(forms[index][subIndex] == 0) {
+            		removeForms();
+            		forms[index][subIndex] = 1;
+            		panelBody.removeAll();
+                	Dictionary.login();
+            	}
+            }
+            else {
+            	action.cancel();
+            }
+        });
+    }
+
+    private void setMenuFull(boolean full) {
+        String icon;
+        if (getComponentOrientation().isLeftToRight()) {
+            icon = (full) ? "menu_left.svg" : "menu_right.svg";
+        } else {
+            icon = (full) ? "menu_right.svg" : "menu_left.svg";
+        }
+        menuButton.setIcon(new FlatSVGIcon("image\\" + icon, 0.8f));
+        menu.setMenuFull(full);
         revalidate();
     }
 
+    public void hideMenu() {
+    	Dictionary.showForm(new SearchForm(loginPanel.getUser().getUsername()));
+        menu.hideMenuItem();
+    }
+
     public void showForm(Component component) {
-        showForm(component, SimpleTransition.getDefaultTransition(false));
+        panelBody.removeAll();
+        panelBody.add(component);
+        panelBody.repaint();
+        panelBody.revalidate();
     }
 
-    public void setForm(Component component) {
-        checkButton();
-        panelSlider.addSlide(component, null);
+    public void setSelectedMenu(int index, int subIndex) {
+        menu.setSelectedMenu(index, subIndex);
     }
 
-    private void checkButton() {
-        cmdUndo.setEnabled(FormManager.getForms().isUndoAble());
-        cmdRedo.setEnabled(FormManager.getForms().isRedoAble());
-        cmdRefresh.setEnabled(FormManager.getForms().getCurrent() != null);
+
+	private Menu menu;
+    private JPanel panelBody;
+    private JButton menuButton;
+
+    private class MainFormLayout implements LayoutManager {
+
+        @Override
+        public void addLayoutComponent(String name, Component comp) {
+        }
+
+        @Override
+        public void removeLayoutComponent(Component comp) {
+        }
+
+        @Override
+        public Dimension preferredLayoutSize(Container parent) {
+            synchronized (parent.getTreeLock()) {
+                return new Dimension(5, 5);
+            }
+        }
+
+        @Override
+        public Dimension minimumLayoutSize(Container parent) {
+            synchronized (parent.getTreeLock()) {
+                return new Dimension(0, 0);
+            }
+        }
+
+        @Override
+        public void layoutContainer(Container parent) {
+            synchronized (parent.getTreeLock()) {
+                boolean ltr = parent.getComponentOrientation().isLeftToRight();
+                Insets insets = UIScale.scale(parent.getInsets());
+                int x = insets.left;
+                int y = insets.top;
+                int width = parent.getWidth() - (insets.left + insets.right);
+                int height = parent.getHeight() - (insets.top + insets.bottom);
+                int menuWidth = UIScale.scale(menu.isMenuFull() ? menu.getMenuMaxWidth() : menu.getMenuMinWidth());
+                int menuX = ltr ? x : x + width - menuWidth;
+                menu.setBounds(menuX, y, menuWidth, height);
+                int menuButtonWidth = menuButton.getPreferredSize().width;
+                int menuButtonHeight = menuButton.getPreferredSize().height;
+                int menubX;
+                if (ltr) {
+                    menubX = (int) (x + menuWidth - (menuButtonWidth * (menu.isMenuFull() ? 0.5f : 0.3f)));
+                } else {
+                    menubX = (int) (menuX - (menuButtonWidth * (menu.isMenuFull() ? 0.5f : 0.7f)));
+                }
+                menuButton.setBounds(menubX, UIScale.scale(30), menuButtonWidth, menuButtonHeight);
+                int gap = UIScale.scale(5);
+                int bodyWidth = width - menuWidth - gap;
+                int bodyHeight = height;
+                int bodyx = ltr ? (x + menuWidth + gap) : x;
+                int bodyy = y;
+                panelBody.setBounds(bodyx, bodyy, bodyWidth, bodyHeight);
+            }
+        }
     }
 }
+
