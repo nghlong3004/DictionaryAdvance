@@ -12,8 +12,8 @@ public class UserController{
 		this.userService = userService;
 	}
 	
-	public boolean isUsername(String username) {
-		return userService.isUsername(username);
+	public boolean isUsernameAvailable(String username) {
+		return userService.isUsernameAvailable(username);
 	}
 	
 	// login
@@ -21,8 +21,8 @@ public class UserController{
 		return userService.login(user);
 	}
 	// successfully
-	public void successfully(String username, boolean remember) {
-		userService.successfully(username, remember);
+	public void handleLoginSuccess(String username, boolean remember) {
+		userService.handleLoginSuccess(username, remember);
 	}
 	// register
 	public void register(User user) {

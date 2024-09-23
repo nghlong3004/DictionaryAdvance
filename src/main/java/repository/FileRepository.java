@@ -42,10 +42,13 @@ public class FileRepository<T> implements Repository<T>{
             System.out.println("File not found! : " + path);
             return new ArrayList<>();
         }
-
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(path)))) {
             Type accountListType = new TypeToken<List<User>>() {}.getType();
-            return gson.fromJson(reader, accountListType);
+            List<T> accounts = gson.fromJson(reader, accountListType);
+            if(accounts == null) {
+            	return new ArrayList<>();
+            }
+            return accounts;
         } catch (IOException e) {
             e.printStackTrace();
             return new ArrayList<>();

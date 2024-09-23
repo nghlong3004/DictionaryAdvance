@@ -83,10 +83,12 @@ public class RegisterPanel extends JPanel{
 		buttonRegister.putClientProperty(FlatClientProperties.STYLE, "" + 
 										"[light]foreground:darken(@foreground, 30%);" +
 										"[dark]foreground:lighten(@foreground, 30%);");
-		textPassword.putClientProperty(FlatClientProperties.STYLE, "");
+		textPassword.putClientProperty(FlatClientProperties.STYLE, "" +
+				"showRevealButton:true;"+
+				"showCapsLock:true");
 		textRePassword.putClientProperty(FlatClientProperties.STYLE, "" +
-										
-										"showCapsLock:true");
+				"showRevealButton:true;"+
+				"showCapsLock:true");
 		textUsername.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập tên đăng nhập hoặc email");
 		textFullname.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập họ và tên");
 		textEmail.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập email");
@@ -142,10 +144,10 @@ public class RegisterPanel extends JPanel{
 			else if(!isValidUsername(username)) {
 				JOptionPane.showMessageDialog(this, "Tên đăng nhập không hợp lệ!");
 			}
-			else if(!login.isUsername(username)) {
+			else if(!login.isUsernameAvailable(username)) {
 				JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại!");
 			}
-			else if(isValidUsername(username) && isValidPassword(password) && login.isUsername(username) && !gender.isEmpty()) {
+			else if(isValidUsername(username) && isValidPassword(password) && login.isUsernameAvailable(username) && !gender.isEmpty()) {
 				login.setUsername(username);
 				login.setPassword(password);
 			
@@ -156,8 +158,6 @@ public class RegisterPanel extends JPanel{
 			}
 			else {
 				JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không hợp lệ");
-				System.out.println(username);
-				System.out.println(password);
 			}
 		});
 		ItemListener itemListener = e -> {

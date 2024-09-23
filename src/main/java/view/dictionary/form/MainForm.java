@@ -28,15 +28,12 @@ public class MainForm extends JLayeredPane {
 	 */
 	private static final long serialVersionUID = 3011069027149983587L;
 	private final LoginPanel loginPanel;
-	private static int [][] forms = new int [10][10];
 	public MainForm(LoginPanel loginPanel) {
 		this.loginPanel = loginPanel;
         init(loginPanel);
     }
 
     private void init(LoginPanel loginPanel) {
-    	removeForms();
-    	forms[0][1] = 1;
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setLayout(new MainFormLayout());
         menu = new Menu(loginPanel.getUser().getFullName(), loginPanel.getUser().getUsername());
@@ -56,14 +53,6 @@ public class MainForm extends JLayeredPane {
         add(menu);
         add(panelBody);
     }
-    private void removeForms() {
-    	for(int i = 0; i < 10; ++i) {
-    		for(int j = 0; j < 10; ++j) {
-    			forms[i][j] = 0;
-    		}
-    	}
-		
-	}
 
 	public void update() {
     	menu.setHeader(loginPanel.getUser().getFullName(), loginPanel.getUser().getUsername());
@@ -86,19 +75,19 @@ public class MainForm extends JLayeredPane {
     private void initMenuEvent() {
         menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
             if(index == 0) {
-            	if(subIndex == 1 && forms[index][subIndex] == 0) {
-            		removeForms();
-            		forms[index][subIndex] = 1;
+            	if(subIndex == 1 ) {
             		Dictionary.showForm(new SearchForm(loginPanel.getUser().getUsername()));
+            	}
+            	else if(subIndex == 2) {
+                	Dictionary.showForm(new TranslateText());
+                }
+            	else {
+            		action.cancel();
             	}
             }
             else if(index == 6) {
-            	if(forms[index][subIndex] == 0) {
-            		removeForms();
-            		forms[index][subIndex] = 1;
             		panelBody.removeAll();
                 	Dictionary.login();
-            	}
             }
             else {
             	action.cancel();

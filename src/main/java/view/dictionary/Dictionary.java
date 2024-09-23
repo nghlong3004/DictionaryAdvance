@@ -70,6 +70,7 @@ public class Dictionary extends JFrame {
     public static void login() {
         FlatAnimatedLafChange.showSnapshot();
         app.setContentPane(app.loginPanel);
+        System.out.println(app.loginPanel.getUser().getUsername());
         app.applyComponentOrientation(app.getComponentOrientation());
         SwingUtilities.updateComponentTreeUI(app.loginPanel);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();

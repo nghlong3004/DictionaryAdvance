@@ -40,7 +40,7 @@ public class AccountRepository {
 		
 	}
 	
-	public boolean isUsername(String username) {
+	public boolean isUsernameAvailable(String username) {
 		for (User user : accounts) {
 			if(user.getUsername().equalsIgnoreCase(username)) {
 				return false;
@@ -59,7 +59,7 @@ public class AccountRepository {
 		return false;
 	}
 	// update if login successfully
-	public void updateUser(String username, boolean remember) {
+	public void handleLoginSuccess(String username, boolean remember) {
 		for(int i = 0; i < accounts.size(); ++i) {
 			User curUser = accounts.get(i);
 			if(username.equalsIgnoreCase(curUser.getUsername())) {

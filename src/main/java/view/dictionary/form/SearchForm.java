@@ -1,5 +1,12 @@
 package view.dictionary.form;
 
+import static util.Constants.Image.*;
+import static util.Constants.ColorApp.*;
+
+import java.awt.Graphics;
+import java.util.Random;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
@@ -14,27 +21,27 @@ import util.AvatarIcon;
 
 public class SearchForm extends JPanel {
     private static final long serialVersionUID = 1L;
-
+    
+    private JEditorPane helloPane;
+    
     public SearchForm(String username) {
     	setLayout(new MigLayout("fill", "[grow, 800:900:1000]10[grow, 120:180]", "[][grow][grow]"));
         JPanel left = new JPanel(new MigLayout("", "[grow, 120:150]", "[]20[]"));
         JEditorPane textExplain = new JEditorPane();
-        String hexColor = "#d97706";
-        
-        
+
 		String html = "<html>" +
 		        "<div style='text-align: center;'>" +
 		        "<table>" +
 		        "<tr><td style='text-align: left;'>Xin chào</td></tr>" +
 		        "<tr><td style='text-align: left; font-size: 24px; color: " + 
-		        hexColor + 
+		        rndColor() + 
 		        ";'>" +
 		        username +
 		        "</td></tr>" +
 		        "</table>" +
 		        "</div>" +
 		        "</html>";
-		JEditorPane helloPane = new JEditorPane("text/html", html);
+		helloPane = new JEditorPane("text/html", html);
 		helloPane.setFocusable(false);
 		helloPane.setEditable(false);
 		textExplain.setFocusable(false);
@@ -44,6 +51,28 @@ public class SearchForm extends JPanel {
         add(textExplain, "top, left, grow, height 420:500:600, width 850:1400:1500");
         add(upRight(helloPane), "cell 1 0, center, width 250!, wrap");
         add(right(), "right, span 1 2");
+    }
+    private String rndColor() {
+    	Random rnd = new Random();
+    	int index = Math.abs(rnd.nextInt() % colors.length);
+    	return colors[index];
+    }
+    
+    public void initSearchForm(String username) {
+    	
+		String html = "<html>" +
+		        "<div style='text-align: center;'>" +
+		        "<table>" +
+		        "<tr><td style='text-align: left;'>Xin chào</td></tr>" +
+		        "<tr><td style='text-align: left; font-size: 24px; color: " + 
+		        rndColor() + 
+		        ";'>" +
+		        username +
+		        "</td></tr>" +
+		        "</table>" +
+		        "</div>" +
+		        "</html>";
+		helloPane.setText(html);
     }
     
     private JComponent upRight(JEditorPane pane) {
@@ -59,7 +88,7 @@ public class SearchForm extends JPanel {
     private JButton sytle(JButton btn) {
     	btn.putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:999;"
-                + "background:$Menu.lightdark.button.background;"
+                + "background:null;"
                 + "foreground:$Menu.foreground;"
                 + "focusWidth:0;"
                 + "borderWidth:0;"
@@ -68,8 +97,8 @@ public class SearchForm extends JPanel {
     }
     
     private JComponent right() {
-    	JEditorPane pane1 = new JEditorPane("text/html", "OK");
-		JEditorPane pane2 = new JEditorPane("text/html", "OK");
+    	JEditorPane pane1 = new JEditorPane("text/html", "Từ đồng nghĩa");
+		JEditorPane pane2 = new JEditorPane("text/html", "Từ trái nghĩa");
 		JPanel panel = new JPanel(new MigLayout("", "[grow]", "[grow]20[grow]"));
 		
 		
@@ -91,8 +120,8 @@ public class SearchForm extends JPanel {
     	JButton btnAV = new JButton("Anh -> Việt");
     	JButton btnVA = new JButton("Việt -> Anh");
     	JButton btnRd = new JButton("Từ ngẫu nhiên");
-    	btnLeft = sytle(btnLeft);
-    	btnRight = sytle(btnRight);
+//    	btnLeft = sytle(btnLeft);
+//    	btnRight = sytle(btnRight);
 //    	btnAV = sytle(btnAV);
 //    	btnVA = sytle(btnVA);
 //    	btnRd = sytle(btnRd);
@@ -119,37 +148,44 @@ public class SearchForm extends JPanel {
     	JButton btn5 = new JButton();
     	btn2 = sytle(btn2);
     	btn3 = sytle(btn3);
-    	AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/lovely.png"), 30, 30, 999);
+    	AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/staroutline_81125 (22).png"), 25, 25, 0);
     	btn3.setIcon(icon);
-    	icon = new AvatarIcon(getClass().getResource("/image/coppy.png"), 30, 30, 999);
+    	icon = new AvatarIcon(getClass().getResource("/image/copy1.png"), 25, 25, 0);
     	btn1.setIcon(icon);
-    	icon = new AvatarIcon(getClass().getResource("/image/flag.png"), 30, 30, 999);
+    	icon = new AvatarIcon(getClass().getResource("/image/flag22.png"), 25, 25, 0);
     	btn2.setIcon(icon);
     	btn1 = sytle(btn1);
     	btn2 = sytle(btn2);
     	btn3 = sytle(btn3);
     	btn4 = sytle(btn4);
     	btn5 = sytle(btn5);
-    	icon = new AvatarIcon(getClass().getResource("/image/loudspeaker.png"), 30, 30, 999);
+    	icon = new AvatarIcon(getClass().getResource("/image/speaker.png"), 25, 25, 999);
     	btn4.setIcon(icon);
     	btn5.setIcon(icon);
     	JPanel us = new JPanel(new MigLayout());
     	JPanel sp = new JPanel(new MigLayout());
+    	final String size = "height 30!, width 30!";
     	JLabel label4 = new JLabel("US");
-    	us.add(btn4, "height 30!, width 30!");
-    	us.add(label4, "height 30!, width 30!");
-    	us.add(btn5, "height 30!, width 30!");
-    	us.add(new JLabel("UK"), "height 30!, width 30!");
-    	sp.add(btn2, "height 30!, width 30!");
-    	sp.add(new JLabel(""), "height 30!, width 30!");
-    	sp.add(btn3, "height 30!, width 30!");
-    	sp.add(new JLabel(""), "height 30!, width 30!");
+    	us.add(btn4, size);
+    	us.add(label4, size);
+    	us.add(btn5, size);
+    	us.add(new JLabel("UK"), size);
+    	sp.add(btn2, size);
+    	sp.add(new JLabel(""), size);
+    	sp.add(btn3, size);
+    	sp.add(new JLabel(""), size);
     	panel2.add(label, "span 2 2, height 100!, width 100! ");
-    	panel2.add(btn1, "left, cell 1 0, height 30!, width 30!");
+    	panel2.add(btn1, "left, cell 1 0, " + size);
     	panel2.add(sp, "cell 4 0,right, wrap");
     	panel2.add(us, "cell 4 1, right");
     	panel.add(panel2, "width 850:1400:1500"); 
     	return panel;
+    }
+    
+    @Override
+    public void paintComponents(Graphics g) {
+    	super.paintComponents(g);
+    	g.drawImage(new ImageIcon(IMAGE_PATH +"background.jpg").getImage(), 0, 0, getWidth(), getHeight(), null);
     }
     
 }

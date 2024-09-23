@@ -2,7 +2,6 @@ package view.login;
 
 import static util.Constants.Image.*;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
@@ -43,13 +42,13 @@ public class LoginPanel extends JPanel{
 	private JButton clickLogin;
 	private ImageIcon icon;
 	public LoginPanel() {
-		super();
-		setting();
-	}
+        setting();
+        
+    }
 	private void setting() {
-		setLayout(new MigLayout("fill, insets 20", "[right]", "[center]"));
+		setLayout(new MigLayout("fill, insets 20", "[grow, right]", "10[center]10"));
 		initialization();
-		JPanel panel = new JPanel(new MigLayout("wrap, fillx, insets 35 45 30 45", "fill, 250:280"));
+		JPanel panel = new JPanel(new MigLayout("wrap, fillx, insets 100 100 100 100", "[fill]"));
 		JLabel title = new JLabel("Đăng nhập");
 		JLabel description = new JLabel("Vui lòng đăng nhập vào tài khoản của bạn");
 		panel.putClientProperty(FlatClientProperties.STYLE, "" + 
@@ -70,7 +69,8 @@ public class LoginPanel extends JPanel{
 		textUsername.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập tên đăng nhập hoặc email");
 		textPassword.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập mật khẩu");
 		textPassword.putClientProperty(FlatClientProperties.STYLE, "" +
-															"showRevealButton:true");
+				"showRevealButton:true;"+
+				"showCapsLock:true");
 		clickLogin.putClientProperty(FlatClientProperties.STYLE, "" + 
 															"borderWidth: 0;" +
 															"focusWidth: 0;"  +
@@ -103,8 +103,16 @@ public class LoginPanel extends JPanel{
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
 		buttonFb.setFocusPainted(false);
 		buttonGg.setFocusPainted(false);
-		buttonFb.setBackground(Color.decode("#A9A9A9"));
-		buttonGg.setBackground(Color.decode("#A9A9A9"));
+		buttonFb.putClientProperty(FlatClientProperties.STYLE, "" + 
+		"[light]foreground:darken(@foreground, 80%);" +
+		"[dark]foreground:lighten(@foreground, 60%);" +
+		"[light]background:lighten(@background, 80%);" +
+		"[dark]background:lighten(@background, 60%);");
+		buttonGg.putClientProperty(FlatClientProperties.STYLE, "" + 
+		"[light]foreground:darken(@foreground, 80%);" +
+		"[dark]foreground:lighten(@foreground, 60%);"+
+		"[light]background:lighten(@background, 80%);" +
+		"[dark]background:lighten(@background, 60%);");
 		buttonFb.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		buttonGg.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		panel.add(buttonFb);
@@ -125,7 +133,7 @@ public class LoginPanel extends JPanel{
 			user.setUsername(textUsername.getText());
 			user.setPassword(new String(textPassword.getPassword()));
 			if(OBJECTCONTAINER.getControllerInstance().login(user)) {
-				OBJECTCONTAINER.getControllerInstance().successfully(user.getUsername(), remember.isSelected());
+				OBJECTCONTAINER.getControllerInstance().handleLoginSuccess(user.getUsername(), remember.isSelected());
 				Dictionary.open();
 			}
 			else {
@@ -135,13 +143,13 @@ public class LoginPanel extends JPanel{
 		
 	}
 	private Component forgotPass() {
-		MyButton clickForgotP = new MyButton("Quên mật khẩu?", "black", "red", false);
+		MyButton clickForgotP = new MyButton("Quên mật khẩu?", "#d1d5db", "#f3f4f6", false);
 		return clickForgotP;
 	}
 	
 	private Component callSignUp() {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 0));
-		MyButton clickRegister = new MyButton("Đăng ký ngay", "green", "red", true);
+		MyButton clickRegister = new MyButton("Đăng ký ngay", "#059669", "#86efac", true);
 		JLabel label = new JLabel("Bạn chưa có tài khoản ?");
 		panel.putClientProperty(FlatClientProperties.STYLE, "" +
 															"background:null");
@@ -189,13 +197,14 @@ public class LoginPanel extends JPanel{
 			this.textUsername.setText(message);
 		}
 	}
-	public boolean isUsername(String username) {
-		return OBJECTCONTAINER.getControllerInstance().isUsername(username);
+	public boolean isUsernameAvailable(String username) {
+		return OBJECTCONTAINER.getControllerInstance().isUsernameAvailable(username);
 	}
 	public User getUser() {
 		return this.user;
 	}
 	public void register(User user) {
+		this.user = user;
 		OBJECTCONTAINER.getControllerInstance().register(user);
 	}
 	

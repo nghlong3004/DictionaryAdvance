@@ -11,6 +11,13 @@
 	<maven.compiler.target>17</maven.compiler.target>
 	<exec.mainClass>main.MainClass</exec.mainClass>
   </properties>
+  <repositories>
+   <repository>
+      <id>any_name</id>
+      <name>Any Name</name>
+      <url>file://${project.basedir}\lib\long_blur\swing-blur-background</url>
+   </repository>
+	</repositories>
   <description>Using api google and microsoft</description>
   
   <dependencies>
@@ -31,6 +38,13 @@
             <artifactId>flatlaf</artifactId>
             <version>3.4.1</version>
         </dependency>
+
+   <dependency>
+      <groupId>long_blur</groupId>
+      <artifactId>swing-blur-background</artifactId>
+      <version>1_1_0</version>
+   </dependency>
+
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf-extras</artifactId>

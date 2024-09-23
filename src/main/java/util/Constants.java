@@ -4,6 +4,37 @@ public class Constants {
 	public static final String REGULAR_EXPRESSIONS = "\\w{2,15}";
 	public static final String REGULAR_PASS_EXPRESSIONS = "[\\w+\\-*&^%$#@!~():?<>';=`]{6,}";
 	public static final String REGULAR_EMAIL_EXPRESSIONS = "^[\\w._%+-]{2,15}@[\\w.-]{1,8}\\.[a-zA-Z]{2,6}$";
+	public static class ColorApp{
+		public static final String[] colors = {
+				"#b91c1c",
+				"#3f3f46",
+				"#b91c1c",
+				"#431407",
+				"#92400e",
+				"#f59e0b",
+				"#fcd34d",
+				"#ef4444",
+				"#65a30d",
+				"#22c55e",
+				"#15803d",
+				"#10b981",
+				"#14b8a6",
+				"#0891b2",
+				"#7dd3fc",
+				"#2563eb",
+				"#3b82f6",
+				"#818cf8",
+				"#4338ca",
+				"#312e81",
+				"#7c3aed",
+				"#d946ef",
+				"#a21caf",
+				"#ec4899",
+				"#e11d48",
+				"#fecdd3",
+				"#fff1f2"
+		};
+	}
 	public static class View{
 		public static final int TILE_DEFAULT_SIZE = 32;
 		public static final int TILES_IN_WIDTH = 26;
