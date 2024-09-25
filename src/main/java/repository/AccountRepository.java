@@ -1,6 +1,6 @@
 package repository;
 
-import static util.Utils.*;
+import static util.repository.Utils.*;
 
 import java.util.List;
 

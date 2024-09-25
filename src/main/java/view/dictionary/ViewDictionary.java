@@ -3,9 +3,11 @@ package view.dictionary;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 
+import util.view.NotificationUI;
 import view.dictionary.form.MainForm;
 import view.login.LoginPanel;
-import view.login.RegisterPanel;
+import view.login.Register;
+import view.notifications.Notification;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -13,34 +15,35 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-public class Dictionary extends JFrame {
+public class ViewDictionary extends JFrame {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 6664637977431167041L;
-	private static Dictionary app;
+	private static ViewDictionary app;
     private final MainForm mainForm;
     private final LoginPanel loginPanel;
-    private final RegisterPanel registerPanel;
+    private final Register registerPanel;
     
     public static void install() {
     	if(app == null) {
-    		app = new Dictionary();
+    		app = new ViewDictionary();
     	}
     }
 
-    private Dictionary() {
+    private ViewDictionary() {
         initComponents();
         setSize(new Dimension(1368, 768));
         setLocationRelativeTo(null);
         loginPanel = new LoginPanel();
-        registerPanel = new RegisterPanel(loginPanel);
+        registerPanel = new Register(loginPanel);
         setContentPane(loginPanel);
         mainForm = new MainForm(loginPanel);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
-        //Notifications.getInstance().setJFrame(this);
+        Notification.getInstance().setJFrame(this);
         setVisible(true);
+        NotificationUI.welcome();
     }
 
     public static void showForm(Component component) {
@@ -70,7 +73,6 @@ public class Dictionary extends JFrame {
     public static void login() {
         FlatAnimatedLafChange.showSnapshot();
         app.setContentPane(app.loginPanel);
-        System.out.println(app.loginPanel.getUser().getUsername());
         app.applyComponentOrientation(app.getComponentOrientation());
         SwingUtilities.updateComponentTreeUI(app.loginPanel);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();

@@ -13,7 +13,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -22,8 +21,10 @@ import com.formdev.flatlaf.FlatClientProperties;
 
 import model.account.User;
 import net.miginfocom.swing.MigLayout;
-import util.ObjectContainer;
-import view.dictionary.Dictionary;
+import util.view.NotificationUI;
+import util.view.ObjectContainer;
+import view.dictionary.ViewDictionary;
+import view.notifications.Notification;
 
 public class LoginPanel extends JPanel{
 
@@ -134,10 +135,12 @@ public class LoginPanel extends JPanel{
 			user.setPassword(new String(textPassword.getPassword()));
 			if(OBJECTCONTAINER.getControllerInstance().login(user)) {
 				OBJECTCONTAINER.getControllerInstance().handleLoginSuccess(user.getUsername(), remember.isSelected());
-				Dictionary.open();
+				ViewDictionary.open();
+				Notification.getInstance().clearAll();
+				NotificationUI.succes("Log in successfully!");
 			}
 			else {
-				JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không chính xác!");
+				NotificationUI.succes("Tài khoản hoặc mật khẩu không chính xác !");
 			}
 		});
 		
@@ -157,7 +160,8 @@ public class LoginPanel extends JPanel{
 															"[light]foreground:darken(@foreground, 30%);" +
 															"[dark]foreground:lighten(@foreground, 30%);");
 		clickRegister.addActionListener(e -> {
-	        Dictionary.resigter();
+			Notification.getInstance().clearAll();
+	        ViewDictionary.resigter();
 		});
 		panel.add(label);
 		panel.add(clickRegister);

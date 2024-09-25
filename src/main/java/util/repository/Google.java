@@ -1,4 +1,4 @@
-package util;
+package util.repository;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

@@ -4,7 +4,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;
 
-import util.AvatarIcon;
+import util.extral.AvatarIcon;
 import view.themes.LightDarkMode;
 import view.themes.ToolBarAccentColor;
 
@@ -112,12 +112,11 @@ public class Menu extends JPanel {
                 + "foreground:$Menu.foreground");
 
         //  Menu
-        scroll = new JScrollPane();
         panelMenu = new JPanel(new MenuItemLayout(this));
         panelMenu.putClientProperty(FlatClientProperties.STYLE, ""
                 + "border:5,5,5,5;"
                 + "background:$Menu.background");
-
+        scroll = new JScrollPane();
         scroll.setViewportView(panelMenu);
         scroll.putClientProperty(FlatClientProperties.STYLE, ""
                 + "border:null");

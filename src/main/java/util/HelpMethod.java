@@ -14,7 +14,6 @@ public class HelpMethod {
 	}
 	
 	public static boolean isValidUsername(String username) {
-		System.out.println(username);
 		if(username == null) {
 			return false;
 		}

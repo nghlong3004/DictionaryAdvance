@@ -9,7 +9,7 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 
-import view.dictionary.Dictionary;
+import view.dictionary.ViewDictionary;
 
 
 public class MainClass {
@@ -20,7 +20,7 @@ public class MainClass {
 		UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
 		FlatMacDarkLaf.setup();
 		SwingUtilities.invokeLater(() -> 
-			Dictionary.install()
+			ViewDictionary.install()
 		);
 	}
 

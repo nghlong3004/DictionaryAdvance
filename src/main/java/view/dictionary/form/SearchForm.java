@@ -12,12 +12,14 @@ import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
 import net.miginfocom.swing.MigLayout;
-import util.AvatarIcon;
+import util.extral.AvatarIcon;
 
 public class SearchForm extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -28,6 +30,7 @@ public class SearchForm extends JPanel {
     	setLayout(new MigLayout("fill", "[grow, 800:900:1000]10[grow, 120:180]", "[][grow][grow]"));
         JPanel left = new JPanel(new MigLayout("", "[grow, 120:150]", "[]20[]"));
         JEditorPane textExplain = new JEditorPane();
+        
 
 		String html = "<html>" +
 		        "<div style='text-align: center;'>" +
@@ -45,6 +48,18 @@ public class SearchForm extends JPanel {
 		helloPane.setFocusable(false);
 		helloPane.setEditable(false);
 		textExplain.setFocusable(false);
+		JScrollPane scroll = new JScrollPane();
+        scroll.setViewportView(textExplain);
+        scroll.putClientProperty(FlatClientProperties.STYLE, ""
+                + "border:null");
+        JScrollBar vscroll = scroll.getVerticalScrollBar();
+        vscroll.setUnitIncrement(10);
+        vscroll.putClientProperty(FlatClientProperties.STYLE, ""
+                + "width:$Menu.scroll.width;"
+                + "trackInsets:$Menu.scroll.trackInsets;"
+                + "thumbInsets:$Menu.scroll.thumbInsets;"
+                + "background:$Menu.ScrollBar.background;"
+                + "thumb:$Menu.ScrollBar.thumb");
         left.add(searchPanel(), "grow");
         add(left, "left, top, grow, wrap");
         add(down(), "left, top, wrap");
@@ -105,7 +120,20 @@ public class SearchForm extends JPanel {
 		pane1.setFocusable(false);
 		pane2.setFocusable(false);
 		
-		panel.add(pane1, "wrap, width 250!, height 270!");
+		JScrollPane scroll = new JScrollPane();
+        scroll.setViewportView(pane1);
+        scroll.putClientProperty(FlatClientProperties.STYLE, ""
+                + "border:null");
+        JScrollBar vscroll = scroll.getVerticalScrollBar();
+        vscroll.setUnitIncrement(10);
+        vscroll.putClientProperty(FlatClientProperties.STYLE, ""
+                + "width:$Menu.scroll.width;"
+                + "trackInsets:$Menu.scroll.trackInsets;"
+                + "thumbInsets:$Menu.scroll.thumbInsets;"
+                + "background:$Menu.ScrollBar.background;"
+                + "thumb:$Menu.ScrollBar.thumb");
+		
+		panel.add(scroll, "wrap, width 250!, height 270!");
 		panel.add(pane2, "width 250!, height 270!");
 		
 		return panel;

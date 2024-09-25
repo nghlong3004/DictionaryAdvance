@@ -1,7 +1,7 @@
 package view.login;
 
 import static util.HelpMethod.*;
-import static util.Utils.*;
+import static util.repository.Utils.*;
 
 import java.awt.Cursor;
 import java.awt.event.ItemEvent;
@@ -10,20 +10,20 @@ import java.awt.event.ItemListener;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
 import model.account.User;
 import net.miginfocom.swing.MigLayout;
-import view.dictionary.Dictionary;
+import util.view.NotificationUI;
+import view.dictionary.ViewDictionary;
+import view.notifications.Notification;
 
-public class RegisterPanel extends JPanel{
+public class Register extends JPanel{
 
 	/**
 	 * 
@@ -48,7 +48,7 @@ public class RegisterPanel extends JPanel{
 	private JButton buttonRegister;
 	private JButton buttonExit;
 	
-	public RegisterPanel(LoginPanel signIn) {
+	public Register(LoginPanel signIn) {
 		super();
 		setting(signIn);
 	}
@@ -56,8 +56,6 @@ public class RegisterPanel extends JPanel{
 		this.login = signIn;
 		setLayout(new MigLayout("fill, insets 10", "[center]", "[center]"));
 		initialization();
-		// setup focus to textUsername in first request
-		SwingUtilities.invokeLater(() -> textUsername.requestFocusInWindow());
 		// new implement
 		JPanel panel = new JPanel(new MigLayout("", "fill, 250:280"));
 		JPanel panelTitleExit = new JPanel(new MigLayout("wrap 3", "[] 16 [grow] []"));
@@ -131,7 +129,7 @@ public class RegisterPanel extends JPanel{
 
 	private void action() {
 		buttonExit.addActionListener(e -> {
-			Dictionary.login();
+			ViewDictionary.login();
 		});
 		buttonRegister.addActionListener(e -> {
 			String username = textUsername.getText();
@@ -139,25 +137,25 @@ public class RegisterPanel extends JPanel{
 			String rePassword = new String(textRePassword.getPassword());
 			String fullname = textFullname.getText();
 			if(!password.equals(rePassword)) {
-				JOptionPane.showMessageDialog(this, "Mật khẩu mới không khớp!");
+				NotificationUI.warning("Mật khẩu mới không khớp!");
 			}
 			else if(!isValidUsername(username)) {
-				JOptionPane.showMessageDialog(this, "Tên đăng nhập không hợp lệ!");
+				NotificationUI.warning("Tên đăng nhập không hợp lệ!");
 			}
 			else if(!login.isUsernameAvailable(username)) {
-				JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại!");
+				NotificationUI.warning("Tên đăng nhập đã tồn tại!");
 			}
 			else if(isValidUsername(username) && isValidPassword(password) && login.isUsernameAvailable(username) && !gender.isEmpty()) {
 				login.setUsername(username);
 				login.setPassword(password);
-			
-				JOptionPane.showMessageDialog(this, "Đăng ký thành công");
+				Notification.getInstance().clearAll();
+				NotificationUI.succes("Registered successfully!!");
 				User user = new User(username, password, fullname, gender, nowTimeinString(), nowTimeinString(), false);
 				login.register(user);
-				Dictionary.login();
+				ViewDictionary.login();
 			}
 			else {
-				JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không hợp lệ");
+				NotificationUI.warning("Tên đăng nhập hoặc mật khẩu không hợp lệ!");
 			}
 		});
 		ItemListener itemListener = e -> {

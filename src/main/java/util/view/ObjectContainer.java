@@ -1,4 +1,4 @@
-package util;
+package util.view;
 
 import controller.UserController;
 import repository.AccountRepository;

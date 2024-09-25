@@ -1,4 +1,4 @@
-package util;
+package util.extral;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;
 
