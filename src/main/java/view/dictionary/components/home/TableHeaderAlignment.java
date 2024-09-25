@@ -1,4 +1,4 @@
-package view.dictionary.form;
+package view.dictionary.components.home;
 
 import java.awt.Component;
 import javax.swing.JLabel;

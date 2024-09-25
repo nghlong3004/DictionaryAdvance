@@ -1,12 +1,9 @@
-package view.dictionary.form;
+package view.dictionary.components.home;
 
-import static util.Constants.Image.*;
 import static util.Constants.ColorApp.*;
 
-import java.awt.Graphics;
 import java.util.Random;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
@@ -17,16 +14,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import net.miginfocom.swing.MigLayout;
 import util.extral.AvatarIcon;
 
-public class SearchForm extends JPanel {
+public class Lookup extends JPanel {
     private static final long serialVersionUID = 1L;
     
     private JEditorPane helloPane;
     
-    public SearchForm(String username) {
+    public Lookup(String username) {
+    	putClientProperty(FlatClientProperties.STYLE, ""
+                + "arc:25;"
+                + "background:null");
     	setLayout(new MigLayout("fill", "[grow, 800:900:1000]10[grow, 120:180]", "[][grow][grow]"));
         JPanel left = new JPanel(new MigLayout("", "[grow, 120:150]", "[]20[]"));
         JEditorPane textExplain = new JEditorPane();
@@ -148,6 +149,15 @@ public class SearchForm extends JPanel {
     	JButton btnAV = new JButton("Anh -> Việt");
     	JButton btnVA = new JButton("Việt -> Anh");
     	JButton btnRd = new JButton("Từ ngẫu nhiên");
+    	text.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
+    	text.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon("image\\search1.svg"));
+    	text.putClientProperty(FlatClientProperties.STYLE, ""
+                + "arc:15;"
+                + "borderWidth:0;"
+                + "focusWidth:0;"
+                + "innerFocusWidth:0;"
+                + "margin:5,20,5,20;"
+                + "background:$Toast.background");
 //    	btnLeft = sytle(btnLeft);
 //    	btnRight = sytle(btnRight);
 //    	btnAV = sytle(btnAV);
@@ -210,11 +220,7 @@ public class SearchForm extends JPanel {
     	return panel;
     }
     
-    @Override
-    public void paintComponents(Graphics g) {
-    	super.paintComponents(g);
-    	g.drawImage(new ImageIcon(IMAGE_PATH +"background.jpg").getImage(), 0, 0, getWidth(), getHeight(), null);
-    }
+    
     
 }
 

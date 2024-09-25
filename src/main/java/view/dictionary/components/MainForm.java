@@ -1,4 +1,4 @@
-package view.dictionary.form;
+package view.dictionary.components;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -6,6 +6,9 @@ import com.formdev.flatlaf.util.UIScale;
 
 import util.view.NotificationUI;
 import view.dictionary.ViewDictionary;
+import view.dictionary.components.home.Lookup;
+import view.dictionary.components.home.TechnicalVocabulary;
+import view.dictionary.components.home.TextTranslator;
 import view.dictionary.menu.Menu;
 import view.dictionary.menu.MenuAction;
 import view.login.LoginPanel;
@@ -77,20 +80,20 @@ public class MainForm extends JLayeredPane {
         menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
             if(index == 0) {
             	if(subIndex == 1 ) {
-            		ViewDictionary.showForm(new SearchForm(loginPanel.getUser().getUsername()));
+            		ViewDictionary.showForm(new Lookup(loginPanel.getUser().getUsername()));
             	}
             	else if(subIndex == 2) {
-                	ViewDictionary.showForm(new TranslateTextForm());
+                	ViewDictionary.showForm(new TextTranslator());
                 }
             	else if(subIndex == 3) {
-            		ViewDictionary.showForm(new MainSearch());
+            		ViewDictionary.showForm(new TechnicalVocabulary());
             	}
             	else {
             		action.cancel();
             	}
             }
             else if(index == 5) {
-            	ViewDictionary.showForm(new AccountForm(loginPanel.getUser()));
+            	ViewDictionary.showForm(new Test());
             }
             else if(index == 6) {
             		panelBody.removeAll();
@@ -116,7 +119,7 @@ public class MainForm extends JLayeredPane {
     }
 
     public void hideMenu() {
-    	ViewDictionary.showForm(new SearchForm(loginPanel.getUser().getUsername()));
+    	ViewDictionary.showForm(new Lookup(loginPanel.getUser().getUsername()));
         menu.hideMenuItem();
     }
 

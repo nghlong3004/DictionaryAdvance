@@ -3,8 +3,9 @@ package view.dictionary;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 
+import raven.popup.GlassPanePopup;
 import util.view.NotificationUI;
-import view.dictionary.form.MainForm;
+import view.dictionary.components.MainForm;
 import view.login.LoginPanel;
 import view.login.Register;
 import view.notifications.Notification;
@@ -41,6 +42,7 @@ public class ViewDictionary extends JFrame {
         setContentPane(loginPanel);
         mainForm = new MainForm(loginPanel);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
+        GlassPanePopup.install(this);
         Notification.getInstance().setJFrame(this);
         setVisible(true);
         NotificationUI.welcome();

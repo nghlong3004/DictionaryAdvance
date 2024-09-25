@@ -1,4 +1,4 @@
-package view.dictionary.form;
+package view.login;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import javax.swing.JPanel;

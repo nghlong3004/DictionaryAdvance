@@ -1,4 +1,4 @@
-package view.dictionary.form;
+package view.dictionary.components.home;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.util.UIScale;

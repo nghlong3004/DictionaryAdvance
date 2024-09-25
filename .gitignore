@@ -1,3 +1,4 @@
 *.mdj
 *.class
-/target/
+*.settings
+target/*

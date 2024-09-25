@@ -1,16 +1,16 @@
 package model;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 public class Dictionary {
-	private TreeMap<String, String> words;
+	private Map<String, String> words;
 	
 	public Dictionary() {
-		super();
 		this.words = new TreeMap<String, String>();
 	}
 
-	public TreeMap<String, String> getWords() {
+	public Map<String, String> getWords() {
 		return words;
 	}
 
