@@ -1,0 +1,84 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>nghlong3004</groupId>
+  <artifactId>DictionaryAdvanve</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Dictionary</name>
+  <packaging>jar</packaging>
+  <properties>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<maven.compiler.source>17</maven.compiler.source>
+	<maven.compiler.target>17</maven.compiler.target>
+	<exec.mainClass>main.MainClass</exec.mainClass>
+  </properties>
+  <repositories>
+   <repository>
+      <id>long_popup</id>
+      <name>Glass Popup</name>
+      <url>file://${project.basedir}\libs\long_popup\swing-glasspane-popup\</url>
+   </repository>
+   <repository>
+      <id>long_date</id>
+      <name>Date Time</name>
+      <url>file://${project.basedir}\libs\long_popup\swing-datetime-picker\</url>
+   </repository>
+	</repositories>
+  <description>Using api google and microsoft</description>
+  
+  <dependencies>
+	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+	<dependency>
+   	 <groupId>mysql</groupId>
+   	 <artifactId>mysql-connector-java</artifactId>
+   	 <version>8.0.32</version>
+	</dependency>
+	<dependency>
+    	<groupId>com.googlecode.json-simple</groupId>
+    	<artifactId>json-simple</artifactId>
+    	<version>1.1.1</version>
+    </dependency>
+    <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-extras</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-fonts-roboto</artifactId>
+            <version>2.137</version>
+        </dependency>
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-swing</artifactId>
+            <version>11.1</version>
+        </dependency>
+    <dependency>
+     	<groupId>com.googlecode.soundlibs</groupId>
+     	<artifactId>jlayer</artifactId>
+     	<version>1.0.1-1</version>
+     </dependency>
+     <dependency>
+    	<groupId>com.google.code.gson</groupId>
+    	<artifactId>gson</artifactId>
+    	<version>2.8.6</version>
+	</dependency>
+	<dependency>
+      <groupId>long_popup</groupId>
+      <artifactId>swing-glasspane-popup</artifactId>
+      <version>1_5_1</version>
+   </dependency>
+   <dependency>
+      <groupId>long_popup</groupId>
+      <artifactId>swing-datetime-picker</artifactId>
+      <version>1_2_3</version>
+   </dependency>
+
+
+  </dependencies>
+  
+</project>
