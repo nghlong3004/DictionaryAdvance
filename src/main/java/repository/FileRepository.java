@@ -94,27 +94,7 @@ public class FileRepository<T> implements DataRepository<T>{
     }
 
 	@Override
-	public void deleteUser() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Map<?, T> loadWords() {
-		
-		
-		
-		return null;
-	}
-
-	@Override
-	public void saveWords() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void deleteWords() {
+	public void delete() {
 		// TODO Auto-generated method stub
 		
 	}

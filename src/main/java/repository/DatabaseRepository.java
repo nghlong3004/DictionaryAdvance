@@ -1,7 +1,6 @@
 package repository;
 
 import java.util.List;
-import java.util.Map;
 
 public class DatabaseRepository<T> implements DataRepository<T>{
 	
@@ -33,22 +32,7 @@ public class DatabaseRepository<T> implements DataRepository<T>{
 		
 	}
 	@Override
-	public void deleteUser() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public Map<?, T> loadWords() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void saveWords() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void deleteWords() {
+	public void delete() {
 		// TODO Auto-generated method stub
 		
 	}
