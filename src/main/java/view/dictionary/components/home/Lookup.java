@@ -2,16 +2,25 @@ package view.dictionary.components.home;
 
 import static util.Constants.ColorApp.*;
 
+import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -23,6 +32,8 @@ public class Lookup extends JPanel {
     private static final long serialVersionUID = 1L;
     
     private JEditorPane helloPane;
+    private JPopupMenu suggestionPopup;
+    private List<String> data;
     
     public Lookup(String username) {
     	putClientProperty(FlatClientProperties.STYLE, ""
@@ -31,7 +42,17 @@ public class Lookup extends JPanel {
     	setLayout(new MigLayout("fill", "[grow, 800:900:1000]10[grow, 120:180]", "[][grow][grow]"));
         JPanel left = new JPanel(new MigLayout("", "[grow, 120:150]", "[]20[]"));
         JEditorPane textExplain = new JEditorPane();
-        
+        suggestionPopup = new JPopupMenu();
+        data = new ArrayList<String>();
+        data.add("apple");
+        data.add("apricot");
+        data.add("banana");
+        data.add("blueberry");
+        data.add("blackberry");
+        data.add("orange");
+        data.add("mango");
+        data.add("melon");
+        data.add("watermelon");
 
 		String html = "<html>" +
 		        "<div style='text-align: center;'>" +
@@ -70,8 +91,8 @@ public class Lookup extends JPanel {
     }
     private String rndColor() {
     	Random rnd = new Random();
-    	int index = Math.abs(rnd.nextInt() % colors.length);
-    	return colors[index];
+    	int index = Math.abs(rnd.nextInt() % COLORS.length);
+    	return COLORS[index];
     }
     
     public void initSearchForm(String username) {
@@ -139,7 +160,7 @@ public class Lookup extends JPanel {
 		
 		return panel;
     }
-    
+    private int selectedIndex = 0;
     private JComponent searchPanel() {
     	JPanel panel = new JPanel(new MigLayout());
     	JPanel panel1 = new JPanel(new MigLayout("fill", "[][][]"));
@@ -158,11 +179,67 @@ public class Lookup extends JPanel {
                 + "innerFocusWidth:0;"
                 + "margin:5,20,5,20;"
                 + "background:$Toast.background");
-//    	btnLeft = sytle(btnLeft);
-//    	btnRight = sytle(btnRight);
-//    	btnAV = sytle(btnAV);
-//    	btnVA = sytle(btnVA);
-//    	btnRd = sytle(btnRd);
+    	suggestionPopup.setFocusable(false);
+    	text.getDocument().addDocumentListener(new DocumentListener() {
+			
+    		@Override
+            public void insertUpdate(DocumentEvent e) {
+                showSuggestions(text);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                showSuggestions(text);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                showSuggestions(text);
+            }
+        });
+    	text.addKeyListener( new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+    	    public void keyPressed(KeyEvent e) {
+    	        int keyCode = e.getKeyCode();
+    	        
+    	        if (keyCode == KeyEvent.VK_UP) {
+    	            if (suggestionPopup.isVisible()) {
+    	            	selectedIndex = (selectedIndex - 1 + suggestionPopup.getComponentCount()) % suggestionPopup.getComponentCount();
+    	                highlightItem();
+    	            }
+    	        }
+    	        
+    	        else if (keyCode == KeyEvent.VK_DOWN) {
+    	            if (suggestionPopup.isVisible()) {
+    	                selectedIndex = (selectedIndex + 1) % suggestionPopup.getComponentCount();
+    	                highlightItem();
+    	            }
+    	            
+    	        }
+
+    	        else if (keyCode == KeyEvent.VK_ENTER) {
+    	            if (suggestionPopup.isVisible() && selectedIndex != -1) {
+    	                JMenuItem selectedItem = (JMenuItem) suggestionPopup.getComponent(selectedIndex);
+    	                text.setText(selectedItem.getText());
+    	                suggestionPopup.setVisible(false);
+    	            }
+    	        }
+    	    }
+		});
+    	
     	panel.add(text, "height 40!, width 400!");
     	panel.add(btnLeft, "height 20!, width 30!");
     	panel.add(btnRight, "height 20!, width 30!, wrap");
@@ -174,6 +251,45 @@ public class Lookup extends JPanel {
     	panel.add(panel1, "grow, span, wrap");   	
     	
     	return panel;
+    }
+    private void highlightItem() {
+        for (int i = 0; i < suggestionPopup.getComponentCount(); i++) {
+            JMenuItem item = (JMenuItem) suggestionPopup.getComponent(i);
+            item.setArmed(i == selectedIndex);
+        }
+    }
+    private void showSuggestions(JTextField text) {
+        String input = text.getText();
+        suggestionPopup.removeAll();
+        selectedIndex = 0;
+        if (input.isEmpty()) {
+            suggestionPopup.setVisible(false);
+            return;
+        }
+
+        List<String> matches = new ArrayList<>();
+        for (String item : data) {
+            if (item.toLowerCase().startsWith(input.toLowerCase())) {
+                matches.add(item);
+            }
+        }
+
+        if (!matches.isEmpty()) {
+            for (String match : matches) {
+                JMenuItem menuItem = new JMenuItem(match);
+                menuItem.addActionListener(e -> {
+                	text.setText(match);
+                    suggestionPopup.setVisible(false);
+                });
+                suggestionPopup.add(menuItem);
+            }
+            suggestionPopup.setPopupSize(new Dimension(text.getWidth(), text.getHeight() * matches.size()));
+            suggestionPopup.show(text, 0, text.getHeight());
+            suggestionPopup.setVisible(true);
+            highlightItem();
+        } else {
+            suggestionPopup.setVisible(false);
+        }
     }
     private JComponent down() {
     	JPanel panel = new JPanel(new MigLayout());

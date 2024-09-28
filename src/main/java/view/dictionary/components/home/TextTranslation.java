@@ -12,14 +12,14 @@ import com.formdev.flatlaf.FlatClientProperties;
 
 import net.miginfocom.swing.MigLayout;
 
-public class TextTranslator extends JPanel{
+public class TextTranslation extends JPanel{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -130365791791745994L;
 	
-	public TextTranslator() {
+	public TextTranslation() {
 		setLayout(new MigLayout("wrap, fill", "[grow]1%[grow]"));
 		JPanel panel1 = new JPanel(new MigLayout("wrap, fill", "", "[grow]2%[grow]2%[grow]"));
 		JPanel panel2 = new JPanel(new MigLayout("fill", "", "3%[grow]1%[grow]3%"));

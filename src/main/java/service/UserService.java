@@ -1,11 +1,12 @@
 package service;
 
 import model.account.User;
+import model.account.UserInterface;
 import repository.AccountRepository;
 
-public class UserService implements UserServiceInterface{
+public class UserService implements UserInterface{
 	
-	public static UserService instance;
+	private static UserService instance;
 	private final AccountRepository account;
 	
 	public static synchronized UserService getInstance(AccountRepository account) {

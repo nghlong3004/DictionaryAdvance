@@ -99,8 +99,8 @@ public class Test extends JPanel {
 				// TODO Auto-generated method stub
 				super.paintComponent(g);
 				Random rnd = new Random();
-				int index = Math.abs(rnd.nextInt() % colors.length);
-				g.setColor(Color.decode(colors[index]));
+				int index = Math.abs(rnd.nextInt() % COLORS.length);
+				g.setColor(Color.decode(COLORS[index]));
 		        g.drawRoundRect(this.getWidth() >> 2, 0, this.getWidth() >> 1, this.getHeight() - 5, 20, 20);
 			}
 		};

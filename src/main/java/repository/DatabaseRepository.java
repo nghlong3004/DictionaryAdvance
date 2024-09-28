@@ -1,8 +1,9 @@
 package repository;
 
 import java.util.List;
+import java.util.Map;
 
-public class DatabaseRepository<T> implements Repository<T>{
+public class DatabaseRepository<T> implements DataRepository<T>{
 	
 	@SuppressWarnings("unused")
 	private String dbUrl;
@@ -19,18 +20,35 @@ public class DatabaseRepository<T> implements Repository<T>{
         this.dbPassword = dbPassword;
         this.type = type;
     }
+	@SuppressWarnings("hiding")
 	@Override
-	public List<T> loadUsers() {
+	public <T, I> I load(Class<I> returnType) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
-	public void saveUsers(List<T> users) {
+	public void save(List<T> users) {
 		// TODO Auto-generated method stub
 		
 	}
 	@Override
-	public void delete() {
+	public void deleteUser() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Map<?, T> loadWords() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void saveWords() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void deleteWords() {
 		// TODO Auto-generated method stub
 		
 	}

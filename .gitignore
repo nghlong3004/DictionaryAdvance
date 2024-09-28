@@ -2,3 +2,4 @@
 *.class
 *.settings
 target/*
+/target/

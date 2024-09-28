@@ -5,7 +5,7 @@ public class Constants {
 	public static final String REGULAR_PASS_EXPRESSIONS = "[\\w+\\-*&^%$#@!~():?<>';=`]{6,}";
 	public static final String REGULAR_EMAIL_EXPRESSIONS = "^[\\w._%+-]{2,15}@[\\w.-]{1,8}\\.[a-zA-Z]{2,6}$";
 	public static class ColorApp{
-		public static final String[] colors = {
+		public static final String[] COLORS = {
 				"#b91c1c",
 				"#3f3f46",
 				"#b91c1c",

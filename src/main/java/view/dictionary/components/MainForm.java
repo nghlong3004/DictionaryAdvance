@@ -8,7 +8,7 @@ import util.view.NotificationUI;
 import view.dictionary.ViewDictionary;
 import view.dictionary.components.home.Lookup;
 import view.dictionary.components.home.TechnicalVocabulary;
-import view.dictionary.components.home.TextTranslator;
+import view.dictionary.components.home.TextTranslation;
 import view.dictionary.menu.Menu;
 import view.dictionary.menu.MenuAction;
 import view.login.LoginPanel;
@@ -83,7 +83,7 @@ public class MainForm extends JLayeredPane {
             		ViewDictionary.showForm(new Lookup(loginPanel.getUser().getUsername()));
             	}
             	else if(subIndex == 2) {
-                	ViewDictionary.showForm(new TextTranslator());
+                	ViewDictionary.showForm(new TextTranslation());
                 }
             	else if(subIndex == 3) {
             		ViewDictionary.showForm(new TechnicalVocabulary());
