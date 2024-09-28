@@ -29,8 +29,11 @@ public class DataSource {
 	public String getDbPassword() {
 		return properties.getProperty("db.password");
 	}
-	public String getFilePath() {
-		return properties.getProperty("file.path");
+	public String getFilePathUser() {
+		return properties.getProperty("file.pathUser");
+	}
+	public String getFilePathDictionary() {
+		return properties.getProperty("file.pathDictionary");
 	}
 	public String getImagePath() {
 		return properties.getProperty("image.path");

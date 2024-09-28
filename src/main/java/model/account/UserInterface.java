@@ -1,8 +1,6 @@
-package service;
+package model.account;
 
-import model.account.User;
-
-public interface UserServiceInterface {
+public interface UserInterface {
 	// check user name
 	public boolean isUsernameAvailable(String username);
 	// login
