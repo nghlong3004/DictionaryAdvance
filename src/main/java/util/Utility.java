@@ -9,10 +9,9 @@ public class Utility {
 
     public static String getCurrentTimeStamp(){
         try {
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-yyyy"); 
+        	String pattern = "dd-M-yyyy hh:mm:ss";
+            SimpleDateFormat dateFormat = new SimpleDateFormat(pattern); 
             String currentDateTime = dateFormat.format(new Date()); 
-
             return currentDateTime;
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +66,6 @@ public class Utility {
     }
     @Override
     public String toString() {
-
     	return TAG;
     }
 

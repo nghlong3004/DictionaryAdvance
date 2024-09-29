@@ -52,6 +52,16 @@ public class Lookup extends JPanel {
 	private JPanel panel_1_1;
 	private JPanel panel_1_2;
     private JEditorPane editorPane;
+    JButton btnNewButton;
+	JButton btnNewButton_1;
+	JButton btnNewButton_1_1;
+	JButton btnNewButton_1_2;
+	JLabel lblNewLabel;
+	JButton btnNewButton_2;
+	JButton btnNewButton_2_1;
+	JButton btnNewButton_2_2;
+	JButton btnNewButton_2_3;
+	JButton btnNewButton_2_4;
     private int selectedIndex = 0;
 
 	/**
@@ -122,11 +132,34 @@ public class Lookup extends JPanel {
 		        "</html>";
 		return html;
 	}
+	private String convert(String s, int size) {
+		
+		String html = "<html>" +
+		        "<div style='text-align: center;'>" +
+		        "<table>" +
+		        "<tr><td style='text-align: left; font-size:" + 24 + "px; color: " + 
+		        "white" + 
+		        ";'>" +
+		        s +
+		        "</td></tr>" +
+		        "</table>" +
+		        "</div>" +
+		        "</html>";
+		return html;
+	}
 	public Lookup(String username) {
 		putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:25;"
                 + "background:null");
 		suggestionPopup = new JPopupMenu();
+		suggestionPopup.putClientProperty(FlatClientProperties.STYLE, ""
+                +
+				"[light]foreground:darken(@background, 3%);" +
+				"[dark]foreground:lighten(@background, 3%);" +
+				"background:null;" +
+				"borderColor:null;" +
+				"borderInsets:5, 5, 5, 5;"
+				);
         data = new ArrayList<String>();
         data.add("apple");
         data.add("apricot");
@@ -277,7 +310,9 @@ public class Lookup extends JPanel {
 			@Override
     	    public void keyPressed(KeyEvent e) {
     	        int keyCode = e.getKeyCode();
-    	        
+    	        if(keyCode == KeyEvent.VK_ENTER) {
+    	        	handleOK();
+    	        }
     	        if (keyCode == KeyEvent.VK_UP) {
     	            if (suggestionPopup.isVisible()) {
     	            	selectedIndex = (selectedIndex - 1 + suggestionPopup.getComponentCount()) % suggestionPopup.getComponentCount();
@@ -303,13 +338,69 @@ public class Lookup extends JPanel {
     	    }
 		});
 		
-		JButton btnNewButton = new JButton("OK");
+		btnNewButton = new JButton("OK");
 		
-		JButton btnNewButton_1 = new JButton("Anh -> Việt");
+		btnNewButton_1 = new JButton("Anh -> Việt");
 		
-		JButton btnNewButton_1_1 = new JButton("Từ ngẫu nhiên");
+		btnNewButton_1_1 = new JButton("Từ ngẫu nhiên");
 		
-		JButton btnNewButton_1_2 = new JButton("Việt -> Anh");
+		btnNewButton_1_2 = new JButton("Việt -> Anh");
+		
+		ActionListener actionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	if(e.getSource() == btnNewButton) {
+            		handleOK();
+            	}
+                if (e.getSource() == btnNewButton_1) {
+                	btnNewButton_1.setBackground(Color.decode("#22c55e"));
+                	btnNewButton_1_1.setBackground(Color.decode("#4ade80"));
+                	btnNewButton_1_2.setBackground(Color.decode("#4ade80"));
+                } else if (e.getSource() == btnNewButton_1_1) {
+                	btnNewButton_1.setBackground(Color.decode("#4ade80"));
+                	btnNewButton_1_1.setBackground(Color.decode("#22c55e"));
+                	btnNewButton_1_2.setBackground(Color.decode("#4ade80"));
+                } else if (e.getSource() == btnNewButton_1_2) {
+                	btnNewButton_1.setBackground(Color.decode("#4ade80"));
+                	btnNewButton_1_1.setBackground(Color.decode("#4ade80"));
+                	btnNewButton_1_2.setBackground(Color.decode("#22c55e"));
+                }
+            }
+        };
+
+        
+        btnNewButton_1.putClientProperty(FlatClientProperties.STYLE, ""
+               
+                
+                + "background:#22c55e;"
+                + "focusWidth:0;"
+                + "borderWidth:0;"
+                + "innerFocusWidth:0");
+        btnNewButton_1_1.putClientProperty(FlatClientProperties.STYLE, ""
+
+                
+                + "background:#22c55e;"
+                + "focusWidth:0;"
+                + "borderWidth:0;"
+                + "innerFocusWidth:0");
+        btnNewButton_1_2.putClientProperty(FlatClientProperties.STYLE, ""
+                
+                
+                + "background:#22c55e;"
+                + "focusWidth:0;"
+                + "borderWidth:0;"
+                + "innerFocusWidth:0");
+        btnNewButton.putClientProperty(FlatClientProperties.STYLE, ""
+                + "arc:999;"
+                + "focusWidth:0;"
+                + "borderWidth:0;"
+                + "innerFocusWidth:0");
+        
+        btnNewButton.addActionListener(actionListener);
+        btnNewButton_1.addActionListener(actionListener);
+        btnNewButton_1_1.addActionListener(actionListener);
+        btnNewButton_1_2.addActionListener(actionListener);
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -365,19 +456,18 @@ public class Lookup extends JPanel {
 					.addContainerGap())
 		);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		JButton btnNewButton_2 = new JButton();
-		JButton btnNewButton_2_1 = new JButton();
-		JButton btnNewButton_2_2 = new JButton();
-		JButton btnNewButton_2_3 = new JButton("US");
+		lblNewLabel = new JLabel();
+		btnNewButton_2 = new JButton();
+		btnNewButton_2_1 = new JButton();
+		btnNewButton_2_2 = new JButton();
+		btnNewButton_2_3 = new JButton("US");
+		btnNewButton_2_4 = new JButton("UK");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.LEADING);
 		btnNewButton_2_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				speek("en");
 			}
 		});
-		
-		JButton btnNewButton_2_4 = new JButton("UK");
 		btnNewButton_2_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				speek("vi");
@@ -548,6 +638,10 @@ public class Lookup extends JPanel {
 
 	}
 	
+	protected void handleOK() {
+		lblNewLabel.setText(convert(text.getText(), 20));
+		
+	}
 	protected void speek(String language){
 		new Thread(() -> {
 			try {

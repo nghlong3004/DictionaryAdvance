@@ -7,17 +7,16 @@ import java.util.List;
 
 import model.DataSource;
 import model.account.User;
-import model.account.UserInterface;
 
-public class AccountRepository implements UserInterface{
+public class AccountRepository implements AccountInterface{
 	
-	private static AccountRepository instance;
+	private static AccountInterface instance;
 
 	private DataRepository<User> repository;
 	private User user;
 	private List<User> accounts;
 	
-	public static synchronized AccountRepository getInstance(DataSource dataSource) {
+	public static synchronized AccountInterface getInstance(DataSource dataSource) {
         if (instance == null) {
             instance = new AccountRepository(dataSource);
         }
@@ -30,7 +29,6 @@ public class AccountRepository implements UserInterface{
 		repository = repositoryFactory.creatRepository();
 		accounts = new ArrayList<User>();
 		accounts = repository.load(accounts.getClass());
-		System.out.println(accounts.get(0));
 		for (User user : accounts) {
 			if(user.isRemember()) {
 				this.user = user;
@@ -43,6 +41,7 @@ public class AccountRepository implements UserInterface{
 		
 	}
 	// login 
+	@Override
 	public boolean isUser(User newUser) {
 		for (User user : accounts) {
 			if(user.getUsername().equalsIgnoreCase(newUser.getUsername())) {
@@ -52,6 +51,7 @@ public class AccountRepository implements UserInterface{
 		return false;
 	}
 	// update if login successfully
+	@Override
 	public void handleLoginSuccess(String username, boolean remember) {
 		for(int i = 0; i < accounts.size(); ++i) {
 			User curUser = accounts.get(i);
@@ -70,30 +70,21 @@ public class AccountRepository implements UserInterface{
 		saveAccounts();
 	}
 	// register
+	@Override
 	public void addUser(User user) {
 		accounts.add(user);
 		saveAccounts();
 	}
 	// save 
+	@Override
 	public void saveAccounts() {
 		repository.save(accounts);
 	}
 	
 	
+	@Override
 	public User getUser() {
 		return this.user;
-	}
-
-	@Override
-	public boolean login(User user) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void register(User user) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import java.util.List;
 
 import model.DataSource;
 import model.dictionary.Dictionary;
-import model.dictionary.DictionaryInterface;
 import model.dictionary.Word;
 import util.repository.Google;
 
@@ -34,7 +33,7 @@ public class DictionaryRepository implements DictionaryInterface{
 		return dictionary.getMapWord().get(key);
 	}
 	@Override
-	public String textTranslation(String key, String languageForm, String languageTo) {
+	public String textTranslator(String key, String languageForm, String languageTo) {
 		String value = null;
 		try {
 			value = Google.translate(key, languageForm, languageTo);
@@ -45,7 +44,7 @@ public class DictionaryRepository implements DictionaryInterface{
 		return value;
 	}
 	@Override
-	public List<Word> tableWord(String specialized) {
+	public List<Word> getTableWord(String specialized) {
 		List<Word> list = new ArrayList<Word>();
 		for (var entry: dictionary.getMapWord().entrySet()) {
 			if(entry.getValue().getSpecialized().equals(specialized)) {
@@ -56,12 +55,12 @@ public class DictionaryRepository implements DictionaryInterface{
 		return null;
 	}
 	@Override
-	public List<String> hotPick() {
+	public List<String> getHotPick() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public List<String> history() {
+	public List<String> getHistory() {
 		List<String> list = new ArrayList<String>();
 		for (var entry: dictionary.getMapWord().entrySet()) {
 			if(!entry.getValue().getSearchTime().isEmpty()) {

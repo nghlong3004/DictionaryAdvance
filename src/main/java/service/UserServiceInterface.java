@@ -1,14 +1,17 @@
-package model.account;
+package service;
 
-public interface UserInterface {
-	// check user name
+import model.account.User;
+
+public interface UserServiceInterface {
+	
 	public boolean isUsernameAvailable(String username);
-	// login
+	
 	public boolean login(User user);
-	// handle login is successfully
+	
 	public void handleLoginSuccess(String username, boolean remember);
-	// register
+	
 	public void register(User user);
-	// get user
+	
 	public User getUser();
+	
 }

@@ -1,6 +1,7 @@
 package repository;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,9 +48,17 @@ public class FileRepository<T> implements DataRepository<T>{
 		}
         Path path = getPath();
         if (!Files.exists(path)) {
+        	File newFile = new File("data\\" +file);
+        	try {
+				newFile.createNewFile();
+			} catch (IOException e) {
+				System.out.println("File not creater!!");
+				e.printStackTrace();
+			}
             System.out.println("File not found! : " + path);
-            datas = new ArrayList<>();
+            return returnType.cast(new HashMap<String, T>());
         }
+        System.out.println("Loading Complete : " + file);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(path)))) {
         	Type dataListType = TypeToken.getParameterized(List.class, type).getType();
             List<T> dataList = gson.fromJson(reader, dataListType);

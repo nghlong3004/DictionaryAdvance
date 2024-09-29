@@ -2,22 +2,21 @@ package service;
 
 import java.util.List;
 
-import model.dictionary.DictionaryInterface;
 import model.dictionary.Word;
-import repository.DictionaryRepository;
+import repository.DictionaryInterface;
 
-public class DictionaryService implements DictionaryInterface{
+public class DictionaryService implements DictionaryServiceInterface{
 	
-	private final DictionaryRepository dictionary;
+	private final DictionaryInterface dictionary;
 	private static DictionaryService instance;
 	
-	public static synchronized DictionaryService getInstance(DictionaryRepository dictionary) {
+	public static synchronized DictionaryService getInstance(DictionaryInterface dictionary) {
 		if(instance == null) {
 			instance = new DictionaryService(dictionary);
 		}
 		return instance;
 	}
-	private DictionaryService(DictionaryRepository dictionary) {
+	private DictionaryService(DictionaryInterface dictionary) {
 		this.dictionary = dictionary;
 	}
 	@Override
@@ -29,26 +28,26 @@ public class DictionaryService implements DictionaryInterface{
 		return dictionary.lookup(key, languageForm, languageTo);
 	}
 	@Override
-	public String textTranslation(String key, String languageForm, String languageTo) {
+	public String textTranslator(String key, String languageForm, String languageTo) {
 		if(key == null) {
 			throw new NullPointerException("KEY NOT VALUE");
 		}
-		return dictionary.textTranslation(key, languageForm, languageTo);
+		return dictionary.textTranslator(key, languageForm, languageTo);
 	}
 	@Override
-	public List<Word> tableWord(String specialized) {
+	public List<Word> getTableWord(String specialized) {
 		// TODO Auto-generated method stub
-		return dictionary.tableWord(specialized);
+		return dictionary.getTableWord(specialized);
 	}
 	@Override
-	public List<String> hotPick() {
+	public List<String> getHotPick() {
 		// TODO Auto-generated method stub
-		return dictionary.hotPick();
+		return dictionary.getHotPick();
 	}
 	@Override
-	public List<String> history() {
+	public List<String> getHistory() {
 		// TODO Auto-generated method stub
-		return dictionary.history();
+		return dictionary.getHistory();
 	}
 	
 	
