@@ -226,7 +226,7 @@ public class Lookup extends JPanel {
 		);
 		
 		panel_1_1 = new JPanel(){
-			private static final long serialVersionUID = 4799123527384112685L;
+			private static final long serialVersionUID = 4799123527384112687L;
 			private int cornerRadius = 30;
 	    	
 
