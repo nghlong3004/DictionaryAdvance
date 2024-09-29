@@ -41,7 +41,7 @@ import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Lookup extends JPanel {
+public class newLookUp extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField text;
@@ -122,7 +122,7 @@ public class Lookup extends JPanel {
 		        "</html>";
 		return html;
 	}
-	public Lookup(String username) {
+	public newLookUp(String username) {
 		putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:25;"
                 + "background:null");
