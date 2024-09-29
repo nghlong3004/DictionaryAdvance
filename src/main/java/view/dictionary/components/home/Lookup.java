@@ -161,15 +161,6 @@ public class Lookup extends JPanel {
 				"borderInsets:5, 5, 5, 5;"
 				);
         data = new ArrayList<String>();
-        data.add("apple");
-        data.add("apricot");
-        data.add("banana");
-        data.add("blueberry");
-        data.add("blackberry");
-        data.add("orange");
-        data.add("mango");
-        data.add("melon");
-        data.add("watermelon");
 		String html = "<html>" +
 		        "<div style='text-align: center;'>" +
 		        "<table>" +
@@ -182,8 +173,6 @@ public class Lookup extends JPanel {
 		        "</table>" +
 		        "</div>" +
 		        "</html>";
-		
-		
 		editorPane = new JEditorPane();
 		editorPane.setOpaque(false);
 		editorPane.setFocusable(false);

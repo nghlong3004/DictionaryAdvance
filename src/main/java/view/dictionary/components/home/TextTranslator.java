@@ -1,6 +1,8 @@
 package view.dictionary.components.home;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,6 +20,9 @@ public class TextTranslator extends JPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = -130365791791745994L;
+	private JLabel textTop;
+	private JLabel textDown;
+	
 	
 	public TextTranslator() {
 		setLayout(new MigLayout("wrap, fill", "[grow]1%[grow]"));
@@ -61,7 +66,8 @@ public class TextTranslator extends JPanel{
 		JButton speaker = new JButton("");
 		JButton mic = new JButton("mic");
 		spker.add(speaker, "height 100%, width 20%!");
-		spker.add(new JLabel("Vietnamese"), "height 100%, width 50%!");
+		textTop = new JLabel("Vietnamese");
+		spker.add(textTop, "height 100%, width 50%!");
 		JTextArea text = new JTextArea("");
 		speaker.putClientProperty(FlatClientProperties.STYLE, "" +
 				"arc:20;" + 
@@ -92,6 +98,17 @@ public class TextTranslator extends JPanel{
 		JLabel left = new JLabel("EngLish", JLabel.CENTER);
 		JButton trans = new JButton("OK");
 		JLabel right = new JLabel("VietNamese", JLabel.CENTER);
+		trans.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String s = left.getText();
+				left.setText(right.getText());
+				textTop.setText(right.getText());
+				right.setText(s);
+				textDown.setText(s);
+			}
+		});
 		panel.add(left, "growy, width 43%");
 		panel.add(trans, "growy, width 5%!");
 		panel.add(right, "growy, width 43%");
@@ -108,7 +125,8 @@ public class TextTranslator extends JPanel{
 		JButton speaker = new JButton("");
 		JButton mic = new JButton("mic");
 		spker.add(speaker, "height 100%, width 20%!");
-		spker.add(new JLabel("English"), "height 100%, width 50%!");
+		textDown = new JLabel("English");
+		spker.add(textDown, "height 100%, width 50%!");
 		JTextArea text = new JTextArea("Nhập văn bản cần dịch...");
 		speaker.putClientProperty(FlatClientProperties.STYLE, "" +
 				"arc:20;" + 
