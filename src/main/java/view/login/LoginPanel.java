@@ -21,8 +21,8 @@ import com.formdev.flatlaf.FlatClientProperties;
 
 import model.account.User;
 import net.miginfocom.swing.MigLayout;
+import util.ObjectContainer;
 import util.view.NotificationUI;
-import util.view.ObjectContainer;
 import view.dictionary.ViewDictionary;
 import view.notifications.Notification;
 

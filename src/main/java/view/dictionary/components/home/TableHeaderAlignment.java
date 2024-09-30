@@ -27,7 +27,7 @@ public class TableHeaderAlignment implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int row, int column) {
         JLabel label = (JLabel) oldHeaderRenderer.getTableCellRendererComponent(jtable, o, bln, bln1, row, column);
-        label.setHorizontalAlignment(getAlignment(column));
+        label.setHorizontalAlignment(getAlignment(1));
         return label;
     }
 

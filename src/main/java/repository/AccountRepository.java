@@ -2,32 +2,33 @@ package repository;
 
 import static util.repository.Utils.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import model.DataSource;
 import model.account.User;
 
-public class AccountRepository {
+public class AccountRepository implements AccountInterface{
 	
-	private static AccountRepository instance;
-	
-	private DataSource dataSource;
-	private Repository<User> repository;
+	private static AccountInterface instance;
+
+	private DataRepository<User> repository;
 	private User user;
 	private List<User> accounts;
 	
-	public static synchronized AccountRepository getInstance() {
+	public static synchronized AccountInterface getInstance(DataSource dataSource) {
         if (instance == null) {
-            instance = new AccountRepository();
+            instance = new AccountRepository(dataSource);
         }
         return instance;
     }
 	
-	private AccountRepository() {
-		dataSource = new DataSource();
-		RepositoryFactory<User> repositoryFactory = new RepositoryFactory<>(dataSource, User.class);
+	@SuppressWarnings("unchecked")
+	private AccountRepository(DataSource dataSource) {
+		DataRepositoryFactory<User> repositoryFactory = new DataRepositoryFactory<>(dataSource, User.class);
 		repository = repositoryFactory.creatRepository();
-		accounts = repository.loadUsers();
+		accounts = new ArrayList<User>();
+		accounts = repository.load(accounts.getClass());
 		for (User user : accounts) {
 			if(user.isRemember()) {
 				this.user = user;
@@ -39,17 +40,8 @@ public class AccountRepository {
 		}
 		
 	}
-	
-	public boolean isUsernameAvailable(String username) {
-		for (User user : accounts) {
-			if(user.getUsername().equalsIgnoreCase(username)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
 	// login 
+	@Override
 	public boolean isUser(User newUser) {
 		for (User user : accounts) {
 			if(user.getUsername().equalsIgnoreCase(newUser.getUsername())) {
@@ -59,6 +51,7 @@ public class AccountRepository {
 		return false;
 	}
 	// update if login successfully
+	@Override
 	public void handleLoginSuccess(String username, boolean remember) {
 		for(int i = 0; i < accounts.size(); ++i) {
 			User curUser = accounts.get(i);
@@ -77,26 +70,31 @@ public class AccountRepository {
 		saveAccounts();
 	}
 	// register
+	@Override
 	public void addUser(User user) {
 		accounts.add(user);
 		saveAccounts();
 	}
 	// save 
+	@Override
 	public void saveAccounts() {
-		repository.saveUsers(accounts);
+		repository.save(accounts);
 	}
 	
 	
+	@Override
 	public User getUser() {
 		return this.user;
 	}
-	
-	public DataSource getDataSource() {
-		return dataSource;
-	}
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+	@Override
+	public boolean isUsernameAvailable(String username) {
+		for (User user : accounts) {
+			if(user.getUsername().equalsIgnoreCase(username)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	

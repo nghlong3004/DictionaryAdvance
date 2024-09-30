@@ -93,7 +93,7 @@ public class MainForm extends JLayeredPane {
             	}
             }
             else if(index == 5) {
-            	ViewDictionary.showForm(new Test());
+            	
             }
             else if(index == 6) {
             		panelBody.removeAll();

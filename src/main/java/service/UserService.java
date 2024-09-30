@@ -1,20 +1,20 @@
 package service;
 
 import model.account.User;
-import repository.AccountRepository;
+import repository.AccountInterface;
 
 public class UserService implements UserServiceInterface{
 	
-	public static UserService instance;
-	private final AccountRepository account;
+	private static UserService instance;
+	private final AccountInterface account;
 	
-	public static synchronized UserService getInstance(AccountRepository account) {
+	public static synchronized UserService getInstance(AccountInterface account) {
 		if(instance == null) {
 			instance = new UserService(account);
 		}
 		return instance;
 	}
-	private UserService(AccountRepository account) {
+	private UserService(AccountInterface account) {
 		this.account = account;
 	}
 	@Override

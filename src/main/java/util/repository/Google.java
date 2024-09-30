@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -20,10 +22,10 @@ public class Google{
 	public static final String GOOGLE_SEARCH_API_URL = "https://clients1.google.com/complete/search";
 	public static final String GOOGLE_TRANSLATE_API_URL = "https://script.google.com/macros/s/AKfycbwU7msuEL2UyzONn_I9m2HMG9FarUKOlmn6jbKIKhPx8Vd1QkqtxnQokl8R792zRrDQ/exec";
 		
-	public static void speak(String language, String text) throws IOException {
+	public static void speak(String language, String text) throws IOException, URISyntaxException {
 	       String url = generateSpeakURL(language, text);
-	       @SuppressWarnings("deprecation")
-		URL obj = new URL(url);
+	       URI uri = new URI(url);
+	       URL obj = uri.toURL();
 	       HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 	       con.setRequestMethod("GET");
 	       con.setRequestProperty("User-Agent", "Mozilla/5.0");

@@ -2,16 +2,16 @@ package repository;
 
 import model.DataSource;
 
-public class RepositoryFactory<T> {
-    private DataSource dataSource;
+public class DataRepositoryFactory<T> {
+	private DataSource dataSource;
     private Class<T> type;
 
-    public RepositoryFactory(DataSource dataSource, Class<T> type) {
+    public DataRepositoryFactory(DataSource dataSource, Class<T> type) {
         this.dataSource = dataSource;
         this.type = type;
     }
 
-    public Repository<T> creatRepository() {
+    public DataRepository<T> creatRepository() {
         String repositoryType = dataSource.getType();
 
         if (repositoryType.equalsIgnoreCase("database")) {
@@ -23,7 +23,7 @@ public class RepositoryFactory<T> {
             );
         } else if (repositoryType.equalsIgnoreCase("file")) {
             return new FileRepository<T>(
-                dataSource.getFilePath(),
+                dataSource.getFilePathUser(),dataSource.getFilePathDictionary(),
                 type
             );
         } else {
