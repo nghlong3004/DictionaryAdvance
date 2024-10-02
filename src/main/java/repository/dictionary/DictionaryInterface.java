@@ -1,10 +1,11 @@
-package service;
+package repository.dictionary;
 
 import java.util.List;
 
 import model.dictionary.Word;
 
-public interface DictionaryServiceInterface {
+public interface DictionaryInterface {
+
   public Word lookup(String key, String languageForm, String languageTo);
 
   public String textTranslator(String key, String languageForm, String languageTo);

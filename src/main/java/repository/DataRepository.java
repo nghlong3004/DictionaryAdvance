@@ -1,13 +1,15 @@
 package repository;
 
-import java.util.List;
+import com.google.gson.JsonElement;
 
-public interface DataRepository <T>{
-	@SuppressWarnings("hiding")
-	public <T, I> I load(Class<I> returnType);
-	
-	public void save(List<T> datas);
-	
-	public void delete();
-	
+public interface DataRepository {
+
+  public void save(String json);
+
+  public void delete();
+
+  public void update();
+
+  public JsonElement read();
+
 }

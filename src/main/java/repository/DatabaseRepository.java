@@ -1,40 +1,19 @@
 package repository;
 
-import java.util.List;
+import model.DatabaseConfiguration;
 
-public class DatabaseRepository<T> implements DataRepository<T>{
+public abstract class DatabaseRepository{
 	
-	@SuppressWarnings("unused")
-	private String dbUrl;
-	@SuppressWarnings("unused")
-	private String dbUsername;
-	@SuppressWarnings("unused")
-	private String dbPassword;
-	@SuppressWarnings("unused")
-	private Class<T> type;
+	private final DatabaseConfiguration databaseConfiguration;
 
-    public DatabaseRepository(String dbUrl, String dbUsername, String dbPassword, Class<T> type) {
-        this.dbUrl = dbUrl;
-        this.dbUsername = dbUsername;
-        this.dbPassword = dbPassword;
-        this.type = type;
+    public DatabaseRepository(DatabaseConfiguration databaseConfiguration) {
+      this.databaseConfiguration = databaseConfiguration;
     }
-	@SuppressWarnings("hiding")
-	@Override
-	public <T, I> I load(Class<I> returnType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public void save(List<T> users) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-		
-	}
-
+    public DatabaseConfiguration getDatabaseConfiguration() {
+      return databaseConfiguration;
+    }
+    
+    
+    
 }

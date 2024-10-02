@@ -5,50 +5,32 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonElement;
 
-public class FileRepository<T> implements DataRepository<T>{
+public abstract class FileRepository{
 	
-	private String fileUser, fileData, file;
+	private String fileName;
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private Class<T> type;
+    
 
-    public FileRepository(String fileUser, String fileData, Class<T> type) {
-    	this.fileUser = fileUser;
-    	this.fileData = fileData;
-    	this.type = type;
-    	file = new String();
+    public FileRepository(String fileName) {
+    	this.fileName = fileName;
     }
     
     // path file in system
     private Path getPath() {
-        return Paths.get("data", file);
+        return Paths.get("data", fileName);
     }
 
-	@SuppressWarnings("hiding")
-	@Override
-	public <T, I> I load(Class <I> returnType) {
-		List<T> datas = new ArrayList<T>();
-		boolean isMap = true;
-		file = fileData;
-		if(returnType.isAssignableFrom(datas.getClass())) {
-			isMap = false;
-			file = fileUser;
-		}
+	public JsonElement load() {
         Path path = getPath();
         if (!Files.exists(path)) {
-        	File newFile = new File("data\\" +file);
+        	File newFile = new File("data\\" + fileName);
         	try {
 				newFile.createNewFile();
 			} catch (IOException e) {
@@ -56,36 +38,24 @@ public class FileRepository<T> implements DataRepository<T>{
 				e.printStackTrace();
 			}
             System.out.println("File not found! : " + path);
-            return returnType.cast(new HashMap<String, T>());
+            return null;
         }
-        System.out.println("Loading Complete : " + file);
+        System.out.println("Loading Complete : " + fileName);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(path)))) {
-        	Type dataListType = TypeToken.getParameterized(List.class, type).getType();
-            List<T> dataList = gson.fromJson(reader, dataListType);
-            if(dataList == null) {
-            	datas = new ArrayList<>();
+            JsonElement datas = gson.fromJson(reader, JsonElement.class);
+            if(datas == null) {
+              return null;
             }
-            else {
-            	datas = dataList;
-            }
+            return datas;
         } catch (IOException e) {
             e.printStackTrace();
-            datas = new ArrayList<>();
+            return null;
         }
-        if(isMap) {
-        	Map<String, T> map = new HashMap<String, T>();
-        	for (T data : datas) {
-				map.put(data.toString(), data);
-			}
-        	return returnType.cast(map);
-        }
-        else {
-        	return returnType.cast(datas);
-        }
+        
     }
 
-	@Override
-	public void save(List<T> datas) {
+	
+	public void save(String datas) {
         Path path = getPath();
         // create file if file is null
         try {
@@ -102,7 +72,7 @@ public class FileRepository<T> implements DataRepository<T>{
         }
     }
 
-	@Override
+	
 	public void delete() {
 		// TODO Auto-generated method stub
 		
