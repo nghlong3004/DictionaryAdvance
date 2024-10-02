@@ -1,16 +1,16 @@
 package repository;
 
-import model.DataSource;
-import model.DatabaseConfiguration;
+import configuration.DatabaseConfiguration;
 import repository.account.AccountDatabaseRepository;
 import repository.account.AccountFileRepository;
 import repository.dictionary.DictionaryDatabaseRepository;
 import repository.dictionary.DictionaryFileRepository;
+import util.PropertyHelper;
 
 public class DataRepositoryFactory {
-	private DataSource dataSource;
+	private PropertyHelper dataSource;
 	private final String tag;
-    public DataRepositoryFactory(DataSource dataSource, String tag) {
+    public DataRepositoryFactory(PropertyHelper dataSource, String tag) {
         this.dataSource = dataSource;
         this.tag = tag;
     }

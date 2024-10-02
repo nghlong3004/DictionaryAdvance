@@ -7,10 +7,10 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import model.DataSource;
 import model.account.User;
 import repository.DataRepository;
 import repository.DataRepositoryFactory;
+import util.PropertyHelper;
 
 public class AccountService implements AccountServiceInterface {
 
@@ -21,14 +21,14 @@ public class AccountService implements AccountServiceInterface {
   private List<User> accounts;
   private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-  public static synchronized AccountService getInstance(DataSource dataSource) {
+  public static synchronized AccountService getInstance(PropertyHelper dataSource) {
     if (instance == null) {
       instance = new AccountService(dataSource);
     }
     return instance;
   }
 
-  private AccountService(DataSource dataSource) {
+  private AccountService(PropertyHelper dataSource) {
     DataRepositoryFactory repositoryFactory = new DataRepositoryFactory(dataSource, "Account");
     repository = repositoryFactory.creatRepository();
     accounts = new ArrayList<User>();

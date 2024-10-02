@@ -1,6 +1,6 @@
 package repository;
 
-import model.DatabaseConfiguration;
+import configuration.DatabaseConfiguration;
 
 public abstract class DatabaseRepository{
 	

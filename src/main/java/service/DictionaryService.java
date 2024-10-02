@@ -11,10 +11,10 @@ import java.util.Map.Entry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import model.DataSource;
 import model.dictionary.Dictionary;
 import repository.DataRepository;
 import repository.DataRepositoryFactory;
+import util.PropertyHelper;
 import util.repository.Google;
 
 public class DictionaryService implements DictionaryServiceInterface {
@@ -23,14 +23,14 @@ public class DictionaryService implements DictionaryServiceInterface {
   private DataRepository dataRepository;
   private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-  public static synchronized DictionaryService getInstance(DataSource dataSource) {
+  public static synchronized DictionaryService getInstance(PropertyHelper dataSource) {
     if (instance == null) {
       instance = new DictionaryService(dataSource);
     }
     return instance;
   }
 
-  private DictionaryService(DataSource dataSource) {
+  private DictionaryService(PropertyHelper dataSource) {
     dictionary = new Dictionary();
     DataRepositoryFactory dataRepositoryFactory =
         new DataRepositoryFactory(dataSource, "Dictionary");

@@ -1,7 +1,7 @@
 package repository.dictionary;
 
 import com.google.gson.JsonElement;
-import model.DatabaseConfiguration;
+import configuration.DatabaseConfiguration;
 import repository.DataRepository;
 import repository.DatabaseRepository;
 
