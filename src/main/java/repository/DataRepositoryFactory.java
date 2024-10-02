@@ -1,33 +1,40 @@
 package repository;
 
-import model.DataSource;
+import configuration.DatabaseConfiguration;
+import repository.account.AccountDatabaseRepository;
+import repository.account.AccountFileRepository;
+import repository.dictionary.DictionaryDatabaseRepository;
+import repository.dictionary.DictionaryFileRepository;
+import util.PropertyHelper;
 
-public class DataRepositoryFactory<T> {
-	private DataSource dataSource;
-    private Class<T> type;
+public class DataRepositoryFactory {
+  private PropertyHelper dataSource;
+  private final String tag;
 
-    public DataRepositoryFactory(DataSource dataSource, Class<T> type) {
-        this.dataSource = dataSource;
-        this.type = type;
+  public DataRepositoryFactory(PropertyHelper dataSource, String tag) {
+    this.dataSource = dataSource;
+    this.tag = tag;
+  }
+
+  public DataRepository creatRepository() {
+    String repositoryType = dataSource.getType();
+
+    if (repositoryType.equalsIgnoreCase("database")) {
+      if (tag.equalsIgnoreCase("Dictionary")) {
+        return new DictionaryDatabaseRepository(new DatabaseConfiguration(dataSource.getDbUrl(),
+            dataSource.getDbUsername(), dataSource.getDbPassword()));
+      } else {
+        return new AccountDatabaseRepository(new DatabaseConfiguration(dataSource.getDbUrl(),
+            dataSource.getDbUsername(), dataSource.getDbPassword()));
+      }
+    } else if (repositoryType.equalsIgnoreCase("file")) {
+      if (tag.equalsIgnoreCase("Dictionary")) {
+        return new DictionaryFileRepository(dataSource.getFilePathDictionary());
+      } else {
+        return new AccountFileRepository(dataSource.getFilePathUser());
+      }
+    } else {
+      throw new IllegalArgumentException("Unknown repository type: " + repositoryType);
     }
-
-    public DataRepository<T> creatRepository() {
-        String repositoryType = dataSource.getType();
-
-        if (repositoryType.equalsIgnoreCase("database")) {
-            return new DatabaseRepository<T>(
-                dataSource.getDbUrl(),
-                dataSource.getDbUsername(),
-                dataSource.getDbPassword(),
-                type
-            );
-        } else if (repositoryType.equalsIgnoreCase("file")) {
-            return new FileRepository<T>(
-                dataSource.getFilePathUser(),dataSource.getFilePathDictionary(),
-                type
-            );
-        } else {
-            throw new IllegalArgumentException("Unknown repository type: " + repositoryType);
-        }
-    }
+  }
 }

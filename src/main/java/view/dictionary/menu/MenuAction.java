@@ -2,14 +2,14 @@ package view.dictionary.menu;
 
 public class MenuAction {
 
-    protected boolean isCancel() {
-        return cancel;
-    }
+  protected boolean isCancel() {
+    return cancel;
+  }
 
-    public void cancel() {
-        this.cancel = true;
-    }
+  public void cancel() {
+    this.cancel = true;
+  }
 
-    private boolean cancel = false;
+  private boolean cancel = false;
 }
 

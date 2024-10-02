@@ -8,39 +8,36 @@ import javax.swing.JTextArea;
 
 public class MyTextArea extends JTextArea {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -2420464747756475271L;
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -2420464747756475271L;
 
-    private String placeholder;
+  private String placeholder;
 
-    public MyTextArea() {
+  public MyTextArea() {}
+
+  public String getPlaceholder() {
+    return placeholder;
+  }
+
+  @Override
+  protected void paintComponent(final Graphics pG) {
+    super.paintComponent(pG);
+
+    if (placeholder == null || placeholder.length() == 0 || getText().length() > 0) {
+      return;
     }
 
-    public String getPlaceholder() {
-        return placeholder;
-    }
+    final Graphics2D g = (Graphics2D) pG;
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    g.setColor(getDisabledTextColor());
+    g.drawString(placeholder, getInsets().left,
+        pG.getFontMetrics().getMaxAscent() + getInsets().top);
+  }
 
-    @Override
-    protected void paintComponent(final Graphics pG) {
-        super.paintComponent(pG);
-
-        if (placeholder == null || placeholder.length() == 0 || getText().length() > 0) {
-            return;
-        }
-
-        final Graphics2D g = (Graphics2D) pG;
-        g.setRenderingHint(
-            RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setColor(getDisabledTextColor());
-        g.drawString(placeholder, getInsets().left, pG.getFontMetrics()
-            .getMaxAscent() + getInsets().top);
-    }
-
-    public void setPlaceholder(final String s) {
-        placeholder = s;
-    }
+  public void setPlaceholder(final String s) {
+    placeholder = s;
+  }
 
 }
