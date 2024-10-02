@@ -2,18 +2,18 @@ package repository;
 
 import configuration.DatabaseConfiguration;
 
-public abstract class DatabaseRepository{
-	
-	private final DatabaseConfiguration databaseConfiguration;
+public abstract class DatabaseRepository {
 
-    public DatabaseRepository(DatabaseConfiguration databaseConfiguration) {
-      this.databaseConfiguration = databaseConfiguration;
-    }
+  private final DatabaseConfiguration databaseConfiguration;
 
-    public DatabaseConfiguration getDatabaseConfiguration() {
-      return databaseConfiguration;
-    }
-    
-    
-    
+  public DatabaseRepository(DatabaseConfiguration databaseConfiguration) {
+    this.databaseConfiguration = databaseConfiguration;
+  }
+
+  public DatabaseConfiguration getDatabaseConfiguration() {
+    return databaseConfiguration;
+  }
+
+
+
 }

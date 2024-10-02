@@ -10,35 +10,34 @@ import javax.swing.JPanel;
 
 public class BackgroundForm extends JPanel {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -4519974681817033597L;
-	private final boolean udecorated;
-    
-    public BackgroundForm(boolean udecorated) {
-        this.udecorated=udecorated;
-        init();
-    }
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -4519974681817033597L;
+  private final boolean udecorated;
 
-    private void init() {
-        setOpaque(!udecorated);
-        setLayout(new BorderLayout());
-        putClientProperty(FlatClientProperties.STYLE, ""
-                + "border:5,5,5,5;"
-                + "background:$Drawer.background");
-    }
+  public BackgroundForm(boolean udecorated) {
+    this.udecorated = udecorated;
+    init();
+  }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        if (udecorated) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            FlatUIUtils.setRenderingHints(g2);
-            int arc = UIScale.scale(30);
-            g2.setColor(getBackground());
-            FlatUIUtils.paintComponentBackground(g2, 0, 0, getWidth(), getHeight(), 0, arc);
-            g2.dispose();
-        }
-        super.paintComponent(g);
+  private void init() {
+    setOpaque(!udecorated);
+    setLayout(new BorderLayout());
+    putClientProperty(FlatClientProperties.STYLE,
+        "" + "border:5,5,5,5;" + "background:$Drawer.background");
+  }
+
+  @Override
+  protected void paintComponent(Graphics g) {
+    if (udecorated) {
+      Graphics2D g2 = (Graphics2D) g.create();
+      FlatUIUtils.setRenderingHints(g2);
+      int arc = UIScale.scale(30);
+      g2.setColor(getBackground());
+      FlatUIUtils.paintComponentBackground(g2, 0, 0, getWidth(), getHeight(), 0, arc);
+      g2.dispose();
     }
+    super.paintComponent(g);
+  }
 }

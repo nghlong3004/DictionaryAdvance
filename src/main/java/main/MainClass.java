@@ -14,14 +14,12 @@ import view.dictionary.ViewDictionary;
 
 public class MainClass {
 
-	public static void main(String[] args) {
-		FlatRobotoFont.install();
-		FlatLaf.registerCustomDefaultsSource("themes");
-		UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-		FlatMacDarkLaf.setup();
-		SwingUtilities.invokeLater(() -> 
-			ViewDictionary.install()
-		);
-	}
+  public static void main(String[] args) {
+    FlatRobotoFont.install();
+    FlatLaf.registerCustomDefaultsSource("themes");
+    UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
+    FlatMacDarkLaf.setup();
+    SwingUtilities.invokeLater(() -> ViewDictionary.install());
+  }
 
 }
