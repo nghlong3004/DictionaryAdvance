@@ -52,17 +52,19 @@ public class Lookup extends JPanel {
   private JPanel panel_1_1;
   private JPanel panel_1_2;
   private JEditorPane editorPane;
-  JButton btnNewButton;
-  JButton btnNewButton_1;
-  JButton btnNewButton_1_1;
-  JButton btnNewButton_1_2;
-  JLabel lblNewLabel;
-  JButton btnNewButton_2;
-  JButton btnNewButton_2_1;
-  JButton btnNewButton_2_2;
-  JButton btnNewButton_2_3;
-  JButton btnNewButton_2_4;
+  private JButton btnNewButton;
+  private JButton btnNewButton_1;
+  private JButton btnNewButton_1_1;
+  private JButton btnNewButton_1_2;
+  private JLabel lblNewLabel;
+  private JButton btnNewButton_2;
+  private JButton btnNewButton_2_1;
+  private JButton btnNewButton_2_2;
+  private JButton btnNewButton_2_3;
+  private JButton btnNewButton_2_4;
   private int selectedIndex = 0;
+  private String langFrom;
+  private String langTo;
 
   /**
    * Create the panel.
@@ -132,19 +134,22 @@ public class Lookup extends JPanel {
     return html;
   }
 
-  public Lookup(String username) {
+  public Lookup(String username, List<String> datas) {
     putClientProperty(FlatClientProperties.STYLE, "" + "arc:25;" + "background:null");
     suggestionPopup = new JPopupMenu();
     suggestionPopup.putClientProperty(FlatClientProperties.STYLE,
         "" + "[light]foreground:darken(@background, 3%);"
             + "[dark]foreground:lighten(@background, 3%);" + "background:null;"
             + "borderColor:null;" + "borderInsets:5, 5, 5, 5;");
-    data = new ArrayList<String>();
+    this.data = datas;
+    langFrom = "en";
+    langTo = "vi";
+    
     String html = "<html>" + "<div style='text-align: center;'>" + "<table>"
         + "<tr><td style='text-align: left;'>Xin chào</td></tr>"
         + "<tr><td style='text-align: left; font-size: 24px; color: " + rndColor() + ";'>"
         + username + "</td></tr>" + "</table>" + "</div>" + "</html>";
-    editorPane = new JEditorPane();
+    editorPane = new JEditorPane("text/html", "");
     editorPane.setOpaque(false);
     editorPane.setFocusable(false);
 
@@ -287,6 +292,7 @@ public class Lookup extends JPanel {
             text.setText(selectedItem.getText());
             suggestionPopup.setVisible(false);
           }
+          editorPane.setText("");
         }
       }
     });
@@ -306,10 +312,14 @@ public class Lookup extends JPanel {
           handleOK();
         }
         if (e.getSource() == btnNewButton_1) {
+          langFrom = "en";
+          langTo = "vi";
           btnNewButton_1.setBackground(Color.decode("#22c55e"));
           btnNewButton_1_1.setBackground(Color.decode("#4ade80"));
           btnNewButton_1_2.setBackground(Color.decode("#4ade80"));
         } else if (e.getSource() == btnNewButton_1_1) {
+          langFrom = "vi";
+          langTo = "en";
           btnNewButton_1.setBackground(Color.decode("#4ade80"));
           btnNewButton_1_1.setBackground(Color.decode("#22c55e"));
           btnNewButton_1_2.setBackground(Color.decode("#4ade80"));
@@ -320,7 +330,7 @@ public class Lookup extends JPanel {
         }
       }
     };
-
+    
 
     btnNewButton_1.putClientProperty(FlatClientProperties.STYLE, ""
 
@@ -329,11 +339,11 @@ public class Lookup extends JPanel {
     btnNewButton_1_1.putClientProperty(FlatClientProperties.STYLE, ""
 
 
-        + "background:#22c55e;" + "focusWidth:0;" + "borderWidth:0;" + "innerFocusWidth:0");
+        + "background:#4ade80;" + "focusWidth:0;" + "borderWidth:0;" + "innerFocusWidth:0");
     btnNewButton_1_2.putClientProperty(FlatClientProperties.STYLE, ""
 
 
-        + "background:#22c55e;" + "focusWidth:0;" + "borderWidth:0;" + "innerFocusWidth:0");
+        + "background:#4ade80;" + "focusWidth:0;" + "borderWidth:0;" + "innerFocusWidth:0");
     btnNewButton.putClientProperty(FlatClientProperties.STYLE,
         "" + "arc:999;" + "focusWidth:0;" + "borderWidth:0;" + "innerFocusWidth:0");
 
@@ -409,12 +419,12 @@ public class Lookup extends JPanel {
     lblNewLabel.setHorizontalAlignment(SwingConstants.LEADING);
     btnNewButton_2_3.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        speek("en");
+        speak("en");
       }
     });
     btnNewButton_2_4.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        speek("vi");
+        speak("vi");
       }
     });
     btnNewButton_2 = sytle(btnNewButton_2);
@@ -570,10 +580,17 @@ public class Lookup extends JPanel {
 
   protected void handleOK() {
     lblNewLabel.setText(convert(text.getText(), 20));
-
+    new Thread(() -> {
+      try {
+        editorPane.setText(Google.translate(text.getText(), langFrom, langTo));
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }).start();
   }
 
-  protected void speek(String language) {
+  protected void speak(String language) {
     new Thread(() -> {
       try {
         Google.speak(language, text.getText());

@@ -208,7 +208,7 @@ public class LoginPanel extends JPanel {
   }
 
   public User getUser() {
-    return this.user;
+    return OBJECTCONTAINER.getControllerInstance().getUser();
   }
 
   public void register(User user) {

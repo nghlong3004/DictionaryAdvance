@@ -3,19 +3,20 @@ package view.dictionary.components.home;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.IOException;
+import java.net.URISyntaxException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.FlatClientProperties;
-
 import net.miginfocom.swing.MigLayout;
+import util.repository.Google;
 import util.view.ImageUtil;
 
 public class TextTranslator extends JPanel {
@@ -24,14 +25,20 @@ public class TextTranslator extends JPanel {
    * 
    */
   private static final long serialVersionUID = -130365791791745994L;
-  private JLabel textTop;
-  private JLabel textDown;
+  private JLabel labelTop;
+  private JLabel labelDown;
   private String languageLeft;
   private String languageRight;
+  private JEditorPane textDown;
+  private MyTextArea textTop;
+  private String languageForm = "en";
+  private String langugeTo = "vi";
+  private JTable table;
 
 
   public TextTranslator() {
     setLayout(new MigLayout("wrap, fill", "[grow]1%[grow]"));
+    textTop = new MyTextArea();
     JPanel panel1 = new JPanel(new MigLayout("wrap, fill", "", "[grow]2%[grow]2%[grow]"));
     JPanel panel2 = new JPanel(new MigLayout("fill", "", "3%[grow]1%[grow]3%"));
     panel1.add(textEng(), "growx, height 45%");
@@ -44,6 +51,26 @@ public class TextTranslator extends JPanel {
 
     add(panel1, "grow,height 100%, width 65%");
     add(panel2, "grow,height 100%, width 30%");
+  }
+
+  protected void actionText() {
+    new Thread(() -> {
+      try {
+        System.out.println(textTop.getText());
+        textDown.setText(Google.translate(textTop.getText().trim(), languageForm, langugeTo));
+        DefaultTableModel modelTable = (DefaultTableModel) table.getModel();
+        String textFrom = textDown.getText(), textTo = textTop.getText();
+        if (languageForm.equals("en")) {
+          textFrom = textTop.getText();
+          textTo = textDown.getText();
+        }
+        modelTable.addRow(new Object[] {textFrom, textTo});
+      } catch (IOException err) {
+        // TODO Auto-generated catch block
+        err.printStackTrace();
+      }
+    }).start();
+
   }
 
   private Component other() {
@@ -60,7 +87,14 @@ public class TextTranslator extends JPanel {
     remove.setIcon(new ImageUtil().getAvatarIcon("remove_icon.png", 25, 25, 0));
     remove = sytle(remove);
     JLabel removelb = new JLabel("Xóa lịch sử");
-    JTable table = new JTable();
+    table = new JTable();
+    remove.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        
+      }
+    });
 
     panel2.add(history, "height 50%, width 8%!");
     panel2.add(historylb);
@@ -88,15 +122,9 @@ public class TextTranslator extends JPanel {
       private static final long serialVersionUID = -4232228108642530784L;
       Class<?>[] types = new Class<?>[] {Object.class, Object.class};
 
-      boolean[] canEdit = new boolean[] {false, false};
-
       @Override
       public Class<?> getColumnClass(int columnIndex) {
         return types[columnIndex];
-      }
-
-      public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit[columnIndex];
       }
     });
     table.getTableHeader().setReorderingAllowed(false);
@@ -131,14 +159,35 @@ public class TextTranslator extends JPanel {
     speaker.setIcon(new ImageUtil().getAvatarIcon("loudspeaker_icon.png", 25, 25, 0));
     speaker = sytle(speaker);
     spker.add(speaker, "height 100%, width 20%!");
-    textTop = new JLabel("Vietnamese");
-    spker.add(textTop, "height 100%, width 50%!");
-    JTextArea text = new JTextArea();
-    text.setEditable(false);
-    text.setFocusable(false);
+    labelTop = new JLabel("Vietnamese");
+    spker.add(labelTop, "height 100%, width 50%!");
+    textDown = new JEditorPane("text/html", "");
+    textDown.setEditable(false);
+    textDown.setFocusable(false);
     mic.setIcon(new ImageUtil().getAvatarIcon("mic.png", 35, 35, 0));
     mic = sytle(mic);
-    text.putClientProperty(FlatClientProperties.STYLE,
+    speaker.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        new Thread(() -> {
+          try {
+            String s = textDown.getText();
+            System.out.println(s);
+            Google.speak(langugeTo, textDown.getText().trim());
+          } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          } catch (URISyntaxException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }
+
+        }).start();
+
+      }
+    });
+    textDown.putClientProperty(FlatClientProperties.STYLE,
         "" + "[light]foreground:darken(@foreground, 80%);"
             + "[dark]foreground:lighten(@foreground, 60%);" + "background:null;"
             + "focusedBackground:null");
@@ -146,10 +195,10 @@ public class TextTranslator extends JPanel {
     mic.setVisible(false);
     panel.add(spker, "cell 0 0, left, height 5%, width 20%!");
     panel.add(mic, "cell 1 0, right, height 5%, width 8%, wrap");
-    panel.add(text, "span 2 1, grow, height 90%, width 99%");
+    panel.add(textDown, "span 2 1, grow, height 90%, width 99%");
     panel.putClientProperty(FlatClientProperties.STYLE,
-        "" + "arc:20;" + "[light]background:darken(@background, 3%);"
-            + "[dark]background:lighten(@background, 3%);");
+        "" + "arc:20;" + "[dark]background:darken(@background, 3%);"
+            + "[light]background:lighten(@background, 3%);");
     return panel;
   }
 
@@ -158,21 +207,20 @@ public class TextTranslator extends JPanel {
     JLabel left = new JLabel("EngLish", JLabel.CENTER);
     JButton trans = new JButton();
     trans.setIcon(new ImageUtil().getAvatarIcon("reverse_icon.png", 30, 30, 999));
-    trans.putClientProperty(FlatClientProperties.STYLE, "" + "background:null");
+    trans.putClientProperty(FlatClientProperties.STYLE, "" + 
+        "[light]background:darken(@background, 15%);"
+        + "[dark]background:lighten(@background, 15%);" +
+                                         "arc:999;");
     JLabel right = new JLabel("VietNamese", JLabel.CENTER);
     trans.addActionListener(new ActionListener() {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        String s = left.getText();
-        left.setText(right.getText());
-        textTop.setText(right.getText());
-        right.setText(s);
-        textDown.setText(s);
+        actionText();
       }
     });
     panel.add(left, "growy, width 43%");
-    panel.add(trans, "growy, width 5%!");
+    panel.add(trans, "growy, width 7%!");
     panel.add(right, "growy, width 43%");
     panel.putClientProperty(FlatClientProperties.STYLE,
         "" + "arc:20;" + "[light]background:darken(@background, 3%);"
@@ -190,19 +238,38 @@ public class TextTranslator extends JPanel {
     speaker.setIcon(new ImageUtil().getAvatarIcon("loudspeaker_icon.png", 25, 25, 0));
     speaker = sytle(speaker);
     spker.add(speaker, "height 100%, width 20%!");
-    textDown = new JLabel("English");
-    spker.add(textDown, "height 100%, width 50%!");
-    MyTextArea text = new MyTextArea();
-    text.setPlaceholder("Nhập văn bản cần dịch...");
+    labelDown = new JLabel("English");
+    spker.add(labelDown, "height 100%, width 50%!");
+    textTop.setPlaceholder("Nhập văn bản cần dịch...");
     mic.setIcon(new ImageUtil().getAvatarIcon("mic.png", 35, 35, 0));
     mic = sytle(mic);
-    text.putClientProperty(FlatClientProperties.STYLE,
+    textTop.putClientProperty(FlatClientProperties.STYLE,
         "" + "[light]foreground:darken(@foreground, 80%);"
             + "[dark]foreground:lighten(@foreground, 60%);" + "background:null");
+    speaker.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        new Thread(() -> {
+
+          try {
+            Google.speak(languageForm, textTop.getText().trim());
+          } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          } catch (URISyntaxException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }
+
+        }).start();
+
+      }
+    });
     spker.putClientProperty(FlatClientProperties.STYLE, "background:null");
     panel.add(spker, "cell 0 0, left, height 5%, width 20%!");
     panel.add(mic, "cell 1 0, right, height 5%, width 8%, wrap");
-    panel.add(text, "span 2 1, grow, height 90%, width 99%");
+    panel.add(textTop, "span 2 1, grow, height 90%, width 99%");
     panel.putClientProperty(FlatClientProperties.STYLE,
         "" + "arc:20;" + "[light]background:darken(@background, 3%);"
             + "[dark]background:lighten(@background, 3%);");
