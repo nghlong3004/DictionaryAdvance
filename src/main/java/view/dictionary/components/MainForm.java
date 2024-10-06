@@ -89,7 +89,7 @@ public class MainForm extends JLayeredPane {
           action.cancel();
         }
       } else if (index == 5) {
-          ViewDictionary.showForm(new ViewAvatarIcon(menu));
+          
       } else if (index == 6) {
         panelBody.removeAll();
         NotificationUI.goodbye();

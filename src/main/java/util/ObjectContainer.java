@@ -20,11 +20,11 @@ public class ObjectContainer {
   private final static DictionaryController DICTIONARY_CONTROLLER =
       new DictionaryController(DICTIONARY_SERVICE_INTERFACE);
 
-  public UserController getControllerInstance() {
+  public static UserController getControllerInstance() {
     return USER_CONTROLLER;
   }
 
-  public DictionaryController getAppController() {
+  public static DictionaryController getAppController() {
     return DICTIONARY_CONTROLLER;
   }
 
