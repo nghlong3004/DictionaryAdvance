@@ -122,6 +122,9 @@ public class Menu extends JPanel {
     add(lightDarkMode);
     add(toolBarAccentColor);
   }
+  public void setAvatarIcon(AvatarIcon icon) {
+    header.setIcon(icon);
+  }
 
   private void createMenu() {
     int index = 0;

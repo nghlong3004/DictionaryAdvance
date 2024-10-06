@@ -32,7 +32,6 @@ public class LoginPanel extends JPanel {
    * 
    */
   private static final long serialVersionUID = 9112353425595838469L;
-  private static final ObjectContainer OBJECTCONTAINER = new ObjectContainer();
   private JTextField textUsername;
   private JPasswordField textPassword;
   private User user;
@@ -132,8 +131,8 @@ public class LoginPanel extends JPanel {
       User user = new User();
       user.setUsername(textUsername.getText());
       user.setPassword(new String(textPassword.getPassword()));
-      if (OBJECTCONTAINER.getControllerInstance().login(user)) {
-        OBJECTCONTAINER.getControllerInstance().handleLoginSuccess(user.getUsername(),
+      if (ObjectContainer.getControllerInstance().login(user)) {
+        ObjectContainer.getControllerInstance().handleLoginSuccess(user.getUsername(),
             remember.isSelected());
         ViewDictionary.open();
         Notification.getInstance().clearAll();
@@ -169,7 +168,7 @@ public class LoginPanel extends JPanel {
 
   private void initialization() {
 
-    user = OBJECTCONTAINER.getControllerInstance().getUser();
+    user = ObjectContainer.getControllerInstance().getUser();
 
     textUsername = new JTextField(user.getUsername());
 
@@ -204,16 +203,16 @@ public class LoginPanel extends JPanel {
   }
 
   public boolean isUsernameAvailable(String username) {
-    return OBJECTCONTAINER.getControllerInstance().isUsernameAvailable(username);
+    return ObjectContainer.getControllerInstance().isUsernameAvailable(username);
   }
 
   public User getUser() {
-    return this.user;
+    return ObjectContainer.getControllerInstance().getUser();
   }
 
   public void register(User user) {
     this.user = user;
-    OBJECTCONTAINER.getControllerInstance().register(user);
+    ObjectContainer.getControllerInstance().register(user);
   }
 
 }

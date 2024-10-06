@@ -21,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -79,7 +80,7 @@ public class MainForm extends JLayeredPane {
     menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
       if (index == 0) {
         if (subIndex == 1) {
-          ViewDictionary.showForm(new Lookup(loginPanel.getUser().getUsername()));
+          ViewDictionary.showForm(new Lookup(loginPanel.getUser().getUsername(), new ArrayList<String>()));
         } else if (subIndex == 2) {
           ViewDictionary.showForm(new TextTranslator());
         } else if (subIndex == 3) {
@@ -88,7 +89,7 @@ public class MainForm extends JLayeredPane {
           action.cancel();
         }
       } else if (index == 5) {
-
+          
       } else if (index == 6) {
         panelBody.removeAll();
         NotificationUI.goodbye();
@@ -112,7 +113,7 @@ public class MainForm extends JLayeredPane {
   }
 
   public void hideMenu() {
-    ViewDictionary.showForm(new Lookup(loginPanel.getUser().getUsername()));
+    ViewDictionary.showForm(new Lookup(loginPanel.getUser().getUsername(), new ArrayList<String>()));
     menu.hideMenuItem();
   }
 
