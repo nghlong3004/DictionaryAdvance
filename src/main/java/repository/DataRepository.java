@@ -1,15 +1,17 @@
 package repository;
 
-import com.google.gson.JsonElement;
+import java.util.List;
 
-public interface DataRepository {
+public interface DataRepository<T> {
 
-  public void save(String json);
+  public void save(String[] key, String[] value);
 
-  public void delete();
+  public void delete(String[] key, String[] value);
 
-  public void update();
+  public void update(String[] key, String[] value);
 
-  public JsonElement read();
+  public List<T> read();
+  
+  public T target(String[] datas);
 
 }

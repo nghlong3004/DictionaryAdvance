@@ -4,9 +4,9 @@ import model.account.User;
 
 public interface AccountServiceInterface {
 
-  public boolean isUsernameAvailable(String username);
-
   public boolean login(User user);
+  
+  public boolean isUsernameAvailable(String username);
 
   public void handleLoginSuccess(String username, boolean remember);
 

@@ -5,12 +5,8 @@ import java.util.List;
 import model.dictionary.Word;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map.Entry;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import model.dictionary.Dictionary;
 import repository.DataRepository;
 import repository.DataRepositoryFactory;
@@ -19,9 +15,12 @@ import util.repository.Google;
 
 public class DictionaryService implements DictionaryServiceInterface {
   private static DictionaryService instance;
+  
+  public final String[] keys = {"word", "meaning", "pronunciation", "description",
+      "example", "synonym", "antonym", "specialized", "language"};
+  
   private Dictionary dictionary;
-  private DataRepository dataRepository;
-  private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+  private DataRepository<?> dataRepository;
 
   public static synchronized DictionaryService getInstance(PropertyHelper dataSource) {
     if (instance == null) {
@@ -30,13 +29,12 @@ public class DictionaryService implements DictionaryServiceInterface {
     return instance;
   }
 
+  @SuppressWarnings("unchecked")
   private DictionaryService(PropertyHelper dataSource) {
     dictionary = new Dictionary();
-    DataRepositoryFactory dataRepositoryFactory =
-        new DataRepositoryFactory(dataSource, "Dictionary");
+    DataRepositoryFactory dataRepositoryFactory = new DataRepositoryFactory(dataSource);
     dataRepository = dataRepositoryFactory.creatRepository();
-    Type userListType = new TypeToken<List<Word>>() {}.getType();
-    dictionary.setMapWordL(gson.fromJson(dataRepository.read(), userListType));
+    dictionary.setMapWordL((List<Word>) dataRepository.read());
 
   }
 
@@ -45,7 +43,15 @@ public class DictionaryService implements DictionaryServiceInterface {
 
     return dictionary.getMapWord().get(key);
   }
-
+  
+  public void saveWord(Word data) {
+    String[] value = {"'" + data.getKey() + "'", "'" + data.getMeaning() + "'", "'" + "'",
+        "'" + data.getDescription() + "'", "'" + data.getExample() + "'",
+        "'" + data.getSynonyms() + "'", "'" + data.getAntonym() + "'",
+        "'" + data.getSpecialized() + "'"/* , "'" + data.getLanguage() + "'" */};
+    dataRepository.save(keys, value);
+  }
+  
   @Override
   public String textTranslator(String key, String languageForm, String languageTo) {
     String value = null;
