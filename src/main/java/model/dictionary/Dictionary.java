@@ -25,7 +25,7 @@ public class Dictionary {
       return;
     }
     for (Word word : list) {
-      this.mapWord.put(word.getKey(), word);
+      this.mapWord.put(word.getWord(), word);
     }
   }
 
