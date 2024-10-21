@@ -1,12 +1,11 @@
 package repository.account;
 
+import java.util.ArrayList;
 import java.util.List;
-import model.account.User;
 import repository.DataRepository;
 import repository.FileRepository;
-import util.repository.Utils;
 
-public class AccountFileRepository extends FileRepository implements DataRepository<User> {
+public class AccountFileRepository extends FileRepository implements DataRepository {
 
   public AccountFileRepository(String fileName) {
     super(fileName);
@@ -14,38 +13,43 @@ public class AccountFileRepository extends FileRepository implements DataReposit
   }
 
   @Override
-  public void save(String[] key, String[] value) {
-    List<User> users = read();
-    User user = new User();
-    Utils.setValues(user, key, value);
-    users.add(user);
+  public void save(String[] keys, String[] values) {
+    List<String[]> users = read();
     super.save(users);
-    
+
   }
 
   @Override
   public void delete(String[] key, String[] value) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void update(String[] key, String[] value) {
     // TODO Auto-generated method stub
-    
-  }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public List<User> read() {
-    return (List<User>) super.read();
   }
 
   @Override
-  public User target(String[] datas) {
-    for(User user: read()) {
-      if(datas[0].equalsIgnoreCase(user.getUsername())) {
-        return user;
+  public List<String[]> read() {
+    return super.read();
+  }
+
+  @Override
+  public List<String[]> target(String[] datas) {
+    for (String[] user : read()) {
+      for (String data : user) {
+        if (data.contains("username")) {
+          String[] username = data.split("/");
+          if (username.length > 1) {
+            if (username[1].trim().equalsIgnoreCase(datas[0])) {
+              List<String[]> arr = new ArrayList<String[]>();
+              arr.add(user);
+              return arr;
+            }
+          }
+        }
       }
     }
     return null;

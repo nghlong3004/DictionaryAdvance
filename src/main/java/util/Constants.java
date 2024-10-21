@@ -6,6 +6,11 @@ public class Constants {
   public static final String REGULAR_EMAIL_EXPRESSIONS =
       "^[\\w._%+-]{2,15}@[\\w.-]{1,8}\\.[a-zA-Z]{2,6}$";
 
+  public static final String[] KEY_USER = {"updated", "created", "gender", "fullname", "email",
+      "birthday", "username", "password", "token"};
+  public static final String[] KEY_WORD =
+      {"word", "meaning", "pronounce", "description", "languaged", "part_of_speech"};
+
   public static class ColorApp {
     public static final String[] COLORS = {"#b91c1c", "#3f3f46", "#b91c1c", "#431407", "#92400e",
         "#f59e0b", "#fcd34d", "#ef4444", "#65a30d", "#22c55e", "#15803d", "#10b981", "#14b8a6",

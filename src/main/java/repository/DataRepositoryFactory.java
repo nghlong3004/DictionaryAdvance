@@ -16,7 +16,7 @@ public class DataRepositoryFactory {
     this.dataSource = dataSource;
   }
 
-  public DataRepository<?> creatRepository() {
+  public DataRepository creatRepository() {
     switch (StorageType.state) {
       case FILE:
         switch (AppState.state) {

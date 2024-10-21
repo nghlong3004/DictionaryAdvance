@@ -33,7 +33,7 @@ public abstract class FileRepository {
     return Paths.get("data", fileName);
   }
 
-  public List<?> read() {
+  public List<String[]> read() {
     Path path = getPath();
     if (!Files.exists(path)) {
       File newFile = new File("data\\" + fileName);
@@ -60,7 +60,7 @@ public abstract class FileRepository {
         default:
           break;
       }
-      List<?> account = gson.fromJson(reader, accountListType);
+      List<String[]> account = gson.fromJson(reader, accountListType);
       if (account == null) {
         return new ArrayList<>();
       }
@@ -73,7 +73,7 @@ public abstract class FileRepository {
   }
 
 
-  public void save(List<?> data) {
+  public void save(List<String[]> data) {
     Path path = getPath();
     // create file if file is null
     try {

@@ -17,23 +17,31 @@ public abstract class DatabaseRepository {
     return databaseConfiguration;
   }
 
-  public void saveData(String tableName, String columnsString, String valuesString) {
-    String query = String.format("INSERT INTO %s(%s) VALUES(%s)", tableName,
-        columnsString, valuesString);
-    DatabaseUtil.update(getDatabaseConfiguration(), query);
-  }
-  
-  public void saveToken(String tableName, String token, String username) {
-    String query = "insert into " + tableName + "(user_id, token, expires) "
-        + "select user_id, '"  + token + "' , '" + Utils.timeNextDay(3) + "' from users where users.username = " + username;
-    System.out.println(query);
-    DatabaseUtil.update(getDatabaseConfiguration(), query);
+  public void updateData(String table, String key, String value) {
+    String query = String.format("UPDATE %s SET %s WHERE %s", table, key, value);
+    DatabaseUtil.update(databaseConfiguration, query);
   }
 
-  public Map<String, String> targetData(String data, String nameTable, String nameWhere) {
-    String query =
-        "select * from " + nameTable + " where " + nameWhere + " = " + data;
-    System.out.println(query);
+  public void saveData(String tableName, String key, String value) {
+    String query = String.format("INSERT INTO %s(%s) VALUES(%s)", tableName, key, value);
+    DatabaseUtil.save(getDatabaseConfiguration(), query);
+  }
+
+  public void saveToken(String tableName, String token, String username) {
+    String query = String.format(
+        "INSERT INTO %s(user_id, token, expires) SELECT user_id, '%s', '%s' FROM users WHERE users.username = '%s'",
+        tableName, token, Utils.timeNextDay(3), username);
+
+    DatabaseUtil.save(getDatabaseConfiguration(), query);
+  }
+
+  public void deleteData(String tableName, String key, String value) {
+    String query = String.format("DELETE FROM %s WHERE %s = %s", tableName, key, value);
+    DatabaseUtil.delete(databaseConfiguration, query);
+  }
+
+  public Map<String, String> targetData(String tableName, String key, String value) {
+    String query = String.format("SELECT * FROM %s WHERE %s = %s", tableName, key, value);
     return DatabaseUtil.target(databaseConfiguration, query);
 
   }

@@ -27,7 +27,7 @@ public class ObjectContainer {
     }
   }
 
-  public static UserController getControllerInstance() {
+  public static UserController getUserController() {
     return USER_CONTROLLER;
   }
 

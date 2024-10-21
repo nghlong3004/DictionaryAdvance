@@ -60,11 +60,13 @@ public class DatabaseUtil {
     return c;
   }
 
-  public static void update(DatabaseConfiguration dbConfig, String query) {
+  public static void delete(DatabaseConfiguration dbConfig, String query) {
+    LOGGER.info("DatabaseUtil::Delete" + query);
+
     Connection c = null;
-    Statement st = null;
     try {
       c = getConnection(dbConfig);
+      Statement st = null;
       if (c != null) {
         st = c.createStatement();
         if (st != null) {
@@ -72,18 +74,68 @@ public class DatabaseUtil {
         }
       }
     } catch (SQLException e) {
-      LOGGER.debug("DatabaseUtil::" + query + e.getMessage());
+      LOGGER.debug("DatabaseUtil::Delete" + query + e.getMessage());
     } finally {
       if (c != null)
         try {
           c.close();
+          LOGGER.debug("DatabaseUtil::Succes Close!");
         } catch (SQLException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-      if (st != null)
+    }
+
+  }
+
+  public static void update(DatabaseConfiguration dbConfig, String query) {
+    LOGGER.info("DatabaseUtil::Update" + query);
+
+    Connection c = null;
+    try {
+      c = getConnection(dbConfig);
+      Statement st = null;
+      if (c != null) {
+        st = c.createStatement();
+        if (st != null) {
+          st.executeUpdate(query);
+        }
+      }
+    } catch (SQLException e) {
+      LOGGER.debug("DatabaseUtil::Update" + query + e.getMessage());
+    } finally {
+      if (c != null)
         try {
-          st.close();
+          c.close();
+          LOGGER.debug("DatabaseUtil::Succes Close!");
+        } catch (SQLException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+    }
+
+  }
+
+  public static void save(DatabaseConfiguration dbConfig, String query) {
+    LOGGER.info("DatabaseUtil::Save " + query);
+
+    Connection c = null;
+    try {
+      c = getConnection(dbConfig);
+      Statement st = null;
+      if (c != null) {
+        st = c.createStatement();
+        if (st != null) {
+          st.executeUpdate(query);
+        }
+      }
+    } catch (SQLException e) {
+      LOGGER.debug("DatabaseUtil::Save " + query + e.getMessage());
+    } finally {
+      if (c != null)
+        try {
+          c.close();
+          LOGGER.debug("DatabaseUtil::Succes Close!");
         } catch (SQLException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -93,6 +145,7 @@ public class DatabaseUtil {
   }
 
   public static Map<String, String> target(DatabaseConfiguration dbConfig, String query) {
+    LOGGER.info("DatabaseUtil::Select " + query);
     Connection c = null;
     Statement st = null;
     try {
@@ -116,7 +169,7 @@ public class DatabaseUtil {
         }
       }
     } catch (SQLException e) {
-      LOGGER.debug("DatabaseUtil::" + query + e.getMessage());
+      LOGGER.debug("DatabaseUtil::Select " + query + e.getMessage());
     } finally {
       if (c != null)
         try {

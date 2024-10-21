@@ -20,7 +20,7 @@ public class Dictionary {
     this.mapWord = mapWord;
   }
 
-  public void setMapWordL(List<Word> list) {
+  public void setMapWordList(List<Word> list) {
     if (list == null) {
       return;
     }

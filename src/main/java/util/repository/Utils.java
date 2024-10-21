@@ -27,14 +27,14 @@ public class Utils {
       String key = keys[i];
       String value = values[i];
 
-      switch (key) {
+      switch (key.trim()) {
         case "username":
           user.setUsername(value != null ? value : "NULL");
           break;
         case "password":
           user.setPassword(value != null ? value : "NULL");
           break;
-        case "fullName":
+        case "fullname":
           user.setFullName(value != null ? value : "NULL");
           break;
         case "gender":
@@ -43,17 +43,20 @@ public class Utils {
         case "email":
           user.setEmail(value != null ? value : user.getUsername() + "@gmail.com");
           break;
-        case "birthdate":
+        case "birthday":
           user.setBirthdate(value != null ? value : "NULL");
           break;
-        case "registrationDate":
+        case "created":
           user.setRegistrationDate(value != null ? value : "NULL");
           break;
-        case "lastLogin":
+        case "updated":
           user.setLastLogin(value != null ? value : "NULL");
           break;
+        case "token":
+          user.setToken(value != null ? value : "NULL");
+          break;
         default:
-          System.out.println("Không có xử lý cho thuộc tính: " + key);
+          System.out.println("User unknow attribute: " + key);
       }
     }
   }
@@ -63,38 +66,38 @@ public class Utils {
       String key = keys[i];
       String value = values[i];
       switch (key) {
-        case "key":
-          entry.setKey(value != null ? value : "NULL");
+        case "word":
+          entry.setWord(value != null ? value : "NULL");
           break;
         case "meaning":
           entry.setMeaning(value != null ? value : "NULL");
           break;
-        case "transcription":
-          entry.setTranscription(value != null ? value : "NULL");
+        case "languaged":
+          entry.setLanguaged(value != null ? value : "NULL");
           break;
-        case "wordType":
-          entry.setWordType(value != null ? value : "NULL");
+        case "pronounce":
+          entry.setPronounce(value != null ? value : "NULL");
           break;
         case "description":
           entry.setDescription(value != null ? value : "NULL");
           break;
-        case "example":
-          entry.setExample(value != null ? value : "NULL");
+        case "part_of_speech":
+          entry.setPartOfSpeech(value != null ? value : "NULL");
           break;
-        case "synonyms":
-          entry.setSynonyms(value != null ? value : "NULL");
+        case "synonym":
+          entry.setSynonym(value != null ? value : "NULL");
           break;
         case "antonym":
           entry.setAntonym(value != null ? value : "NULL");
           break;
-        case "searchTime":
-          entry.setSearchTime(value != null ? value : "NULL");
-          break;
-        case "specialized":
-          entry.setSpecialized(value != null ? value : "NULL");
-          break;
+        // case "searchTime":
+        // entry.setSearchTime(value != null ? value : "NULL");
+        // break;
+        // case "specialized":
+        // entry.setSpecialized(value != null ? value : "NULL");
+        // break;
         default:
-          System.out.println("Không có xử lý cho thuộc tính: " + key);
+          System.out.println("Word unknow attribute:: " + key);
       }
     }
   }

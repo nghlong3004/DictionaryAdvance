@@ -1,21 +1,21 @@
 package service;
 
+import java.util.List;
 import java.util.prefs.Preferences;
 import model.account.User;
 import repository.DataRepository;
 import repository.DataRepositoryFactory;
 import util.BCryptUtil;
+import util.Constants;
 import util.PropertyHelper;
+import util.repository.Utils;
 import java.security.SecureRandom;
 
 public class AccountService implements AccountServiceInterface {
 
   private static AccountService instance;
 
-  public final String[] keys =
-      {"updated", "created", "gender", "fullname", "email", "birthday", "username", "password"};
-
-  private DataRepository<User> repository;
+  private DataRepository repository;
   private User user;
 
   public static synchronized AccountService getInstance(PropertyHelper dataSource) {
@@ -25,10 +25,9 @@ public class AccountService implements AccountServiceInterface {
     return instance;
   }
 
-  @SuppressWarnings("unchecked")
   private AccountService(PropertyHelper dataSource) {
     DataRepositoryFactory repositoryFactory = new DataRepositoryFactory(dataSource);
-    repository = (DataRepository<User>) repositoryFactory.creatRepository();
+    repository = repositoryFactory.creatRepository();
     user = new User();
     appIsRemember();
   }
@@ -37,14 +36,20 @@ public class AccountService implements AccountServiceInterface {
     Preferences pre = Preferences.userRoot().node("remember");
 
     String token = pre.get("token", null);
-    User checkUser = repository
-        .target(new String[] {"(select user_id from dictionary.users where username = '"
-            + token.substring(0, token.indexOf(':')) + "' )", "remember", "user_id"});
-    if (token.length() > 1 && checkUser != null) {
+    // stringList[0] = attribute name
+    // stringList[0] = attribute value
+    List<String[]> stringList = repository
+        .target(new String[] {"remember", "user_id", "(select user_id from users where username = '"
+            + token.substring(0, token.indexOf(':')).trim() + "' )"});
+
+    if (token.length() > 1 && stringList != null && stringList.size() > 1) {
+      User checkUser = new User();
+      Utils.setValues(checkUser, stringList.get(0), stringList.get(1));
       if (!token.equalsIgnoreCase(checkUser.getToken())) {
       } else {
-        user = repository
-            .target(new String[] {"'" + token.substring(0, token.indexOf(':')) + "'", "users", "username"});
+        stringList = repository.target(new String[] {"users", "username",
+            String.format("'%s'", token.substring(0, token.indexOf(':')).trim())});
+        Utils.setValues(user, stringList.get(0), stringList.get(1));
         user.setToken(token);
       }
     }
@@ -53,10 +58,11 @@ public class AccountService implements AccountServiceInterface {
   // update if login successfully
   @Override
   public void handleLoginSuccess(String username, boolean isRemember) {
+    repository.delete(new String[] {"remember", "''"}, new String[] {"''"});
     if (isRemember == true) {
       remember(username);
     } else {
-      remember("");
+      remember(null);
     }
   }
   // save
@@ -68,11 +74,13 @@ public class AccountService implements AccountServiceInterface {
 
   @Override
   public boolean login(User newUser) {
-    User checkUser =
-        (User) repository.target(new String[] {"'" + newUser.getUsername() + "'", "users", "username"});
-    if (checkUser == null) {
+    List<String[]> check = repository
+        .target(new String[] {"users", "username", String.format("'%s'", newUser.getUsername())});
+    if (check == null | check.size() < 2) {
       return false;
     }
+    User checkUser = new User();
+    Utils.setValues(checkUser, check.get(0), check.get(1));
     if (checkPassword(checkUser.getPassword(), newUser.getPassword())) {
       this.user = checkUser;
       this.user.setPassword(newUser.getPassword());
@@ -85,12 +93,12 @@ public class AccountService implements AccountServiceInterface {
   public void register(User user) {
     User data = user;
     data.setPassword(hashPassword(user.getPassword()));
-    repository.save(keys, value(data));
+    repository.save(Constants.KEY_USER, value(data));
   }
 
   @Override
   public boolean isUsernameAvailable(String username) {
-    if ((User) repository.target(new String[] {"'" + username + "'", "users", "username"}) == null) {
+    if (repository.target(new String[] {"users", "username", username}) == null) {
       return true;
     }
     return false;
@@ -102,7 +110,7 @@ public class AccountService implements AccountServiceInterface {
       System.err.println("no username");
     } else {
       String token = generateToken(username);
-      repository.save(new String[] {"token", token }, new String[] {"'" + username + "'", ""});
+      repository.save(new String[] {"token", token}, new String[] {username, ""});
       pre.put("token", token);
     }
 
@@ -115,8 +123,8 @@ public class AccountService implements AccountServiceInterface {
   public boolean checkPassword(String hash, String attempt) {
     Preferences pre = Preferences.userRoot().node("remember");
     String token = pre.get("token", null);
-    if(user.getToken() != null && user.getToken().equals(token)) {
-      if(hash.equals(attempt)) {
+    if (user.getToken() != null && user.getToken().equals(token)) {
+      if (hash.equals(attempt)) {
         return true;
       }
     }
