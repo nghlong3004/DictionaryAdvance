@@ -3,6 +3,7 @@ package util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import util.state.StorageType;
 
 public class PropertyHelper {
   private Properties properties;
@@ -11,6 +12,16 @@ public class PropertyHelper {
     properties = new Properties();
     try (InputStream input = getClass().getResourceAsStream("/config/config.properties")) {
       properties.load(input);
+      switch (getType()) {
+        case "file":
+          StorageType.state = StorageType.FILE;
+          break;
+        case "database":
+          StorageType.state = StorageType.DATABASE;
+          break;
+        default:
+          break;
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }

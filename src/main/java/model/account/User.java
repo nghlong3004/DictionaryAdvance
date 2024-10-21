@@ -9,6 +9,7 @@ public class User {
   private String email;
   private String registrationDate;
   private String lastLogin;
+  private String token;
   private boolean remember;
 
   public User(String username, String password, String fullName, String gender,
@@ -17,9 +18,10 @@ public class User {
     this.password = password;
     this.fullName = fullName;
     this.setGender(gender);
-    this.email = "unknow";
+    this.email = username + "@gmail.com";
     this.registrationDate = registrationDate;
     this.lastLogin = lastLogin;
+    this.token = "NULL";
     this.setRemember(remember);
   }
 
@@ -32,6 +34,7 @@ public class User {
     this.email = new String();
     this.registrationDate = new String();
     this.lastLogin = new String();
+    this.token = "NULL";
     this.setRemember(false);
   }
 
@@ -109,6 +112,16 @@ public class User {
 
   public void setGender(String gender) {
     this.gender = gender;
+  }
+
+
+  public String getToken() {
+    return token;
+  }
+
+
+  public void setToken(String token) {
+    this.token = token;
   }
 
 }

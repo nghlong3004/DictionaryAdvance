@@ -1,16 +1,15 @@
 package service;
 
-import static util.repository.Utils.*;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import java.util.prefs.Preferences;
 import model.account.User;
 import repository.DataRepository;
 import repository.DataRepositoryFactory;
+import util.BCryptUtil;
+import util.Constants;
 import util.PropertyHelper;
+import util.repository.Utils;
+import java.security.SecureRandom;
 
 public class AccountService implements AccountServiceInterface {
 
@@ -18,8 +17,6 @@ public class AccountService implements AccountServiceInterface {
 
   private DataRepository repository;
   private User user;
-  private List<User> accounts;
-  private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   public static synchronized AccountService getInstance(PropertyHelper dataSource) {
     if (instance == null) {
@@ -29,47 +26,46 @@ public class AccountService implements AccountServiceInterface {
   }
 
   private AccountService(PropertyHelper dataSource) {
-    DataRepositoryFactory repositoryFactory = new DataRepositoryFactory(dataSource, "Account");
+    DataRepositoryFactory repositoryFactory = new DataRepositoryFactory(dataSource);
     repository = repositoryFactory.creatRepository();
-    accounts = new ArrayList<User>();
-    Type userListType = new TypeToken<ArrayList<User>>() {}.getType();
-    accounts = gson.fromJson(repository.read(), userListType);
-    for (User user : accounts) {
-      if (user.isRemember()) {
-        this.user = user;
-        break;
+    user = new User();
+    appIsRemember();
+  }
+
+  private void appIsRemember() {
+    Preferences pre = Preferences.userRoot().node("remember");
+
+    String token = pre.get("token", null);
+    // stringList[0] = attribute name
+    // stringList[0] = attribute value
+    List<String[]> stringList = repository
+        .target(new String[] {"remember", "user_id", "(select user_id from users where username = '"
+            + token.substring(0, token.indexOf(':')).trim() + "' )"});
+
+    if (token.length() > 1 && stringList != null && stringList.size() > 1) {
+      User checkUser = new User();
+      Utils.setValues(checkUser, stringList.get(0), stringList.get(1));
+      if (!token.equalsIgnoreCase(checkUser.getToken())) {
+      } else {
+        stringList = repository.target(new String[] {"users", "username",
+            String.format("'%s'", token.substring(0, token.indexOf(':')).trim())});
+        Utils.setValues(user, stringList.get(0), stringList.get(1));
+        user.setToken(token);
       }
     }
-    if (user == null) {
-      user = new User();
-    }
-
   }
 
   // update if login successfully
   @Override
-  public void handleLoginSuccess(String username, boolean remember) {
-    for (int i = 0; i < accounts.size(); ++i) {
-      User curUser = accounts.get(i);
-      if (username.equalsIgnoreCase(curUser.getUsername())) {
-        curUser.setLastLogin(nowTimeinString());
-        curUser.setRemember(remember);
-        accounts.set(i, curUser);
-      } else {
-        if (curUser.isRemember()) {
-          curUser.setRemember(false);
-          accounts.set(i, curUser);
-        }
-      }
+  public void handleLoginSuccess(String username, boolean isRemember) {
+    repository.delete(new String[] {"remember", "''"}, new String[] {"''"});
+    if (isRemember == true) {
+      remember(username);
+    } else {
+      remember(null);
     }
-    saveAccounts();
   }
   // save
-
-  public void saveAccounts() {
-    repository.save(gson.toJson(accounts));
-  }
-
 
   @Override
   public User getUser() {
@@ -77,30 +73,85 @@ public class AccountService implements AccountServiceInterface {
   }
 
   @Override
-  public boolean isUsernameAvailable(String username) {
-    for (User user : accounts) {
-      if (user.getUsername().equalsIgnoreCase(username)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  @Override
   public boolean login(User newUser) {
-    for (User user : accounts) {
-      if (user.getUsername().equalsIgnoreCase(newUser.getUsername())) {
-        return user.getPassword().equals(newUser.getPassword());
-      }
+    List<String[]> check = repository
+        .target(new String[] {"users", "username", String.format("'%s'", newUser.getUsername())});
+    if (check == null | check.size() < 2) {
+      return false;
+    }
+    User checkUser = new User();
+    Utils.setValues(checkUser, check.get(0), check.get(1));
+    if (checkPassword(checkUser.getPassword(), newUser.getPassword())) {
+      this.user = checkUser;
+      this.user.setPassword(newUser.getPassword());
+      return true;
     }
     return false;
   }
 
   @Override
   public void register(User user) {
-    accounts.add(user);
-    saveAccounts();
+    User data = user;
+    data.setPassword(hashPassword(user.getPassword()));
+    repository.save(Constants.KEY_USER, value(data));
+  }
 
+  @Override
+  public boolean isUsernameAvailable(String username) {
+    if (repository.target(new String[] {"users", "username", username}) == null) {
+      return true;
+    }
+    return false;
+  }
+
+  public void remember(String username) {
+    Preferences pre = Preferences.userRoot().node("remember");
+    if (username == null) {
+      System.err.println("no username");
+    } else {
+      String token = generateToken(username);
+      repository.save(new String[] {"token", token}, new String[] {username, ""});
+      pre.put("token", token);
+    }
+
+  }
+
+  public String hashPassword(String passwordToHash) {
+    return BCryptUtil.hashPassword(passwordToHash, BCryptUtil.gensalt(12));
+  }
+
+  public boolean checkPassword(String hash, String attempt) {
+    Preferences pre = Preferences.userRoot().node("remember");
+    String token = pre.get("token", null);
+    if (user.getToken() != null && user.getToken().equals(token)) {
+      if (hash.equals(attempt)) {
+        return true;
+      }
+    }
+    return BCryptUtil.checkPassword(attempt, hash);
+  }
+
+  public String generateToken(String username) {
+    long longToken = Math.abs(new SecureRandom().nextLong());
+    String random = Long.toString(longToken, 16);
+    return (username + ":" + random);
+  }
+
+  public String[] value(User data) {
+    char gender = '0';
+    switch (data.getGender()) {
+      case "Male":
+        gender = '1';
+        break;
+      case "Female":
+        gender = '2';
+        break;
+    }
+    String[] values = {"'" + data.getLastLogin() + "'", "'" + data.getRegistrationDate() + "'",
+        "'" + gender + "'", "'" + data.getFullName() + "'", "'" + data.getEmail() + "'",
+        data.getBirthdate() == null ? "NULL" : "'" + data.getBirthdate() + "'",
+        "'" + data.getUsername() + "'", "'" + data.getPassword() + "'"};
+    return values;
   }
 
 

@@ -131,8 +131,8 @@ public class LoginPanel extends JPanel {
       User user = new User();
       user.setUsername(textUsername.getText());
       user.setPassword(new String(textPassword.getPassword()));
-      if (ObjectContainer.getControllerInstance().login(user)) {
-        ObjectContainer.getControllerInstance().handleLoginSuccess(user.getUsername(),
+      if (ObjectContainer.getUserController().login(user)) {
+        ObjectContainer.getUserController().handleLoginSuccess(user.getUsername(),
             remember.isSelected());
         ViewDictionary.open();
         Notification.getInstance().clearAll();
@@ -168,7 +168,7 @@ public class LoginPanel extends JPanel {
 
   private void initialization() {
 
-    user = ObjectContainer.getControllerInstance().getUser();
+    user = ObjectContainer.getUserController().getUser();
 
     textUsername = new JTextField(user.getUsername());
 
@@ -203,16 +203,16 @@ public class LoginPanel extends JPanel {
   }
 
   public boolean isUsernameAvailable(String username) {
-    return ObjectContainer.getControllerInstance().isUsernameAvailable(username);
+    return ObjectContainer.getUserController().isUsernameAvailable(username);
   }
 
   public User getUser() {
-    return ObjectContainer.getControllerInstance().getUser();
+    return ObjectContainer.getUserController().getUser();
   }
 
   public void register(User user) {
     this.user = user;
-    ObjectContainer.getControllerInstance().register(user);
+    ObjectContainer.getUserController().register(user);
   }
 
 }

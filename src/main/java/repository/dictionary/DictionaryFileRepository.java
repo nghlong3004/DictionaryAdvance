@@ -1,6 +1,6 @@
 package repository.dictionary;
 
-import com.google.gson.JsonElement;
+import java.util.List;
 import repository.DataRepository;
 import repository.FileRepository;
 
@@ -12,21 +12,34 @@ public class DictionaryFileRepository extends FileRepository implements DataRepo
   }
 
   @Override
-  public void save(String json) {
+  public void save(String[] key, String[] value) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void update() {
+  public void delete(String[] key, String[] value) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public JsonElement read() {
+  public void update(String[] key, String[] value) {
     // TODO Auto-generated method stub
-    return super.load();
+
   }
+
+  @Override
+  public List<String[]> read() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<String[]> target(String[] data) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 
 }
