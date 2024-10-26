@@ -10,7 +10,7 @@ public class Word {
   private String synonym;
   private String description;
   private String pronounce;
-  private String partOfSpeech;
+  private String part_of_speech;
   private String languaged;
   private String history;
 
@@ -63,11 +63,11 @@ public class Word {
   }
 
   public String getPartOfSpeech() {
-    return partOfSpeech;
+    return part_of_speech;
   }
 
   public void setPartOfSpeech(String partOfSpeech) {
-    this.partOfSpeech = partOfSpeech;
+    this.part_of_speech = partOfSpeech;
   }
 
   public String getLanguaged() {

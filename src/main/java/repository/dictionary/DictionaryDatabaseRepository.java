@@ -1,6 +1,7 @@
 package repository.dictionary;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import configuration.DatabaseConfiguration;
 import model.dictionary.Word;
@@ -17,8 +18,15 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
 
   @Override
   public List<Word> getListWordsBy(String starting, String languageFrom, String languageTo) {
-    // TODO Auto-generated method stub
-    return null;
+    String query = "SELECT * FROM dictionary WHERE word LIKE ? AND languaged = ? LIMIT 5";
+    List<Object> params = new ArrayList<Object>();
+    params.add(starting + '%');
+    params.add(languageFrom);
+    List<Word> words = new ArrayList<Word>();
+    for (Object word : databaseExecute(query, params, Word.class)) {
+      words.add((Word) word);
+    }
+    return words.isEmpty() ? null : words;
   }
 
   @Override

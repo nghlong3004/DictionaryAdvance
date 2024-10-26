@@ -49,7 +49,7 @@ public class ObjectContainer {
     return USER_CONTROLLER;
   }
 
-  public static DictionaryController getAppController() {
+  public static DictionaryController getDictionaryController() {
     return dictionaryController;
   }
 
