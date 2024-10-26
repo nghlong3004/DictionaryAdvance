@@ -14,27 +14,38 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import configuration.FileConfiguration;
 import model.account.User;
 import model.dictionary.Word;
-import util.state.AppState;
+import util.EnumContainer;
 
 public abstract class FileRepository {
 
-  private String fileName;
+  private FileConfiguration fileConfiguration;
   private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 
-  public FileRepository(String fileName) {
-    this.fileName = fileName;
+  public FileRepository(FileConfiguration fileConfiguration) {
+    this.fileConfiguration = fileConfiguration;
   }
 
   // path file in system
   private Path getPath() {
+    String fileName = switch (EnumContainer.authenticationState) {
+      case LOGIN -> fileConfiguration.getFileUserName();
+      case LOGGED_IN -> fileConfiguration.getFileDictionaryName();
+      default -> null;
+    };
     return Paths.get("data", fileName);
   }
 
-  public List<String[]> read() {
+  public List<String[]> readFile() {
     Path path = getPath();
+    String fileName = switch (EnumContainer.authenticationState) {
+      case LOGIN -> fileConfiguration.getFileUserName();
+      case LOGGED_IN -> fileConfiguration.getFileDictionaryName();
+      default -> null;
+    };
     if (!Files.exists(path)) {
       File newFile = new File("data\\" + fileName);
       try {
@@ -50,11 +61,11 @@ public abstract class FileRepository {
     try (BufferedReader reader =
         new BufferedReader(new InputStreamReader(Files.newInputStream(path)))) {
       Type accountListType = null;
-      switch (AppState.state) {
+      switch (EnumContainer.authenticationState) {
         case LOGIN:
           accountListType = new TypeToken<List<User>>() {}.getType();
           break;
-        case IN_APP:
+        case LOGGED_IN:
           accountListType = new TypeToken<List<Word>>() {}.getType();
           break;
         default:
@@ -73,7 +84,7 @@ public abstract class FileRepository {
   }
 
 
-  public void save(List<String[]> data) {
+  public void saveFile(List<String[]> data) {
     Path path = getPath();
     // create file if file is null
     try {

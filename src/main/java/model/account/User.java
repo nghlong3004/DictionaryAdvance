@@ -1,75 +1,32 @@
 package model.account;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
-  private String username;
-  private String password;
-  private String fullName;
-  private String gender;
-  private String birthdate;
   private String email;
-  private String registrationDate;
-  private String lastLogin;
-  private String token;
-  private boolean remember;
+  private String password;
+  private String fullname;
+  private int gender;
+  private LocalDate birthday;
+  private LocalDateTime created;
+  private LocalDateTime updated;
 
-  public User(String username, String password, String fullName, String gender,
-      String registrationDate, String lastLogin, boolean remember) {
-    this.username = username;
+  public User(String email, String password, String fullname, int gender, LocalDate birthday,
+      LocalDateTime registrationDate, LocalDateTime lastLogin) {
+    this.email = email;
     this.password = password;
-    this.fullName = fullName;
-    this.setGender(gender);
-    this.email = username + "@gmail.com";
-    this.registrationDate = registrationDate;
-    this.lastLogin = lastLogin;
-    this.token = "NULL";
-    this.setRemember(remember);
+    this.fullname = fullname;
+    this.gender = gender;
+    this.birthday = birthday;
+    this.created = registrationDate;
+    this.updated = lastLogin;
   }
-
 
   public User() {
-    this.username = new String();
-    this.password = new String();
-    this.fullName = new String();
-    this.birthdate = new String();
-    this.email = new String();
-    this.registrationDate = new String();
-    this.lastLogin = new String();
-    this.token = "NULL";
-    this.setRemember(false);
-  }
 
-
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public String getFullName() {
-    return fullName;
-  }
-
-  public void setFullName(String fullName) {
-    this.fullName = fullName;
-  }
-
-  public String getBirthdate() {
-    return birthdate;
-  }
-
-  public void setBirthdate(String birthdate) {
-    this.birthdate = birthdate;
   }
 
   public String getEmail() {
@@ -80,48 +37,66 @@ public class User {
     this.email = email;
   }
 
-  public String getRegistrationDate() {
-    return registrationDate;
+  public String getPassword() {
+    return password;
   }
 
-  public void setRegistrationDate(String registrationDate) {
-    this.registrationDate = registrationDate;
+  public void setPassword(String password) {
+    this.password = password;
   }
 
-  public String getLastLogin() {
-    return lastLogin;
+  public String getFullname() {
+    return fullname;
   }
 
-  public void setLastLogin(String lastLogin) {
-    this.lastLogin = lastLogin;
+  public void setFullname(String fullname) {
+    this.fullname = fullname;
   }
 
-  public boolean isRemember() {
-    return remember;
-  }
-
-  public void setRemember(boolean remember) {
-    this.remember = remember;
-  }
-
-
-  public String getGender() {
+  public int getGender() {
     return gender;
   }
 
-
-  public void setGender(String gender) {
+  public void setGender(short gender) {
     this.gender = gender;
   }
 
-
-  public String getToken() {
-    return token;
+  public LocalDate getBirthday() {
+    return birthday;
   }
 
-
-  public void setToken(String token) {
-    this.token = token;
+  public void setBirthday(LocalDate birthday) {
+    this.birthday = birthday;
   }
+  
+
+  public LocalDateTime getCreated() {
+    return created;
+  }
+
+  public void setCreated(LocalDateTime created) {
+    this.created = created;
+  }
+
+  public LocalDateTime getUpdated() {
+    return updated;
+  }
+
+  public void setUpdated(LocalDateTime updated) {
+    this.updated = updated;
+  }
+
+  public List<Object> getAttributesAsList() {
+    List<Object> attributes = new ArrayList<>();
+    attributes.add(getEmail());
+    attributes.add(getPassword());
+    attributes.add(getFullname());
+    attributes.add(getGender());
+    attributes.add(getBirthday());
+    attributes.add(getCreated());
+    attributes.add(getUpdated());
+    return attributes;
+  }
+
 
 }

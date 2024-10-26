@@ -43,7 +43,7 @@ public class MainForm extends JLayeredPane {
   private void init(LoginPanel loginPanel) {
     setBorder(new EmptyBorder(5, 5, 5, 5));
     setLayout(new MainFormLayout());
-    menu = new Menu(loginPanel.getUser().getFullName(), loginPanel.getUser().getUsername());
+    menu = new Menu(loginPanel.getUser().getFullname(), loginPanel.getUser().getEmail());
     panelBody = new JPanel(new BorderLayout());
     initMenuArrowIcon();
     menuButton.putClientProperty(FlatClientProperties.STYLE, ""
@@ -59,7 +59,7 @@ public class MainForm extends JLayeredPane {
   }
 
   public void update() {
-    menu.setHeader(loginPanel.getUser().getFullName(), loginPanel.getUser().getUsername());
+    menu.setHeader(loginPanel.getUser().getFullname(), loginPanel.getUser().getEmail());
   }
 
   @Override
@@ -80,7 +80,8 @@ public class MainForm extends JLayeredPane {
     menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
       if (index == 0) {
         if (subIndex == 1) {
-          ViewDictionary.showForm(new Lookup(loginPanel.getUser().getUsername(), new ArrayList<String>()));
+          ViewDictionary
+              .showForm(new Lookup(loginPanel.getUser().getEmail(), new ArrayList<String>()));
         } else if (subIndex == 2) {
           ViewDictionary.showForm(new TextTranslator());
         } else if (subIndex == 3) {
@@ -89,7 +90,7 @@ public class MainForm extends JLayeredPane {
           action.cancel();
         }
       } else if (index == 5) {
-          
+
       } else if (index == 6) {
         panelBody.removeAll();
         NotificationUI.goodbye();
@@ -113,7 +114,7 @@ public class MainForm extends JLayeredPane {
   }
 
   public void hideMenu() {
-    ViewDictionary.showForm(new Lookup(loginPanel.getUser().getUsername(), new ArrayList<String>()));
+    ViewDictionary.showForm(new Lookup(loginPanel.getUser().getEmail(), new ArrayList<String>()));
     menu.hideMenuItem();
   }
 

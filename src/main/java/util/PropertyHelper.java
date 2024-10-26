@@ -3,7 +3,7 @@ package util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import util.state.StorageType;
+import util.EnumContainer.DataStorageType;
 
 public class PropertyHelper {
   private Properties properties;
@@ -14,10 +14,10 @@ public class PropertyHelper {
       properties.load(input);
       switch (getType()) {
         case "file":
-          StorageType.state = StorageType.FILE;
+          EnumContainer.dataStorageType = DataStorageType.FILE;
           break;
         case "database":
-          StorageType.state = StorageType.DATABASE;
+          EnumContainer.dataStorageType = DataStorageType.DATABASE;
           break;
         default:
           break;

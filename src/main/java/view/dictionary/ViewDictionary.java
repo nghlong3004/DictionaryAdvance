@@ -5,7 +5,6 @@ import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 
 import raven.popup.GlassPanePopup;
 import util.ObjectContainer;
-import util.state.AppState;
 import util.view.NotificationUI;
 import view.dictionary.components.MainForm;
 import view.login.LoginPanel;
@@ -57,7 +56,6 @@ public class ViewDictionary extends JFrame {
 
   public static void open() {
     FlatAnimatedLafChange.showSnapshot();
-    AppState.state = AppState.IN_APP;
     ObjectContainer.loadDictionary();
     app.setContentPane(app.mainForm);
     app.mainForm.update();
@@ -70,7 +68,6 @@ public class ViewDictionary extends JFrame {
 
   public static void resigter() {
     FlatAnimatedLafChange.showSnapshot();
-    AppState.state = AppState.LOGIN;
     app.setContentPane(app.registerPanel);
     app.loginPanel.applyComponentOrientation(app.getComponentOrientation());
     SwingUtilities.updateComponentTreeUI(app.registerPanel);
@@ -79,7 +76,6 @@ public class ViewDictionary extends JFrame {
 
   public static void login() {
     FlatAnimatedLafChange.showSnapshot();
-    AppState.state = AppState.LOGIN;
     app.setContentPane(app.loginPanel);
     app.applyComponentOrientation(app.getComponentOrientation());
     SwingUtilities.updateComponentTreeUI(app.loginPanel);

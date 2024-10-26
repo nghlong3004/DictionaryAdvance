@@ -43,7 +43,7 @@ public class Register extends JPanel {
   private JRadioButton radioMale;
   private JRadioButton radioFemale;
   private JRadioButton radioDefault;
-  private String gender;
+  private int gender;
 
   private JButton buttonRegister;
   private JButton buttonExit;
@@ -133,16 +133,15 @@ public class Register extends JPanel {
         NotificationUI.warning("Mật khẩu mới không khớp!");
       } else if (!isValidUsername(username)) {
         NotificationUI.warning("Tên đăng nhập không hợp lệ!");
-      } else if (!login.isUsernameAvailable(username)) {
+      } else if (login.getUserByEmail(username) != null) {
         NotificationUI.warning("Tên đăng nhập đã tồn tại!");
       } else if (isValidUsername(username) && isValidPassword(password)
-          && login.isUsernameAvailable(username) && !gender.isEmpty()) {
+          && login.getUserByEmail(username) == null && gender >= 0) {
         login.setUsername(username);
         login.setPassword(password);
         Notification.getInstance().clearAll();
         NotificationUI.succes("Registered successfully!!");
-        User user = new User(username, password, fullname, gender, nowTimeinString(),
-            nowTimeinString(), false);
+        User user = new User(username, password, fullname, gender, null, nowTime(), null);
         login.register(user);
         ViewDictionary.login();
       } else {
@@ -153,11 +152,11 @@ public class Register extends JPanel {
       if (e.getStateChange() == ItemEvent.SELECTED) {
         JRadioButton selected = (JRadioButton) e.getItem();
         if (selected.equals(radioMale)) {
-          gender = "Male";
+          gender = 0;
         } else if (selected.equals(radioFemale)) {
-          gender = "Female";
+          gender = 1;
         } else if (selected.equals(radioDefault)) {
-          gender = "Default";
+          gender = 2;
         }
       }
     };
@@ -179,11 +178,13 @@ public class Register extends JPanel {
     radioFemale = new JRadioButton("Nữ");
     radioMale = new JRadioButton("Nam");
     radioDefault = new JRadioButton("Khác");
-    gender = new String();
-
+    
+    gender = -1;
+    
     buttonRegister = new JButton("Đăng ký");
     buttonExit = new JButton("x");
   }
+
 
 
 

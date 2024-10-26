@@ -1,59 +1,40 @@
 package repository.account;
 
-import java.util.ArrayList;
-import java.util.List;
-import repository.DataRepository;
+import configuration.FileConfiguration;
+import model.account.User;
 import repository.FileRepository;
+import repository.UserRepository;
 
-public class AccountFileRepository extends FileRepository implements DataRepository {
+public class AccountFileRepository extends FileRepository implements UserRepository {
 
-  public AccountFileRepository(String fileName) {
-    super(fileName);
-    // TODO Auto-generated constructor stub
+  public AccountFileRepository(FileConfiguration fileConfiguration) {
+    super(fileConfiguration);
   }
 
   @Override
-  public void save(String[] keys, String[] values) {
-    List<String[]> users = read();
-    super.save(users);
-
-  }
-
-  @Override
-  public void delete(String[] key, String[] value) {
+  public User getUserByEmail(String email) {
     // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void update(String[] key, String[] value) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public List<String[]> read() {
-    return super.read();
-  }
-
-  @Override
-  public List<String[]> target(String[] datas) {
-    for (String[] user : read()) {
-      for (String data : user) {
-        if (data.contains("username")) {
-          String[] username = data.split("/");
-          if (username.length > 1) {
-            if (username[1].trim().equalsIgnoreCase(datas[0])) {
-              List<String[]> arr = new ArrayList<String[]>();
-              arr.add(user);
-              return arr;
-            }
-          }
-        }
-      }
-    }
     return null;
   }
+
+  @Override
+  public void saveUser(User user) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void updateUser(User user) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void deleteUser(User user) {
+    // TODO Auto-generated method stub
+    
+  }
+
 
 
 }

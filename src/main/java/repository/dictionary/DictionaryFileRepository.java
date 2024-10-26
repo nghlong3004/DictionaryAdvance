@@ -1,45 +1,44 @@
 package repository.dictionary;
 
+import java.time.LocalDate;
 import java.util.List;
-import repository.DataRepository;
+import configuration.FileConfiguration;
+import model.dictionary.Word;
+import repository.DictionaryRepository;
 import repository.FileRepository;
 
-public class DictionaryFileRepository extends FileRepository implements DataRepository {
+public class DictionaryFileRepository extends FileRepository implements DictionaryRepository {
 
-  public DictionaryFileRepository(String fileName) {
-    super(fileName);
-    // TODO Auto-generated constructor stub
+  public DictionaryFileRepository(FileConfiguration fileConfiguration) {
+    super(fileConfiguration);
+    
   }
 
   @Override
-  public void save(String[] key, String[] value) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void delete(String[] key, String[] value) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void update(String[] key, String[] value) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public List<String[]> read() {
+  public List<Word> getListWordsBy(String starting, String languageFrom, String languageTo) {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public List<String[]> target(String[] data) {
+  public List<Word> getTableWordBySpecialized(String specialized) {
     // TODO Auto-generated method stub
     return null;
   }
+
+  @Override
+  public List<Word> getHistoryByDate(LocalDate date) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<Word> getLovelyByEmail(String email) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  
 
 
 }

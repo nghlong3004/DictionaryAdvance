@@ -18,7 +18,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-
+import controller.UserController;
 import model.account.User;
 import net.miginfocom.swing.MigLayout;
 import util.ObjectContainer;
@@ -33,8 +33,8 @@ public class LoginPanel extends JPanel {
    */
   private static final long serialVersionUID = 9112353425595838469L;
   private JTextField textUsername;
+  private final UserController userController = ObjectContainer.getUserController();
   private JPasswordField textPassword;
-  private User user;
 
   private JCheckBox remember;
   private boolean flagRemember = false;
@@ -129,11 +129,10 @@ public class LoginPanel extends JPanel {
 
     clickLogin.addActionListener(e -> {
       User user = new User();
-      user.setUsername(textUsername.getText());
+      user.setEmail(textUsername.getText());
       user.setPassword(new String(textPassword.getPassword()));
-      if (ObjectContainer.getUserController().login(user)) {
-        ObjectContainer.getUserController().handleLoginSuccess(user.getUsername(),
-            remember.isSelected());
+      if (userController.login(user)) {
+        userController.handleLoginSuccess(user.getEmail(), remember.isSelected());
         ViewDictionary.open();
         Notification.getInstance().clearAll();
         NotificationUI.succes("Log in successfully!");
@@ -167,19 +166,13 @@ public class LoginPanel extends JPanel {
   }
 
   private void initialization() {
+    textUsername = new JTextField("nghlong3004@gmail.com");
 
-    user = ObjectContainer.getUserController().getUser();
-
-    textUsername = new JTextField(user.getUsername());
-
-    textPassword = new JPasswordField(new String(user.getPassword()));
+    textPassword = new JPasswordField("matkhau");
 
     clickLogin = new JButton("Đăng nhập");
 
     remember = new JCheckBox("Nhớ mật khẩu");
-    if (user.isRemember()) {
-      remember.setSelected(true);
-    }
 
     icon = new ImageIcon(IMAGE_PATH + IMAGE_LOGIN_BACKGROUND);
   }
@@ -202,17 +195,16 @@ public class LoginPanel extends JPanel {
     }
   }
 
-  public boolean isUsernameAvailable(String username) {
-    return ObjectContainer.getUserController().isUsernameAvailable(username);
+  public User getUserByEmail(String email) {
+    return userController.getUserByEmail(email);
   }
 
   public User getUser() {
-    return ObjectContainer.getUserController().getUser();
+    return userController.getUser();
   }
 
   public void register(User user) {
-    this.user = user;
-    ObjectContainer.getUserController().register(user);
+    userController.register(user);
   }
 
 }

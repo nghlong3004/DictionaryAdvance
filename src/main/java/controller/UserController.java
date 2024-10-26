@@ -12,8 +12,8 @@ public class UserController {
     this.userService = userService;
   }
 
-  public boolean isUsernameAvailable(String username) {
-    return userService.isUsernameAvailable(username);
+  public User getUserByEmail(String username) {
+    return userService.getUserByEmail(username);
   }
 
   // login

@@ -6,7 +6,7 @@ public interface AccountServiceInterface {
 
   public boolean login(User user);
   
-  public boolean isUsernameAvailable(String username);
+  public User getUserByEmail(String email);
 
   public void handleLoginSuccess(String username, boolean remember);
 
