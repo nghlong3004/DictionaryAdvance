@@ -8,8 +8,7 @@ import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
-
-import view.dictionary.ViewDictionary;
+import view.ViewDictionary;
 
 
 public class MainClass {

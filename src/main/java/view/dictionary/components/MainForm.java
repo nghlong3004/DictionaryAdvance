@@ -4,8 +4,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.util.UIScale;
 
-import util.view.NotificationUI;
-import view.dictionary.ViewDictionary;
+import view.ViewDictionary;
 import view.dictionary.components.home.Lookup;
 import view.dictionary.components.home.TechnicalVocabulary;
 import view.dictionary.components.home.TextTranslator;
@@ -21,7 +20,6 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -78,25 +76,19 @@ public class MainForm extends JLayeredPane {
 
   private void initMenuEvent() {
     menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
-      if (index == 0) {
-        if (subIndex == 1) {
-          ViewDictionary
-              .showForm(new Lookup(loginPanel.getUser().getEmail(), new ArrayList<String>()));
-        } else if (subIndex == 2) {
-          ViewDictionary.showForm(new TextTranslator());
-        } else if (subIndex == 3) {
-          ViewDictionary.showForm(new TechnicalVocabulary());
-        } else {
-          action.cancel();
-        }
-      } else if (index == 5) {
-
-      } else if (index == 6) {
-        panelBody.removeAll();
-        NotificationUI.goodbye();
-        ViewDictionary.login();
-      } else {
-        action.cancel();
+      switch (index) {
+        case 0:
+          switch(subIndex) {
+            case 1: 
+              ViewDictionary.showForm(new Lookup(loginPanel.getUser().getEmail()));
+              break;
+            case 2:
+              ViewDictionary.showForm(new TextTranslator());
+              break;
+            case 3:
+              ViewDictionary.showForm(new TechnicalVocabulary());
+              break;
+          }
       }
     });
   }
@@ -114,7 +106,7 @@ public class MainForm extends JLayeredPane {
   }
 
   public void hideMenu() {
-    ViewDictionary.showForm(new Lookup(loginPanel.getUser().getEmail(), new ArrayList<String>()));
+    ViewDictionary.showForm(new Lookup(loginPanel.getUser().getEmail()));
     menu.hideMenuItem();
   }
 

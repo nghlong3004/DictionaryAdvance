@@ -133,7 +133,7 @@ public class Lookup extends JPanel {
     return html;
   }
 
-  public Lookup(String username, List<String> datas) {
+  public Lookup(String username) {
     putClientProperty(FlatClientProperties.STYLE, "" + "arc:25;" + "background:null");
     suggestionPopup = new JPopupMenu();
     suggestionPopup.putClientProperty(FlatClientProperties.STYLE,
@@ -577,7 +577,6 @@ public class Lookup extends JPanel {
     if(data != null) {
       for(Word word: data) {
         if(word.getWord().equals(text.getText())) {
-          System.out.println(word.getMeaning());
           lblNewLabel.setText(convert(word.getWord(), 20));
           editorPane.setText(word.getMeaning());
         }

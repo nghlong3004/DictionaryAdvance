@@ -1,8 +1,5 @@
 package model.dictionary;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Word {
   private String word;
   private String meaning;
@@ -12,7 +9,6 @@ public class Word {
   private String pronounce;
   private String part_of_speech;
   private String languaged;
-  private String history;
 
   public String getWord() {
     return word;
@@ -76,27 +72,6 @@ public class Word {
 
   public void setLanguaged(String languaged) {
     this.languaged = languaged;
-  }
-
-  public String getHistory() {
-    return history;
-  }
-
-  public void setHistory(String history) {
-    this.history = history;
-  }
-  public List<Object> getAttributesAsList() {
-    List<Object> attributes = new ArrayList<>();
-    attributes.add(getWord());
-    attributes.add(getMeaning());
-    attributes.add(getAntonym());
-    attributes.add(getSynonym());
-    attributes.add(getDescription());
-    attributes.add(getPronounce());
-    attributes.add(getPartOfSpeech());
-    attributes.add(getLanguaged());
-    attributes.add(getHistory());
-    return attributes;
   }
 
 

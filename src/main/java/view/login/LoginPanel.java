@@ -23,7 +23,7 @@ import model.user.User;
 import net.miginfocom.swing.MigLayout;
 import util.ObjectContainer;
 import util.view.NotificationUI;
-import view.dictionary.ViewDictionary;
+import view.ViewDictionary;
 import view.notifications.Notification;
 
 public class LoginPanel extends JPanel {

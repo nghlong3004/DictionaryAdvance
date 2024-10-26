@@ -1,4 +1,4 @@
-package view.dictionary;
+package view;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
