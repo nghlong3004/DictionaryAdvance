@@ -7,7 +7,8 @@ import model.dictionary.Word;
 import repository.DatabaseRepository;
 import repository.DictionaryRepository;
 
-public class DictionaryDatabaseRepository extends DatabaseRepository implements DictionaryRepository {
+public class DictionaryDatabaseRepository extends DatabaseRepository
+    implements DictionaryRepository {
 
   public DictionaryDatabaseRepository(DatabaseConfiguration databaseConfiguration) {
     super(databaseConfiguration);

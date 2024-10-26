@@ -8,8 +8,8 @@ import controller.UserController;
 
 import service.DictionaryServiceInterface;
 import service.DictionaryService;
-import service.AccountServiceInterface;
-import service.AccountService;
+import service.UserServiceInterface;
+import service.UserService;
 
 public class ObjectContainer {
 
@@ -21,7 +21,7 @@ public class ObjectContainer {
   private static final FileConfiguration FILE_CONFIGURATION = new FileConfiguration(
       PROPERTY_HELPER.getFilePathUser(), PROPERTY_HELPER.getFilePathDictionary());
 
-  private static final AccountServiceInterface USER_SERVICE_INTERFACE = new AccountService();
+  private static final UserServiceInterface USER_SERVICE_INTERFACE = new UserService();
   
   private static final UserController USER_CONTROLLER = new UserController(USER_SERVICE_INTERFACE);
 

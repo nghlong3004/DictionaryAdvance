@@ -11,7 +11,7 @@ public class DictionaryFileRepository extends FileRepository implements Dictiona
 
   public DictionaryFileRepository(FileConfiguration fileConfiguration) {
     super(fileConfiguration);
-    
+
   }
 
   @Override
@@ -38,7 +38,6 @@ public class DictionaryFileRepository extends FileRepository implements Dictiona
     return null;
   }
 
-  
 
 
 }

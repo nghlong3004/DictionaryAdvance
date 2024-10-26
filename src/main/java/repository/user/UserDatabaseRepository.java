@@ -1,17 +1,17 @@
-package repository.account;
+package repository.user;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import configuration.DatabaseConfiguration;
-import model.account.User;
+import model.user.User;
 import repository.DatabaseRepository;
 import repository.UserRepository;
 import util.RowInsert;
 
-public class AccountDatabaseRepository extends DatabaseRepository implements UserRepository {
+public class UserDatabaseRepository extends DatabaseRepository implements UserRepository {
 
-  public AccountDatabaseRepository(DatabaseConfiguration databaseConfiguration) {
+  public UserDatabaseRepository(DatabaseConfiguration databaseConfiguration) {
     super(databaseConfiguration);
   }
 

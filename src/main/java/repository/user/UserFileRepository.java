@@ -1,13 +1,13 @@
-package repository.account;
+package repository.user;
 
 import configuration.FileConfiguration;
-import model.account.User;
+import model.user.User;
 import repository.FileRepository;
 import repository.UserRepository;
 
-public class AccountFileRepository extends FileRepository implements UserRepository {
+public class UserFileRepository extends FileRepository implements UserRepository {
 
-  public AccountFileRepository(FileConfiguration fileConfiguration) {
+  public UserFileRepository(FileConfiguration fileConfiguration) {
     super(fileConfiguration);
   }
 
@@ -32,7 +32,7 @@ public class AccountFileRepository extends FileRepository implements UserReposit
   @Override
   public void deleteUser(User user) {
     // TODO Auto-generated method stub
-    
+
   }
 
 

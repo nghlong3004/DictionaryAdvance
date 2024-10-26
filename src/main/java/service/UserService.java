@@ -1,18 +1,18 @@
 package service;
 
 import configuration.MappingConfiguration;
-import model.account.User;
+import model.user.User;
 import repository.UserRepository;
 import repository.UserRepositoryFactory;
 import util.BCryptUtil;
 import util.repository.Utils;
 
-public class AccountService implements AccountServiceInterface {
+public class UserService implements UserServiceInterface {
 
   private UserRepository userRepository;
   private User user;
 
-  public AccountService() {
+  public UserService() {
     MappingConfiguration.registerMapping(User.class, "users");
     UserRepositoryFactory repositoryFactory = new UserRepositoryFactory();
     userRepository = repositoryFactory.createUserRepository();
@@ -34,7 +34,7 @@ public class AccountService implements AccountServiceInterface {
   @Override
   public boolean login(User newUser) {
     User user = getUserByEmail(newUser.getEmail());
-    if(user == null) {
+    if (user == null) {
       return false;
     }
     return checkPassword(user.getPassword(), newUser.getPassword());
@@ -46,7 +46,7 @@ public class AccountService implements AccountServiceInterface {
     data.setPassword(hashPassword(user.getPassword()));
     userRepository.saveUser(data);
   }
- 
+
   @Override
   public User getUserByEmail(String username) {
     return userRepository.getUserByEmail(username);

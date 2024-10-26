@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import controller.UserController;
-import model.account.User;
+import model.user.User;
 import net.miginfocom.swing.MigLayout;
 import util.ObjectContainer;
 import util.view.NotificationUI;

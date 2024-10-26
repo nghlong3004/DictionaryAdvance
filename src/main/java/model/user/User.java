@@ -1,4 +1,4 @@
-package model.account;
+package model.user;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -68,7 +68,7 @@ public class User {
   public void setBirthday(LocalDate birthday) {
     this.birthday = birthday;
   }
-  
+
 
   public LocalDateTime getCreated() {
     return created;

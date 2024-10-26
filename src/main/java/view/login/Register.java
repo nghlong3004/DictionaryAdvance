@@ -16,8 +16,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-
-import model.account.User;
+import model.user.User;
 import net.miginfocom.swing.MigLayout;
 import util.view.NotificationUI;
 import view.dictionary.ViewDictionary;

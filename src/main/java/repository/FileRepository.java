@@ -15,8 +15,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import configuration.FileConfiguration;
-import model.account.User;
 import model.dictionary.Word;
+import model.user.User;
 import util.EnumContainer;
 
 public abstract class FileRepository {

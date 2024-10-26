@@ -1,11 +1,11 @@
 package service;
 
-import model.account.User;
+import model.user.User;
 
-public interface AccountServiceInterface {
+public interface UserServiceInterface {
 
   public boolean login(User user);
-  
+
   public User getUserByEmail(String email);
 
   public void handleLoginSuccess(String username, boolean remember);

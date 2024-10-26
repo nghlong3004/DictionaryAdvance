@@ -28,7 +28,7 @@ public class DictionaryService implements DictionaryServiceInterface {
     try {
       value = Google.translate(key, languageForm, languageTo);
     } catch (IOException e) {
-      
+
       e.printStackTrace();
     }
     return value;
