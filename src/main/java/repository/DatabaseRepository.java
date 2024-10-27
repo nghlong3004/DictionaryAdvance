@@ -1,19 +1,19 @@
 package repository;
 
+import java.util.List;
 import configuration.DatabaseConfiguration;
+import util.DatabaseExecutor;
 
 public abstract class DatabaseRepository {
 
-  private final DatabaseConfiguration databaseConfiguration;
+  private DatabaseExecutor databaseExecutor;
 
   public DatabaseRepository(DatabaseConfiguration databaseConfiguration) {
-    this.databaseConfiguration = databaseConfiguration;
+    databaseExecutor = new DatabaseExecutor(databaseConfiguration);
   }
 
-  public DatabaseConfiguration getDatabaseConfiguration() {
-    return databaseConfiguration;
+  public List<Object> databaseExecute(String query, List<Object> params, Class<?> clazz) {
+    return databaseExecutor.execute(query, params, clazz);
   }
-
-
 
 }
