@@ -1,49 +1,21 @@
 package model.dictionary;
 
 public class Word {
-  // từ vựng
-  private String key;
-  // nghĩa của từ
+  private String word;
   private String meaning;
-  // phiên âm
-  private String transcription;
-  // Từ loại
-  private String wordType;
-  // mô tả từ đó
+  private String antonym;
+  private String synonym;
   private String description;
-  // ví dụ về từ đó
-  private String example;
-  // từ đồng nghĩa
-  private String Synonyms;
-  // từ trái nghĩa
-  private String Antonym;
-  // thời gian tìm kiếm
-  private String searchTime;
-  // chuyen nganh
-  private String specialized;
+  private String pronounce;
+  private String part_of_speech;
+  private String languaged;
 
-  public String getKey() {
-    return key;
+  public String getWord() {
+    return word;
   }
 
-  public void setKey(String vocabulary) {
-    this.key = vocabulary;
-  }
-
-  public String getTranscription() {
-    return transcription;
-  }
-
-  public void setTranscription(String transcription) {
-    this.transcription = transcription;
-  }
-
-  public String getWordType() {
-    return wordType;
-  }
-
-  public void setWordType(String wordType) {
-    this.wordType = wordType;
+  public void setWord(String word) {
+    this.word = word;
   }
 
   public String getMeaning() {
@@ -54,6 +26,22 @@ public class Word {
     this.meaning = meaning;
   }
 
+  public String getAntonym() {
+    return antonym;
+  }
+
+  public void setAntonym(String antonym) {
+    this.antonym = antonym;
+  }
+
+  public String getSynonym() {
+    return synonym;
+  }
+
+  public void setSynonym(String synonym) {
+    this.synonym = synonym;
+  }
+
   public String getDescription() {
     return description;
   }
@@ -62,45 +50,30 @@ public class Word {
     this.description = description;
   }
 
-  public String getExample() {
-    return example;
+  public String getPronounce() {
+    return pronounce;
   }
 
-  public void setExample(String example) {
-    this.example = example;
+  public void setPronounce(String pronounce) {
+    this.pronounce = pronounce;
   }
 
-  public String getSynonyms() {
-    return Synonyms;
+  public String getPartOfSpeech() {
+    return part_of_speech;
   }
 
-  public void setSynonyms(String synonyms) {
-    Synonyms = synonyms;
+  public void setPartOfSpeech(String partOfSpeech) {
+    this.part_of_speech = partOfSpeech;
   }
 
-  public String getAntonym() {
-    return Antonym;
+  public String getLanguaged() {
+    return languaged;
   }
 
-  public void setAntonym(String antonym) {
-    Antonym = antonym;
+  public void setLanguaged(String languaged) {
+    this.languaged = languaged;
   }
 
-  public String getSearchTime() {
-    return searchTime;
-  }
-
-  public void setSearchTime(String searchTime) {
-    this.searchTime = searchTime;
-  }
-
-  public String getSpecialized() {
-    return specialized;
-  }
-
-  public void setSpecialized(String specialized) {
-    this.specialized = specialized;
-  }
 
 
 }
