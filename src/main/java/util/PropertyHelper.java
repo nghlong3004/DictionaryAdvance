@@ -3,6 +3,7 @@ package util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import util.EnumContainer.DataStorageType;
 
 public class PropertyHelper {
   private Properties properties;
@@ -11,6 +12,16 @@ public class PropertyHelper {
     properties = new Properties();
     try (InputStream input = getClass().getResourceAsStream("/config/config.properties")) {
       properties.load(input);
+      switch (getType()) {
+        case "file":
+          EnumContainer.dataStorageType = DataStorageType.FILE;
+          break;
+        case "database":
+          EnumContainer.dataStorageType = DataStorageType.DATABASE;
+          break;
+        default:
+          break;
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
