@@ -1,36 +1,36 @@
 package configuration;
 
-import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MappingConfiguration {
 
-  private static final Map<Class<?>, EntityMapping> MAPPINGS = new HashMap<>();
+  private String tableName;
+  private Map<String, String> fieldToColumnMapping = new HashMap<>();
 
-  public static void registerMapping(Class<?> clazz, String tableName) {
-    EntityMapping entityMapping = new EntityMapping(tableName);
-
-    Field[] fields = clazz.getDeclaredFields();
-
-    for (Field field : fields) {
-      String fieldName = field.getName();
-      String columnName = convertFieldToColumn(fieldName);
-      entityMapping.addFieldMapping(fieldName, columnName);
-    }
-    entityMapping.finalizeMappings();
-    register(clazz, entityMapping);
+  public MappingConfiguration(String tableName) {
+    this.tableName = tableName;
   }
 
-  public static EntityMapping getMapping(Class<?> clazz) {
-    return MAPPINGS.get(clazz);
+  public void addFieldMapping(String fieldName, String columnName) {
+    fieldToColumnMapping.put(fieldName, columnName);
   }
 
-  private static void register(Class<?> clazz, EntityMapping entityMapping) {
-    MAPPINGS.put(clazz, entityMapping);
+  public String getTableName() {
+    return tableName;
   }
 
-  private static String convertFieldToColumn(String fieldName) {
-    return fieldName;
+  public String getColumnForField(String fieldName) {
+    return fieldToColumnMapping.get(fieldName);
   }
+
+  public Map<String, String> getFieldToColumnMapping() {
+    return fieldToColumnMapping;
+  }
+
+  public void finalizeMappings() {
+    fieldToColumnMapping = Collections.unmodifiableMap(fieldToColumnMapping);
+  }
+
 }

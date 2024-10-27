@@ -6,10 +6,9 @@ import model.dictionary.Word;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import configuration.MappingConfiguration;
-
 import repository.DictionaryRepository;
 import repository.DictionaryRepositoryFactory;
+import util.MappingUtil;
 import util.repository.Google;
 
 public class DictionaryService implements DictionaryServiceInterface {
@@ -17,7 +16,7 @@ public class DictionaryService implements DictionaryServiceInterface {
   private DictionaryRepository dictionaryRepository;
 
   public DictionaryService() {
-    MappingConfiguration.registerMapping(Word.class, "dictionary");
+    MappingUtil.registerMapping(Word.class, "dictionary");
     DictionaryRepositoryFactory dataRepositoryFactory = new DictionaryRepositoryFactory();
     dictionaryRepository = dataRepositoryFactory.createDictionaryRepository();
   }

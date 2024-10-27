@@ -1,14 +1,13 @@
 package util;
 
 import java.lang.reflect.Field;
-import configuration.EntityMapping;
 import configuration.MappingConfiguration;
 
 public class RowInsert {
   public static String generateInsertSQL(Object entity) throws IllegalAccessException {
     Class<?> clazz = entity.getClass();
 
-    EntityMapping mapping = MappingConfiguration.getMapping(clazz);
+    MappingConfiguration mapping = MappingUtil.getMapping(clazz);
     if (mapping == null) {
       throw new RuntimeException("No mapping found for class: " + clazz.getName());
     }

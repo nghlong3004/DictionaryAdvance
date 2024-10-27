@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 import configuration.DatabaseConfiguration;
-import configuration.EntityMapping;
 import configuration.MappingConfiguration;
 
 public class DatabaseExecutor {
@@ -108,7 +107,7 @@ public class DatabaseExecutor {
 
   private List<Object> processSelectQuery(PreparedStatement statement, Class<?> clazz) {
     List<Object> rows = new ArrayList<>();
-    EntityMapping mapping = MappingConfiguration.getMapping(clazz);
+    MappingConfiguration mapping = MappingUtil.getMapping(clazz);
 
     if (mapping == null) {
       LOGGER.error("No mapping found for class: " + clazz.getName());
@@ -126,7 +125,7 @@ public class DatabaseExecutor {
     return rows;
   }
 
-  private Object mapResultSetToEntity(ResultSet rs, Class<?> clazz, EntityMapping mapping)
+  private Object mapResultSetToEntity(ResultSet rs, Class<?> clazz, MappingConfiguration mapping)
       throws Exception {
     Object instance = clazz.getDeclaredConstructor().newInstance();
     for (Map.Entry<String, String> entry : mapping.getFieldToColumnMapping().entrySet()) {

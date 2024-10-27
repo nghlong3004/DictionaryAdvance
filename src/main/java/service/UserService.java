@@ -1,10 +1,10 @@
 package service;
 
-import configuration.MappingConfiguration;
 import model.user.User;
 import repository.UserRepository;
 import repository.UserRepositoryFactory;
 import util.BCryptUtil;
+import util.MappingUtil;
 import util.repository.Utils;
 
 public class UserService implements UserServiceInterface {
@@ -13,7 +13,7 @@ public class UserService implements UserServiceInterface {
   private User user;
 
   public UserService() {
-    MappingConfiguration.registerMapping(User.class, "users");
+    MappingUtil.registerMapping(User.class, "users");
     UserRepositoryFactory repositoryFactory = new UserRepositoryFactory();
     userRepository = repositoryFactory.createUserRepository();
     user = new User();
