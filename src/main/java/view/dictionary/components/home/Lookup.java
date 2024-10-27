@@ -17,7 +17,6 @@ import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +27,9 @@ import javax.swing.event.DocumentListener;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-
+import controller.DictionaryController;
+import model.dictionary.Word;
+import util.ObjectContainer;
 import util.extral.AvatarIcon;
 import util.repository.Google;
 
@@ -44,9 +45,10 @@ import java.awt.event.ActionEvent;
 public class Lookup extends JPanel {
 
   private static final long serialVersionUID = 1L;
+  private DictionaryController dictionaryController = ObjectContainer.getDictionaryController();
   private JTextField text;
   private JPopupMenu suggestionPopup;
-  private List<String> data;
+  private List<Word> data;
   private JPanel panel;
   private JPanel panel_1;
   private JPanel panel_1_1;
@@ -79,32 +81,28 @@ public class Lookup extends JPanel {
   private void showSuggestions(JTextField text) {
     String input = text.getText();
     suggestionPopup.removeAll();
-    selectedIndex = 0;
     if (input.isEmpty()) {
       suggestionPopup.setVisible(false);
       return;
     }
 
-    List<String> matches = new ArrayList<>();
-    for (String item : data) {
-      if (item.toLowerCase().startsWith(input.toLowerCase())) {
-        matches.add(item);
-      }
-    }
+    data = dictionaryController.getListWordsBy(input, langFrom, langTo);
 
-    if (!matches.isEmpty()) {
-      for (String match : matches) {
-        JMenuItem menuItem = new JMenuItem(match);
+    if (data != null && !data.isEmpty()) {
+      for (Word match : data) {
+        JMenuItem menuItem = new JMenuItem(match.getWord());
         menuItem.addActionListener(e -> {
-          text.setText(match);
+          text.setText(match.getWord());
+          handleOK();
           suggestionPopup.setVisible(false);
         });
         suggestionPopup.add(menuItem);
       }
-      suggestionPopup
-          .setPopupSize(new Dimension(text.getWidth(), text.getHeight() * matches.size()));
+      suggestionPopup.setPopupSize(new Dimension(text.getWidth(), text.getHeight() * data.size()));
       suggestionPopup.show(text, 0, text.getHeight());
       suggestionPopup.setVisible(true);
+      suggestionPopup.revalidate();
+      suggestionPopup.repaint();
       highlightItem();
     } else {
       suggestionPopup.setVisible(false);
@@ -134,20 +132,19 @@ public class Lookup extends JPanel {
     return html;
   }
 
-  public Lookup(String username, List<String> datas) {
+  public Lookup(String username) {
     putClientProperty(FlatClientProperties.STYLE, "" + "arc:25;" + "background:null");
     suggestionPopup = new JPopupMenu();
     suggestionPopup.putClientProperty(FlatClientProperties.STYLE,
         "" + "[light]foreground:darken(@background, 3%);"
             + "[dark]foreground:lighten(@background, 3%);" + "background:null;"
             + "borderColor:null;" + "borderInsets:5, 5, 5, 5;");
-    this.data = datas;
     langFrom = "en";
     langTo = "vi";
-    
+
     String html = "<html>" + "<div style='text-align: center;'>" + "<table>"
         + "<tr><td style='text-align: left;'>Xin chào</td></tr>"
-        + "<tr><td style='text-align: left; font-size: 24px; color: " + rndColor() + ";'>"
+        + "<tr><td style='text-align: left; font-size: 20px; color: " + rndColor() + ";'>"
         + username + "</td></tr>" + "</table>" + "</div>" + "</html>";
     editorPane = new JEditorPane("text/html", "");
     editorPane.setOpaque(false);
@@ -269,6 +266,11 @@ public class Lookup extends JPanel {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_ENTER) {
           handleOK();
+          if (suggestionPopup.isVisible() && selectedIndex != -1) {
+            JMenuItem selectedItem = (JMenuItem) suggestionPopup.getComponent(selectedIndex);
+            text.setText(selectedItem.getText());
+            suggestionPopup.setVisible(false);
+          }
         }
         if (keyCode == KeyEvent.VK_UP) {
           if (suggestionPopup.isVisible()) {
@@ -286,14 +288,6 @@ public class Lookup extends JPanel {
 
         }
 
-        else if (keyCode == KeyEvent.VK_ENTER) {
-          if (suggestionPopup.isVisible() && selectedIndex != -1) {
-            JMenuItem selectedItem = (JMenuItem) suggestionPopup.getComponent(selectedIndex);
-            text.setText(selectedItem.getText());
-            suggestionPopup.setVisible(false);
-          }
-          editorPane.setText("");
-        }
       }
     });
 
@@ -317,20 +311,20 @@ public class Lookup extends JPanel {
           btnNewButton_1.setBackground(Color.decode("#22c55e"));
           btnNewButton_1_1.setBackground(Color.decode("#4ade80"));
           btnNewButton_1_2.setBackground(Color.decode("#4ade80"));
-        } else if (e.getSource() == btnNewButton_1_1) {
+        } else if (e.getSource() == btnNewButton_1_2) {
           langFrom = "vi";
           langTo = "en";
           btnNewButton_1.setBackground(Color.decode("#4ade80"));
-          btnNewButton_1_1.setBackground(Color.decode("#22c55e"));
-          btnNewButton_1_2.setBackground(Color.decode("#4ade80"));
+          btnNewButton_1_2.setBackground(Color.decode("#22c55e"));
+          btnNewButton_1_1.setBackground(Color.decode("#4ade80"));
         } else if (e.getSource() == btnNewButton_1_2) {
           btnNewButton_1.setBackground(Color.decode("#4ade80"));
-          btnNewButton_1_1.setBackground(Color.decode("#4ade80"));
-          btnNewButton_1_2.setBackground(Color.decode("#22c55e"));
+          btnNewButton_1_2.setBackground(Color.decode("#4ade80"));
+          btnNewButton_1_1.setBackground(Color.decode("#22c55e"));
         }
       }
     };
-    
+
 
     btnNewButton_1.putClientProperty(FlatClientProperties.STYLE, ""
 
@@ -579,15 +573,14 @@ public class Lookup extends JPanel {
   }
 
   protected void handleOK() {
-    lblNewLabel.setText(convert(text.getText(), 20));
-    new Thread(() -> {
-      try {
-        editorPane.setText(Google.translate(text.getText(), langFrom, langTo));
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+    if (data != null) {
+      for (Word word : data) {
+        if (word.getWord().equals(text.getText())) {
+          lblNewLabel.setText(convert(word.getWord(), 20));
+          editorPane.setText(word.getMeaning());
+        }
       }
-    }).start();
+    }
   }
 
   protected void speak(String language) {

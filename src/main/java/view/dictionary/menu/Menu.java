@@ -44,10 +44,10 @@ public class Menu extends JPanel {
 
   private String headerName;
 
-  private final String menuItems[][] = {{"~MAIN~"},
-      {"Trang chủ", "Tra từ", "Dịch văn bản", "Từ vựng theo chuyên ngành", "Từ vựng hot"},
-      {"~OTHER~"}, {"Lịch sử"}, {"Yêu thích"}, {"Mini Game"}, {"Cài đặt"}, {"~ACCOUNT~"},
-      {"Tài khoản"}, {"Đăng xuất"}};
+  private final String menuItems[][] =
+      {{"~MAIN~"}, {"Trang chủ", "Tra từ", "Dịch văn bản", "Từ vựng theo chuyên ngành"},
+          {"~OTHER~"}, {"Lịch sử"}, {"Yêu thích"}, {"Mini Game"}, {"Cài đặt"}, {"~ACCOUNT~"},
+          {"Tài khoản"}, {"Đăng xuất"}};
 
   public boolean isMenuFull() {
     return menuFull;
@@ -122,6 +122,7 @@ public class Menu extends JPanel {
     add(lightDarkMode);
     add(toolBarAccentColor);
   }
+
   public void setAvatarIcon(AvatarIcon icon) {
     header.setIcon(icon);
   }
@@ -275,4 +276,3 @@ public class Menu extends JPanel {
     }
   }
 }
-
