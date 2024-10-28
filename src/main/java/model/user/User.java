@@ -2,8 +2,6 @@ package model.user;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class User {
   private String email;
@@ -84,18 +82,6 @@ public class User {
 
   public void setUpdated(LocalDateTime updated) {
     this.updated = updated;
-  }
-
-  public List<Object> getAttributesAsList() {
-    List<Object> attributes = new ArrayList<>();
-    attributes.add(getEmail());
-    attributes.add(getPassword());
-    attributes.add(getFullname());
-    attributes.add(getGender());
-    attributes.add(getBirthday());
-    attributes.add(getCreated());
-    attributes.add(getUpdated());
-    return attributes;
   }
 
 

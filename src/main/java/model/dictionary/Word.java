@@ -7,8 +7,8 @@ public class Word {
   private String synonym;
   private String description;
   private String pronounce;
-  private String part_of_speech;
-  private String languaged;
+  private String partOfSpeech;
+  private String language;
 
   public String getWord() {
     return word;
@@ -59,19 +59,19 @@ public class Word {
   }
 
   public String getPartOfSpeech() {
-    return part_of_speech;
+    return partOfSpeech;
   }
 
   public void setPartOfSpeech(String partOfSpeech) {
-    this.part_of_speech = partOfSpeech;
+    this.partOfSpeech = partOfSpeech;
   }
 
   public String getLanguaged() {
-    return languaged;
+    return language;
   }
 
   public void setLanguaged(String languaged) {
-    this.languaged = languaged;
+    this.language = languaged;
   }
 
 
