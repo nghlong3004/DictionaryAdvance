@@ -34,13 +34,13 @@ public class DictionaryService implements DictionaryServiceInterface {
   }
 
   @Override
-  public List<Word> getListWordsBy(String key, String languageForm, String languageTo) {
-    return dictionaryRepository.getListWordsBy(key, languageForm, languageTo);
+  public List<Word> searchWordStartWithKey(String key, String languageForm, String languageTo) {
+    return dictionaryRepository.searchWordStartWithKey(key, languageForm, languageTo);
   }
 
   @Override
-  public List<Word> getTableWord(String specialized) {
-    return dictionaryRepository.getTableWordBySpecialized(specialized);
+  public List<Word> getSpecializedWord(String specialized) {
+    return dictionaryRepository.getSpecializedWord(specialized);
   }
 
   @Override
