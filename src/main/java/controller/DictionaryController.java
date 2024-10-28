@@ -12,16 +12,16 @@ public class DictionaryController {
     this.dictionaryService = dictionary;
   }
 
-  public List<Word> getListWordsBy(String key, String languageForm, String languageTo) {
-    return dictionaryService.getListWordsBy(key, languageForm, languageTo);
+  public List<Word> searchWordStartWithKey(String key, String languageForm, String languageTo) {
+    return dictionaryService.searchWordStartWithKey(key, languageForm, languageTo);
   }
 
   public String textTranslator(String key, String languageForm, String languageTo) {
     return dictionaryService.textTranslator(key, languageForm, languageTo);
   }
 
-  public List<Word> getTableWord(String specialized) {
-    return dictionaryService.getTableWord(specialized);
+  public List<Word> getSpecializedWord(String specialized) {
+    return dictionaryService.getSpecializedWord(specialized);
   }
 
   public List<Word> getLovelyByEmail(String email) {
