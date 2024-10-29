@@ -7,10 +7,8 @@ public class Constants {
       "^[\\w._%+-]{2,15}@[\\w.-]{1,8}\\.[a-zA-Z]{2,6}$";
 
   public static class ColorApp {
-    public static final String[] COLORS = {"#b91c1c", "#3f3f46", "#b91c1c", "#431407", "#92400e",
-        "#f59e0b", "#fcd34d", "#ef4444", "#65a30d", "#22c55e", "#15803d", "#10b981", "#14b8a6",
-        "#0891b2", "#7dd3fc", "#2563eb", "#3b82f6", "#818cf8", "#4338ca", "#312e81", "#7c3aed",
-        "#d946ef", "#a21caf", "#ec4899", "#e11d48", "#fecdd3", "#fff1f2"};
+    public static final String[] COLORS = {"#a3e635", "#4ade80", "#facc15", "#ef4444", "#3b82f6",
+        "#8b5cf6", "#6d28d9", "#f9a8d4", "#be123c"};
   }
   public static class View {
     public static final int TILE_DEFAULT_SIZE = 32;
