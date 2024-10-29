@@ -1,15 +1,22 @@
 package configuration;
 
 public class FileConfiguration {
-  private final String fileName;
+  private final String fileUserName;
+  private final String fileDictionaryName;
 
-  public FileConfiguration(String fileName) {
-    this.fileName = fileName;
+  public FileConfiguration(String fileUserName, String fileDictionaryName) {
+    this.fileUserName = fileUserName;
+    this.fileDictionaryName = fileDictionaryName;
   }
 
-  public String getFileName() {
-    return fileName;
+  public String getFileUserName() {
+    return fileUserName;
   }
+
+  public String getFileDictionaryName() {
+    return fileDictionaryName;
+  }
+
 
 
 }
