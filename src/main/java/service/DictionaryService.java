@@ -5,45 +5,20 @@ import java.util.List;
 import model.dictionary.Word;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Map.Entry;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import model.dictionary.Dictionary;
-import repository.DataRepository;
-import repository.DataRepositoryFactory;
-import util.PropertyHelper;
+import java.time.LocalDate;
+import repository.DictionaryRepository;
+import repository.DictionaryRepositoryFactory;
+import util.MappingUtil;
 import util.repository.Google;
 
 public class DictionaryService implements DictionaryServiceInterface {
-  private static DictionaryService instance;
-  private Dictionary dictionary;
-  private DataRepository dataRepository;
-  private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-  public static synchronized DictionaryService getInstance(PropertyHelper dataSource) {
-    if (instance == null) {
-      instance = new DictionaryService(dataSource);
-    }
-    return instance;
-  }
+  private DictionaryRepository dictionaryRepository;
 
-  private DictionaryService(PropertyHelper dataSource) {
-    dictionary = new Dictionary();
-    DataRepositoryFactory dataRepositoryFactory =
-        new DataRepositoryFactory(dataSource, "Dictionary");
-    dataRepository = dataRepositoryFactory.creatRepository();
-    Type userListType = new TypeToken<List<Word>>() {}.getType();
-    dictionary.setMapWordL(gson.fromJson(dataRepository.read(), userListType));
-
-  }
-
-  @Override
-  public Word lookup(String key, String languageForm, String languageTo) {
-
-    return dictionary.getMapWord().get(key);
+  public DictionaryService() {
+    MappingUtil.registerMapping(Word.class, "dictionary");
+    DictionaryRepositoryFactory dataRepositoryFactory = new DictionaryRepositoryFactory();
+    dictionaryRepository = dataRepositoryFactory.createDictionaryRepository();
   }
 
   @Override
@@ -52,42 +27,32 @@ public class DictionaryService implements DictionaryServiceInterface {
     try {
       value = Google.translate(key, languageForm, languageTo);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
+
       e.printStackTrace();
     }
     return value;
   }
 
   @Override
-  public List<Word> getTableWord(String specialized) {
-    List<Word> list = new ArrayList<Word>();
-    for (Entry<String, Word> entry : dictionary.getMapWord().entrySet()) {
-      if (entry.getValue().getSpecialized().equals(specialized)) {
-        list.add(entry.getValue());
-      }
-    }
-
-    return null;
+  public List<Word> searchWordStartWithKey(String key, String languageForm, String languageTo) {
+    return dictionaryRepository.searchWordStartWithKey(key, languageForm, languageTo);
   }
 
   @Override
-  public List<String> getHotPick() {
-    // TODO Auto-generated method stub
-    return null;
+  public List<Word> getSpecializedWord(String specialized) {
+    return dictionaryRepository.getSpecializedWord(specialized);
   }
 
   @Override
-  public List<String> getHistory() {
-    List<String> list = new ArrayList<String>();
-    for (Entry<String, Word> entry : dictionary.getMapWord().entrySet()) {
-      if (!entry.getValue().getSearchTime().isEmpty()) {
-        list.add(entry.getKey());
-      }
-    }
-    return list;
+  public List<Word> getLovelyByEmail(String email) {
+    return dictionaryRepository.getLovelyByEmail(email);
+  }
+
+  @Override
+  public List<Word> getHistoryByDate(LocalDate data) {
+    return dictionaryRepository.getHistoryByDate(data);
   }
 
 
 
 }
-
