@@ -1,9 +1,10 @@
-package view.dictionary;
+package view;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 
 import raven.popup.GlassPanePopup;
+import util.ObjectContainer;
 import util.view.NotificationUI;
 import view.dictionary.components.MainForm;
 import view.login.LoginPanel;
@@ -55,6 +56,7 @@ public class ViewDictionary extends JFrame {
 
   public static void open() {
     FlatAnimatedLafChange.showSnapshot();
+    ObjectContainer.loadDictionary();
     app.setContentPane(app.mainForm);
     app.mainForm.update();
     app.mainForm.applyComponentOrientation(app.getComponentOrientation());
