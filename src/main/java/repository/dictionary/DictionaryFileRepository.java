@@ -1,32 +1,43 @@
 package repository.dictionary;
 
-import com.google.gson.JsonElement;
-import repository.DataRepository;
+import java.time.LocalDate;
+import java.util.List;
+import configuration.FileConfiguration;
+import model.dictionary.Word;
+import repository.DictionaryRepository;
 import repository.FileRepository;
 
-public class DictionaryFileRepository extends FileRepository implements DataRepository {
+public class DictionaryFileRepository extends FileRepository implements DictionaryRepository {
 
-  public DictionaryFileRepository(String fileName) {
-    super(fileName);
-    // TODO Auto-generated constructor stub
-  }
-
-  @Override
-  public void save(String json) {
-    // TODO Auto-generated method stub
+  public DictionaryFileRepository(FileConfiguration fileConfiguration) {
+    super(fileConfiguration);
 
   }
 
   @Override
-  public void update() {
+  public List<Word> getListWordsBy(String starting, String languageFrom, String languageTo) {
     // TODO Auto-generated method stub
-
+    return null;
   }
 
   @Override
-  public JsonElement read() {
+  public List<Word> getTableWordBySpecialized(String specialized) {
     // TODO Auto-generated method stub
-    return super.load();
+    return null;
   }
+
+  @Override
+  public List<Word> getHistoryByDate(LocalDate date) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<Word> getLovelyByEmail(String email) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
 
 }
