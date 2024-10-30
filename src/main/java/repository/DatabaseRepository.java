@@ -12,8 +12,8 @@ public abstract class DatabaseRepository {
     databaseExecutor = new DatabaseExecutor(databaseConfiguration);
   }
 
-  public List<Object> databaseExecute(String query, List<Object> params, Class<?> clazz) {
-    return databaseExecutor.execute(query, params, clazz);
+  public List<List<Object>> databaseExecute(String query) {
+    return databaseExecutor.execute(query);
   }
 
 }
