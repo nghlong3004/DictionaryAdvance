@@ -3,12 +3,12 @@ package controller;
 import java.time.LocalDate;
 import java.util.List;
 import model.dictionary.Word;
-import service.DictionaryServiceInterface;
+import service.DictionaryService;
 
 public class DictionaryController {
-  private final DictionaryServiceInterface dictionaryService;
+  private final DictionaryService dictionaryService;
 
-  public DictionaryController(DictionaryServiceInterface dictionary) {
+  public DictionaryController(DictionaryService dictionary) {
     this.dictionaryService = dictionary;
   }
 
@@ -32,7 +32,7 @@ public class DictionaryController {
     return dictionaryService.getHistoryByDate(data);
   }
 
-  public DictionaryServiceInterface getDictionaryService() {
+  public DictionaryService getDictionaryService() {
     return dictionaryService;
   }
 }

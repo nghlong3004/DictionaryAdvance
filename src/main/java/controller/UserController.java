@@ -1,14 +1,14 @@
 package controller;
 
 import model.user.User;
-import service.UserServiceInterface;
+import service.UserService;
 
 public class UserController {
 
   // controller ---call--> service
-  private final UserServiceInterface userService;
+  private final UserService userService;
 
-  public UserController(UserServiceInterface userService) {
+  public UserController(UserService userService) {
     this.userService = userService;
   }
 

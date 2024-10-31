@@ -6,22 +6,21 @@ import model.dictionary.Word;
 
 import java.io.IOException;
 import java.time.LocalDate;
+
 import repository.DictionaryRepository;
 import repository.DictionaryRepositoryFactory;
-import util.MappingUtil;
+
 import util.repository.Google;
 
-public class DictionaryService implements DictionaryServiceInterface {
+public class DictionaryService {
 
   private DictionaryRepository dictionaryRepository;
 
   public DictionaryService() {
-    MappingUtil.registerMapping(Word.class, "dictionary");
     DictionaryRepositoryFactory dataRepositoryFactory = new DictionaryRepositoryFactory();
     dictionaryRepository = dataRepositoryFactory.createDictionaryRepository();
   }
 
-  @Override
   public String textTranslator(String key, String languageForm, String languageTo) {
     String value = null;
     try {
@@ -33,22 +32,18 @@ public class DictionaryService implements DictionaryServiceInterface {
     return value;
   }
 
-  @Override
   public List<Word> searchWordStartWithKey(String key, String languageForm, String languageTo) {
     return dictionaryRepository.searchWordStartWithKey(key, languageForm, languageTo);
   }
 
-  @Override
   public List<Word> getSpecializedWord(String specialized) {
     return dictionaryRepository.getSpecializedWord(specialized);
   }
 
-  @Override
   public List<Word> getLovelyByEmail(String email) {
     return dictionaryRepository.getLovelyByEmail(email);
   }
 
-  @Override
   public List<Word> getHistoryByDate(LocalDate data) {
     return dictionaryRepository.getHistoryByDate(data);
   }
