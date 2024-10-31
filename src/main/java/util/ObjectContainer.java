@@ -6,9 +6,7 @@ import configuration.FileConfiguration;
 import controller.DictionaryController;
 import controller.UserController;
 
-import service.DictionaryServiceInterface;
 import service.DictionaryService;
-import service.UserServiceInterface;
 import service.UserService;
 
 public class ObjectContainer {
@@ -21,19 +19,19 @@ public class ObjectContainer {
   private static final FileConfiguration FILE_CONFIGURATION = new FileConfiguration(
       PROPERTY_HELPER.getFilePathUser(), PROPERTY_HELPER.getFilePathDictionary());
 
-  private static final UserServiceInterface USER_SERVICE_INTERFACE = new UserService();
+  private static final UserService USER_SERVICE = new UserService();
 
-  private static final UserController USER_CONTROLLER = new UserController(USER_SERVICE_INTERFACE);
+  private static final UserController USER_CONTROLLER = new UserController(USER_SERVICE);
 
-  private static DictionaryServiceInterface dictionaryServiceInterface;
+  private static DictionaryService dictionaryService;
   private static DictionaryController dictionaryController;
 
   public static void loadDictionary() {
-    if (dictionaryServiceInterface == null) {
-      dictionaryServiceInterface = new DictionaryService();
+    if (dictionaryService == null) {
+      dictionaryService = new DictionaryService();
     }
     if (dictionaryController == null) {
-      dictionaryController = new DictionaryController(dictionaryServiceInterface);
+      dictionaryController = new DictionaryController(dictionaryService);
     }
   }
 
