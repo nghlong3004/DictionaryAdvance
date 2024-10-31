@@ -86,7 +86,7 @@ public class Lookup extends JPanel {
       return;
     }
 
-    data = dictionaryController.getListWordsBy(input, langFrom, langTo);
+    data = dictionaryController.searchWordStartWithKey(input, langFrom, langTo);
 
     if (data != null && !data.isEmpty()) {
       for (Word match : data) {

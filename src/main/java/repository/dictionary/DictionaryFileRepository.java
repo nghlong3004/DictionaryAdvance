@@ -15,26 +15,26 @@ public class DictionaryFileRepository extends FileRepository implements Dictiona
   }
 
   @Override
-  public List<Word> getListWordsBy(String starting, String languageFrom, String languageTo) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public List<Word> getTableWordBySpecialized(String specialized) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public List<Word> getHistoryByDate(LocalDate date) {
-    // TODO Auto-generated method stub
+
     return null;
   }
 
   @Override
   public List<Word> getLovelyByEmail(String email) {
-    // TODO Auto-generated method stub
+
+    return null;
+  }
+
+  @Override
+  public List<Word> searchWordStartWithKey(String key, String languageFrom, String languageTo) {
+
+    return null;
+  }
+
+  @Override
+  public List<Word> getSpecializedWord(String specialized) {
+
     return null;
   }
 

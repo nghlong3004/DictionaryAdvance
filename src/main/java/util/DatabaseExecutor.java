@@ -1,25 +1,21 @@
 package util;
 
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 import configuration.DatabaseConfiguration;
-import configuration.MappingConfiguration;
 
 public class DatabaseExecutor {
 
@@ -72,74 +68,62 @@ public class DatabaseExecutor {
     return c;
   }
 
-  public List<Object> execute(String query, final List<Object> params, Class<?> clazz) {
+  public List<List<Object>> execute(String query) {
     LOGGER.info("DatabaseExecutor::Execute " + query);
-    if (params == null) {
-      LOGGER.debug("DatabaseExecutor::Params is null");
-      return null;
-    }
     try (Connection c = getConnection()) {
       if (c != null) {
-        try (PreparedStatement statement = prepareStatementWithParams(c, query, params)) {
-          if (query.trim().toUpperCase().startsWith("SELECT")) {
-            return processSelectQuery(statement, clazz);
-          } else {
-            statement.executeUpdate();
-            LOGGER.info("DatabaseExecutor::Non-SELECT query executed successfully");
+        try (Statement statement = c.createStatement()) {
+          try (ResultSet resultSet = statement.executeQuery(query)) {
+            ResultSetMetaData md = resultSet.getMetaData();
+            int numCols = md.getColumnCount();
+            List<String> colNames = IntStream.range(0, numCols).mapToObj(i -> {
+              try {
+                return md.getColumnName(i + 1);
+              } catch (SQLException e) {
+                LOGGER.error("DatabaseExecutor::Error ResultSetMetaData get column name!", e);
+                return "?";
+              }
+            }).collect(Collectors.toList());
+            List<List<Object>> result = new ArrayList<List<Object>>();
+            List<Object> nameCol = new ArrayList<Object>();
+            colNames.forEach(value -> {
+              nameCol.add(toCamelCase(value));
+            });
+            result.add(nameCol);
+            while (resultSet.next()) {
+              List<Object> row = new ArrayList<Object>();
+              colNames.forEach(cn -> {
+                try {
+                  row.add(resultSet.getObject(cn));
+                } catch (SQLException e) {
+                  e.printStackTrace();
+                }
+              });
+              LOGGER.info(String.format("DatabaseExecutor::%s It's been successful!",
+                  query.substring(0, query.indexOf(' '))));
+              result.add(row);
+            }
+            return result;
+          } catch (Exception e) {
+            LOGGER.error("DatabaseExecutor::Error result statement executing query", e);
           }
+        } catch (Exception e) {
+          LOGGER.error("DatabaseExecutor::Error statement executing query", e);
         }
       }
     } catch (Exception e) {
       LOGGER.error("DatabaseExecutor::Error executing query", e);
     }
 
-    return Collections.emptyList();
+    return new ArrayList<List<Object>>();
   }
 
-  private PreparedStatement prepareStatementWithParams(Connection connection, String query,
-      List<Object> params) throws SQLException {
-    PreparedStatement statement = connection.prepareStatement(query);
-    for (int i = 0; i < params.size(); ++i) {
-      statement.setObject(i + 1, params.get(i));
+  private String toCamelCase(String phrase) {
+    while (phrase.contains("_")) {
+      phrase = phrase.replaceFirst("_[a-z]",
+          String.valueOf(Character.toUpperCase(phrase.charAt(phrase.indexOf("_") + 1))));
     }
-    return statement;
-  }
-
-  private List<Object> processSelectQuery(PreparedStatement statement, Class<?> clazz) {
-    List<Object> rows = new ArrayList<>();
-    MappingConfiguration mapping = MappingUtil.getMapping(clazz);
-
-    if (mapping == null) {
-      LOGGER.error("No mapping found for class: " + clazz.getName());
-      return rows;
-    }
-
-    try (ResultSet rs = statement.executeQuery()) {
-      while (rs.next()) {
-        Object instance = mapResultSetToEntity(rs, clazz, mapping);
-        rows.add(instance);
-      }
-    } catch (Exception e) {
-      LOGGER.error("DatabaseExecutor::Select error", e);
-    }
-    return rows;
-  }
-
-  private Object mapResultSetToEntity(ResultSet rs, Class<?> clazz, MappingConfiguration mapping)
-      throws Exception {
-    Object instance = clazz.getDeclaredConstructor().newInstance();
-    for (Map.Entry<String, String> entry : mapping.getFieldToColumnMapping().entrySet()) {
-      String fieldName = entry.getKey();
-      String columnName = entry.getValue();
-      Field field = clazz.getDeclaredField(fieldName);
-      field.setAccessible(true);
-      Object value = rs.getObject(columnName);
-      if (field.getType().equals(LocalDateTime.class) && value instanceof Timestamp) {
-        value = ((Timestamp) value).toLocalDateTime();
-      }
-      field.set(instance, value);
-    }
-    return instance;
+    return phrase;
   }
 
 

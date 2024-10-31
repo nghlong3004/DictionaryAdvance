@@ -11,42 +11,81 @@ import repository.DictionaryRepository;
 public class DictionaryDatabaseRepository extends DatabaseRepository
     implements DictionaryRepository {
 
+  private final String tableName = "dictionary";
+
   public DictionaryDatabaseRepository(DatabaseConfiguration databaseConfiguration) {
     super(databaseConfiguration);
-    // TODO Auto-generated constructor stub
   }
 
   @Override
-  public List<Word> getListWordsBy(String starting, String languageFrom, String languageTo) {
-    String query = "SELECT * FROM dictionary WHERE word LIKE ? AND languaged = ? LIMIT 5";
-    List<Object> params = new ArrayList<Object>();
-    params.add(starting + '%');
-    params.add(languageFrom);
+  public List<Word> searchWordStartWithKey(String starting, String languageFrom,
+      String languageTo) {
+    String query =
+        String.format("SELECT * FROM %s WHERE word LIKE '%s' AND language = '%s' LIMIT 5",
+            tableName, starting + '%', languageFrom);
     List<Word> words = new ArrayList<Word>();
-    for (Object word : databaseExecute(query, params, Word.class)) {
-      words.add((Word) word);
+    List<List<Object>> data = databaseExecute(query);
+    for (int i = 1; i < data.size(); ++i) {
+      words.add(mapperDictionary(data.get(0), data.get(i)));
     }
     return words.isEmpty() ? null : words;
   }
 
   @Override
-  public List<Word> getTableWordBySpecialized(String specialized) {
-    // TODO Auto-generated method stub
+  public List<Word> getSpecializedWord(String specialized) {
+
     return null;
   }
 
   @Override
   public List<Word> getHistoryByDate(LocalDate date) {
-    // TODO Auto-generated method stub
+
     return null;
   }
 
   @Override
   public List<Word> getLovelyByEmail(String email) {
-    // TODO Auto-generated method stub
+
     return null;
   }
 
+  private Word mapperDictionary(List<Object> column, List<Object> row) {
+    Word word = new Word();
+    for (int i = 0; i < column.size(); ++i) {
+      String columnName = (String) column.get(i);
+      switch (columnName) {
+        case "word":
+          word.setWord((String) row.get(i));
+          break;
+        case "meaning":
+          word.setMeaning((String) row.get(i));
+          break;
+        case "antonym":
+          word.setAntonym((String) row.get(i));
+          break;
+        case "synonym":
+          word.setSynonym((String) row.get(i));
+          break;
+        case "description":
+          word.setDescription((String) row.get(i));
+          break;
+        case "pronounce":
+          word.setPronounce((String) row.get(i));
+          break;
+        case "partOfSpeech":
+          word.setPartOfSpeech((String) row.get(i));
+          break;
+        case "language":
+          word.setLanguaged((String) row.get(i));
+          break;
+        default:
+          break;
+      }
+
+    }
+    System.out.println(word);
+    return word;
+  }
 
 
 }

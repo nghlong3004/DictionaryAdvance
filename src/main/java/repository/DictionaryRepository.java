@@ -6,9 +6,9 @@ import model.dictionary.Word;
 
 public interface DictionaryRepository {
 
-  public List<Word> getListWordsBy(String starting, String languageFrom, String languageTo);
+  public List<Word> searchWordStartWithKey(String key, String languageFrom, String languageTo);
 
-  public List<Word> getTableWordBySpecialized(String specialized);
+  public List<Word> getSpecializedWord(String specialized);
 
   public List<Word> getHistoryByDate(LocalDate date);
 
