@@ -89,6 +89,10 @@ public class MainForm extends JLayeredPane {
               ViewDictionary.showForm(new TechnicalVocabulary());
               break;
           }
+          break;
+        case 6:
+          ViewDictionary.login();
+          break;
       }
     });
   }

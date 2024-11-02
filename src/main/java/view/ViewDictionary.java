@@ -8,7 +8,6 @@ import util.ObjectContainer;
 import util.view.NotificationUI;
 import view.dictionary.components.MainForm;
 import view.login.LoginPanel;
-import view.login.Register;
 import view.notifications.Notification;
 
 import java.awt.Component;
@@ -26,7 +25,6 @@ public class ViewDictionary extends JFrame {
   private static ViewDictionary app;
   private final MainForm mainForm;
   private final LoginPanel loginPanel;
-  private final Register registerPanel;
 
   public static void install() {
     if (app == null) {
@@ -39,7 +37,6 @@ public class ViewDictionary extends JFrame {
     setSize(new Dimension(1368, 768));
     setLocationRelativeTo(null);
     loginPanel = new LoginPanel();
-    registerPanel = new Register(loginPanel);
     setContentPane(loginPanel);
     mainForm = new MainForm(loginPanel);
     getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
@@ -63,14 +60,6 @@ public class ViewDictionary extends JFrame {
     setSelectedMenu(0, 0);
     app.mainForm.hideMenu();
     SwingUtilities.updateComponentTreeUI(app.mainForm);
-    FlatAnimatedLafChange.hideSnapshotWithAnimation();
-  }
-
-  public static void resigter() {
-    FlatAnimatedLafChange.showSnapshot();
-    app.setContentPane(app.registerPanel);
-    app.loginPanel.applyComponentOrientation(app.getComponentOrientation());
-    SwingUtilities.updateComponentTreeUI(app.registerPanel);
     FlatAnimatedLafChange.hideSnapshotWithAnimation();
   }
 
