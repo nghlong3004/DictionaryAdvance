@@ -12,6 +12,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
@@ -19,7 +22,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Random;
-
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.event.DocumentEvent;
@@ -45,32 +50,46 @@ import java.awt.event.ActionEvent;
 public class Lookup extends JPanel {
 
   private static final long serialVersionUID = 1L;
+
   private DictionaryController dictionaryController = ObjectContainer.getDictionaryController();
-  private JTextField text;
+
+  private JTextField txtSearch;
+
   private JPopupMenu suggestionPopup;
+
   private List<Word> data;
+
   private JPanel panel;
   private JPanel panel_1;
   private JPanel panel_1_1;
   private JPanel panel_1_2;
-  private JEditorPane editorPane;
-  private JButton btnNewButton;
-  private JButton btnNewButton_1;
-  private JButton btnNewButton_1_1;
-  private JButton btnNewButton_1_2;
-  private JLabel lblNewLabel;
-  private JButton btnNewButton_2;
-  private JButton btnNewButton_2_1;
-  private JButton btnNewButton_2_2;
-  private JButton btnNewButton_2_3;
-  private JButton btnNewButton_2_4;
-  private int selectedIndex = 0;
-  private String langFrom;
-  private String langTo;
 
-  /**
-   * Create the panel.
-   */
+  private JEditorPane PaneExplain;
+
+  private JButton btnOk;
+  private JButton btnAnhViet;
+  private JButton btnRandom;
+  private JButton btnVietAnh;
+
+  private JLabel lbWord;
+
+  private JButton btnCoppy;
+  private JButton btnFlag;
+  private JButton btnStart;
+  private JButton btnSpeakerUs;
+  private JButton btnSpeakerVn;
+
+  private JTextArea txtAntonym;
+  private JTextArea txtSynonym;
+
+  private int selectedIndex = 0;
+
+  private String languageFrom;
+  private String languageTo;
+
+  private boolean isFlag = false;
+  private boolean isStar = false;
+
   private void highlightItem() {
     for (int i = 0; i < suggestionPopup.getComponentCount(); i++) {
       JMenuItem item = (JMenuItem) suggestionPopup.getComponent(i);
@@ -86,13 +105,13 @@ public class Lookup extends JPanel {
       return;
     }
 
-    data = dictionaryController.searchWordStartWithKey(input, langFrom, langTo);
+    data = dictionaryController.searchWordStartWithKey(input, languageFrom, languageTo);
 
     if (data != null && !data.isEmpty()) {
       for (Word match : data) {
         JMenuItem menuItem = new JMenuItem(match.getWord());
         menuItem.addActionListener(e -> {
-          text.setText(match.getWord());
+          txtSearch.setText(match.getWord());
           handleOK();
           suggestionPopup.setVisible(false);
         });
@@ -127,9 +146,22 @@ public class Lookup extends JPanel {
   private String convert(String s, int size) {
 
     String html = "<html>" + "<div style='text-align: center;'>" + "<table>"
-        + "<tr><td style='text-align: left; font-size:" + 24 + "px; color: " + "white" + ";'>" + s
+        + "<tr><td style='text-align: left; font-size:" + 24 + "px; color: " + "#22c55e" + ";'>" + s
         + "</td></tr>" + "</table>" + "</div>" + "</html>";
     return html;
+  }
+
+  private String deconvert(String html) {
+    String[] arr = html.split(">");
+    String s = "";
+    for (int i = 0; i < arr[5].length(); ++i) {
+      if (arr[5].charAt(i) != '<') {
+        s += arr[5].charAt(i);
+      } else {
+        break;
+      }
+    }
+    return s;
   }
 
   public Lookup(String username) {
@@ -139,115 +171,53 @@ public class Lookup extends JPanel {
         "" + "[light]foreground:darken(@background, 3%);"
             + "[dark]foreground:lighten(@background, 3%);" + "background:null;"
             + "borderColor:null;" + "borderInsets:5, 5, 5, 5;");
-    langFrom = "en";
-    langTo = "vi";
+    languageFrom = "en";
+    languageTo = "vi";
 
     String html = "<html>" + "<div style='text-align: center;'>" + "<table>"
         + "<tr><td style='text-align: left;'>Xin chào</td></tr>"
-        + "<tr><td style='text-align: left; font-size: 20px; color: " + rndColor() + ";'>"
-        + username + "</td></tr>" + "</table>" + "</div>" + "</html>";
-    editorPane = new JEditorPane("text/html", "");
-    editorPane.setOpaque(false);
-    editorPane.setFocusable(false);
+        + "<tr><td style='text-align: left; font-size: 15px; color: " + rndColor() + ";'>"
+        + username.substring(0, username.indexOf('@')) + "</td></tr>" + "</table>" + "</div>"
+        + "</html>";
+    PaneExplain = new JEditorPane("text/html", "");
+    PaneExplain.setOpaque(false);
+    PaneExplain.setFocusable(false);
 
 
-    panel = new JPanel() {
-      private static final long serialVersionUID = 4799123527384112685L;
-      private int cornerRadius = 30;
+    panel = new MyPanel();
+    panel_1 = new MyPanel();
+    panel_1_1 = new MyPanel();
 
-
-      @Override
-      protected void paintBorder(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.decode("#e7e5e4"));
-        // g2.setStroke(new BasicStroke(2));
-        g2.draw(new RoundRectangle2D.Double(1, 1, getWidth() - 2, getHeight() - 2, cornerRadius,
-            cornerRadius));
-
-        g2.dispose();
-      }
-    };
-    panel.putClientProperty(FlatClientProperties.STYLE,
-        "" + "arc:25;" + "[light]foreground:darken(@background, 3%);"
-            + "[dark]foreground:lighten(@background, 3%);"
-            + "[light]background:darken(@background, 3%);"
-            + "[dark]background:lighten(@background, 3%);");
-    panel_1 = new JPanel() {
-      private static final long serialVersionUID = 4799123527384112685L;
-      private int cornerRadius = 30;
-
-
-      @Override
-      protected void paintBorder(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.decode("#e7e5e4"));
-        // g2.setStroke(new BasicStroke(2));
-        g2.draw(new RoundRectangle2D.Double(1, 1, getWidth() - 2, getHeight() - 2, cornerRadius,
-            cornerRadius));
-
-        g2.dispose();
-      }
-    };
-    panel_1.putClientProperty(FlatClientProperties.STYLE,
-        "" + "arc:25;" + "[light]foreground:darken(@background, 3%);"
-            + "[dark]foreground:lighten(@background, 3%);"
-            + "[light]background:darken(@background, 3%);"
-            + "[dark]background:lighten(@background, 3%);");
-
-    panel_1_1 = new JPanel() {
-      private static final long serialVersionUID = 4799123527384112687L;
-      private int cornerRadius = 30;
-
-
-      @Override
-      protected void paintBorder(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.decode("#e7e5e4"));
-        // g2.setStroke(new BasicStroke(2));
-        g2.draw(new RoundRectangle2D.Double(1, 1, getWidth() - 2, getHeight() - 2, cornerRadius,
-            cornerRadius));
-
-        g2.dispose();
-      }
-    };
-    panel_1_1.putClientProperty(FlatClientProperties.STYLE,
-        "" + "arc:25;" + "[light]foreground:darken(@background, 3%);"
-            + "[dark]foreground:lighten(@background, 3%);"
-            + "[light]background:darken(@background, 3%);"
-            + "[dark]background:lighten(@background, 3%);");
     panel_1_2 = new JPanel();
     panel_1_2.putClientProperty(FlatClientProperties.STYLE, "" + "arc:25;");
 
-    text = new JTextField();
-    text.setColumns(10);
-    text.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
-    text.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON,
+    txtSearch = new JTextField();
+    txtSearch.setColumns(10);
+    txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
+    txtSearch.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON,
         new FlatSVGIcon("image\\search1.svg"));
-    text.putClientProperty(FlatClientProperties.STYLE,
+    txtSearch.putClientProperty(FlatClientProperties.STYLE,
         "" + "arc:15;" + "borderWidth:0;" + "focusWidth:0;" + "innerFocusWidth:0;"
             + "margin:5,20,5,20;" + "background:$Toast.background");
     suggestionPopup.setFocusable(false);
-    text.getDocument().addDocumentListener(new DocumentListener() {
+    txtSearch.getDocument().addDocumentListener(new DocumentListener() {
 
       @Override
       public void insertUpdate(DocumentEvent e) {
-        showSuggestions(text);
+        showSuggestions(txtSearch);
       }
 
       @Override
       public void removeUpdate(DocumentEvent e) {
-        showSuggestions(text);
+        showSuggestions(txtSearch);
       }
 
       @Override
       public void changedUpdate(DocumentEvent e) {
-        showSuggestions(text);
+        showSuggestions(txtSearch);
       }
     });
-    text.addKeyListener(new KeyListener() {
+    txtSearch.addKeyListener(new KeyListener() {
 
       @Override
       public void keyTyped(KeyEvent e) {
@@ -268,7 +238,7 @@ public class Lookup extends JPanel {
           handleOK();
           if (suggestionPopup.isVisible() && selectedIndex != -1) {
             JMenuItem selectedItem = (JMenuItem) suggestionPopup.getComponent(selectedIndex);
-            text.setText(selectedItem.getText());
+            txtSearch.setText(selectedItem.getText());
             suggestionPopup.setVisible(false);
           }
         }
@@ -291,60 +261,66 @@ public class Lookup extends JPanel {
       }
     });
 
-    btnNewButton = new JButton("OK");
-
-    btnNewButton_1 = new JButton("Anh -> Việt");
-
-    btnNewButton_1_1 = new JButton("Từ ngẫu nhiên");
-
-    btnNewButton_1_2 = new JButton("Việt -> Anh");
+    btnOk = new JButton("OK");
+    // chuyen che do tu Anh sang Viet
+    btnAnhViet = new JButton("Anh -> Việt");
+    // click se random 1 tu ngau nhien
+    btnRandom = new JButton("Từ ngẫu nhiên");
+    // chuyen che do tu Viet sang Anh
+    btnVietAnh = new JButton("Việt -> Anh");
 
     ActionListener actionListener = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnNewButton) {
+        if (e.getSource() == btnOk) {
           handleOK();
         }
-        if (e.getSource() == btnNewButton_1) {
-          langFrom = "en";
-          langTo = "vi";
-          btnNewButton_1.setBackground(Color.decode("#22c55e"));
-          btnNewButton_1_1.setBackground(Color.decode("#4ade80"));
-          btnNewButton_1_2.setBackground(Color.decode("#4ade80"));
-        } else if (e.getSource() == btnNewButton_1_2) {
-          langFrom = "vi";
-          langTo = "en";
-          btnNewButton_1.setBackground(Color.decode("#4ade80"));
-          btnNewButton_1_2.setBackground(Color.decode("#22c55e"));
-          btnNewButton_1_1.setBackground(Color.decode("#4ade80"));
-        } else if (e.getSource() == btnNewButton_1_2) {
-          btnNewButton_1.setBackground(Color.decode("#4ade80"));
-          btnNewButton_1_2.setBackground(Color.decode("#4ade80"));
-          btnNewButton_1_1.setBackground(Color.decode("#22c55e"));
+        if (e.getSource() == btnAnhViet) {
+          languageFrom = "en";
+          languageTo = "vi";
+          btnAnhViet.setBackground(Color.decode("#22c55e"));
+          btnRandom.setBackground(Color.decode("#4ade80"));
+          btnVietAnh.setBackground(Color.decode("#4ade80"));
+        } else if (e.getSource() == btnVietAnh) {
+          languageFrom = "vi";
+          languageTo = "en";
+          btnAnhViet.setBackground(Color.decode("#4ade80"));
+          btnVietAnh.setBackground(Color.decode("#22c55e"));
+          btnRandom.setBackground(Color.decode("#4ade80"));
+        } else if (e.getSource() == btnRandom) {
+          List<Word> datas =
+              dictionaryController.searchWordStartWithKey(rndAlphabet(), languageFrom, languageTo);
+          while (datas == null) {
+            datas = dictionaryController.searchWordStartWithKey(rndAlphabet(), languageFrom,
+                languageTo);
+          }
+          Word data = datas.get(rndRange(datas.size()));
+          handleWord(convert(data.getWord(), 20), data.getMeaning(), data.getSynonym(),
+              data.getAntonym());
         }
       }
     };
 
 
-    btnNewButton_1.putClientProperty(FlatClientProperties.STYLE, ""
+    btnAnhViet.putClientProperty(FlatClientProperties.STYLE, ""
 
 
         + "background:#22c55e;" + "focusWidth:0;" + "borderWidth:0;" + "innerFocusWidth:0");
-    btnNewButton_1_1.putClientProperty(FlatClientProperties.STYLE, ""
+    btnRandom.putClientProperty(FlatClientProperties.STYLE, ""
 
 
         + "background:#4ade80;" + "focusWidth:0;" + "borderWidth:0;" + "innerFocusWidth:0");
-    btnNewButton_1_2.putClientProperty(FlatClientProperties.STYLE, ""
+    btnVietAnh.putClientProperty(FlatClientProperties.STYLE, ""
 
 
         + "background:#4ade80;" + "focusWidth:0;" + "borderWidth:0;" + "innerFocusWidth:0");
-    btnNewButton.putClientProperty(FlatClientProperties.STYLE,
+    btnOk.putClientProperty(FlatClientProperties.STYLE,
         "" + "arc:999;" + "focusWidth:0;" + "borderWidth:0;" + "innerFocusWidth:0");
 
-    btnNewButton.addActionListener(actionListener);
-    btnNewButton_1.addActionListener(actionListener);
-    btnNewButton_1_1.addActionListener(actionListener);
-    btnNewButton_1_2.addActionListener(actionListener);
+    btnOk.addActionListener(actionListener);
+    btnAnhViet.addActionListener(actionListener);
+    btnRandom.addActionListener(actionListener);
+    btnVietAnh.addActionListener(actionListener);
 
     GroupLayout groupLayout = new GroupLayout(this);
     groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -357,19 +333,19 @@ public class Lookup extends JPanel {
                 .addGroup(groupLayout.createSequentialGroup()
                     .addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
                         .addGroup(groupLayout.createSequentialGroup()
-                            .addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 135,
+                            .addComponent(btnAnhViet, GroupLayout.PREFERRED_SIZE, 135,
                                 GroupLayout.PREFERRED_SIZE)
                             .addGap(48)
-                            .addComponent(btnNewButton_1_2, GroupLayout.PREFERRED_SIZE, 135,
+                            .addComponent(btnVietAnh, GroupLayout.PREFERRED_SIZE, 135,
                                 GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE,
                                 Short.MAX_VALUE)
-                            .addComponent(btnNewButton_1_1, GroupLayout.PREFERRED_SIZE, 135,
+                            .addComponent(btnRandom, GroupLayout.PREFERRED_SIZE, 135,
                                 GroupLayout.PREFERRED_SIZE))
                         .addGroup(groupLayout.createSequentialGroup()
-                            .addComponent(text, GroupLayout.PREFERRED_SIZE, 436,
+                            .addComponent(txtSearch, GroupLayout.PREFERRED_SIZE, 436,
                                 GroupLayout.PREFERRED_SIZE)
-                            .addGap(22).addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 45,
+                            .addGap(22).addComponent(btnOk, GroupLayout.PREFERRED_SIZE, 45,
                                 GroupLayout.PREFERRED_SIZE)))
                     .addPreferredGap(ComponentPlacement.RELATED)))
             .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -378,93 +354,117 @@ public class Lookup extends JPanel {
                     Short.MAX_VALUE)
                 .addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
             .addGap(22)));
-    groupLayout
-        .setVerticalGroup(
-            groupLayout.createParallelGroup(Alignment.LEADING)
+    groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+        .addGroup(groupLayout.createSequentialGroup()
+            .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(groupLayout.createSequentialGroup().addGap(20)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(txtSearch, GroupLayout.PREFERRED_SIZE, 38,
+                            GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnOk))
+                    .addGap(24)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(btnAnhViet).addComponent(btnRandom).addComponent(btnVietAnh)))
+                .addGroup(groupLayout.createSequentialGroup().addContainerGap()
+                    .addComponent(panel_1_2, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)))
+            .addPreferredGap(ComponentPlacement.RELATED)
+            .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                .addComponent(panel, GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
                 .addGroup(groupLayout.createSequentialGroup()
-                    .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(groupLayout.createSequentialGroup().addGap(20)
-                            .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(text, GroupLayout.PREFERRED_SIZE, 38,
-                                    GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnNewButton))
-                            .addGap(24)
-                            .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(btnNewButton_1).addComponent(btnNewButton_1_1)
-                                .addComponent(btnNewButton_1_2)))
-                        .addGroup(
-                            groupLayout.createSequentialGroup().addContainerGap().addComponent(
-                                panel_1_2, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)))
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(panel, GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
-                        .addGroup(groupLayout.createSequentialGroup()
-                            .addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                            .addGap(18).addComponent(panel_1_1, GroupLayout.DEFAULT_SIZE, 236,
-                                Short.MAX_VALUE)))
-                    .addContainerGap()));
+                    .addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addGap(18)
+                    .addComponent(panel_1_1, GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)))
+            .addContainerGap()));
 
-    lblNewLabel = new JLabel();
-    btnNewButton_2 = new JButton();
-    btnNewButton_2_1 = new JButton();
-    btnNewButton_2_2 = new JButton();
-    btnNewButton_2_3 = new JButton("US");
-    btnNewButton_2_4 = new JButton("UK");
-    lblNewLabel.setHorizontalAlignment(SwingConstants.LEADING);
-    btnNewButton_2_3.addActionListener(new ActionListener() {
+    lbWord = new JLabel();
+    btnCoppy = new JButton();
+    btnFlag = new JButton();
+    btnStart = new JButton();
+    btnSpeakerUs = new JButton("US");
+    btnSpeakerVn = new JButton("VN");
+    // lbWord.setHorizontalAlignment(SwingConstants.LEADING);
+    btnSpeakerUs.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         speak("en");
       }
     });
-    btnNewButton_2_4.addActionListener(new ActionListener() {
+    btnSpeakerVn.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         speak("vi");
       }
     });
-    btnNewButton_2 = sytle(btnNewButton_2);
-    btnNewButton_2_1 = sytle(btnNewButton_2_1);
-    btnNewButton_2_2 = sytle(btnNewButton_2_2);
-    btnNewButton_2_3 = sytle(btnNewButton_2_3);
-    btnNewButton_2_4 = sytle(btnNewButton_2_4);
+    btnCoppy = sytle(btnCoppy);
+    btnFlag = sytle(btnFlag);
+    btnStart = sytle(btnStart);
+    btnSpeakerUs = sytle(btnSpeakerUs);
+    btnSpeakerVn = sytle(btnSpeakerVn);
     AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/copy1.png"), 25, 25, 0);
-    btnNewButton_2.setIcon(icon);
-    icon = new AvatarIcon(getClass().getResource("/image/staroutline_81125 (22).png"), 25, 25, 0);
-    btnNewButton_2_2.setIcon(icon);
-    icon = new AvatarIcon(getClass().getResource("/image/flag22.png"), 25, 25, 0);
-    btnNewButton_2_1.setIcon(icon);
+    btnCoppy.setIcon(icon);
+    btnCoppy.addActionListener(actionEvent -> {
+      if (lbWord.getText() != null || !lbWord.getText().isEmpty()) {
+        String myString = deconvert(lbWord.getText());
+        StringSelection stringSelection = new StringSelection(myString);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+      }
+    });
+    icon = new AvatarIcon(getClass().getResource("/image/star.png"), 25, 25, 0);
+    btnStart.setIcon(icon);
+    btnStart.addActionListener(actionEvent -> {
+      String bland = "";
+      isStar = !isStar;
+      if (isStar) {
+        bland = "1";
+      }
+      final AvatarIcon iconFlag =
+          new AvatarIcon(getClass().getResource("/image/star" + bland + ".png"), 25, 25, 0);
+      btnStart.setIcon(iconFlag);
+    });
+    icon = new AvatarIcon(getClass().getResource("/image/flag.png"), 30, 30, 0);
+    btnFlag.setIcon(icon);
+    btnFlag.addActionListener(actionEvent -> {
+      String bland = "";
+      isFlag = !isFlag;
+      if (isFlag) {
+        bland = "1";
+      }
+      final AvatarIcon iconFlag =
+          new AvatarIcon(getClass().getResource("/image/flag" + bland + ".png"), 25, 25, 0);
+      btnFlag.setIcon(iconFlag);
+    });
     icon = new AvatarIcon(getClass().getResource("/image/speaker.png"), 25, 25, 999);
-    btnNewButton_2_3.setIcon(icon);
-    btnNewButton_2_4.setIcon(icon);
+    btnSpeakerUs.setIcon(icon);
+    btnSpeakerVn.setIcon(icon);
     GroupLayout gl_panel = new GroupLayout(panel);
     gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
         .addGroup(gl_panel.createSequentialGroup().addGap(21)
             .addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
                 .addGroup(
                     gl_panel.createSequentialGroup()
-                        .addComponent(editorPane, GroupLayout.DEFAULT_SIZE, 880, Short.MAX_VALUE)
+                        .addComponent(PaneExplain, GroupLayout.DEFAULT_SIZE, 880, Short.MAX_VALUE)
                         .addContainerGap())
                 .addGroup(
                     gl_panel.createSequentialGroup()
-                        .addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 166,
+                        .addComponent(lbWord, GroupLayout.PREFERRED_SIZE, 150,
                             GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(ComponentPlacement.UNRELATED)
                         .addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
                             .addGroup(gl_panel.createSequentialGroup()
-                                .addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, 37,
+                                .addComponent(btnCoppy, GroupLayout.PREFERRED_SIZE, 37,
                                     GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(ComponentPlacement.RELATED, 526, Short.MAX_VALUE)
-                                .addComponent(btnNewButton_2_1, GroupLayout.PREFERRED_SIZE, 37,
+                                .addComponent(btnFlag, GroupLayout.PREFERRED_SIZE, 37,
                                     GroupLayout.PREFERRED_SIZE))
                             .addGroup(gl_panel.createSequentialGroup()
                                 .addPreferredGap(ComponentPlacement.RELATED, 522, Short.MAX_VALUE)
-                                .addComponent(btnNewButton_2_3, GroupLayout.PREFERRED_SIZE, 37 << 1,
+                                .addComponent(btnSpeakerUs, GroupLayout.PREFERRED_SIZE, 37 << 1,
                                     GroupLayout.PREFERRED_SIZE)
                                 .addGap(2)))
                         .addGap(18)
                         .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-                            .addComponent(btnNewButton_2_2, GroupLayout.PREFERRED_SIZE, 37,
+                            .addComponent(btnStart, GroupLayout.PREFERRED_SIZE, 37,
                                 GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnNewButton_2_4, GroupLayout.PREFERRED_SIZE, 37 << 1,
+                            .addComponent(btnSpeakerVn, GroupLayout.PREFERRED_SIZE, 37 << 1,
                                 GroupLayout.PREFERRED_SIZE))
                         .addGap(59)))));
     gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(gl_panel
@@ -472,100 +472,91 @@ public class Lookup extends JPanel {
         .addGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(gl_panel
             .createSequentialGroup().addGap(27)
             .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-                .addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 62,
-                    GroupLayout.PREFERRED_SIZE)
-                .addGroup(
-                    gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(btnNewButton_2)
-                        .addComponent(btnNewButton_2_1).addComponent(btnNewButton_2_2))))
+                .addComponent(lbWord, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+                .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(btnCoppy)
+                    .addComponent(btnFlag).addComponent(btnStart))))
             .addGroup(gl_panel.createSequentialGroup().addGap(68)
                 .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-                    .addComponent(btnNewButton_2_3).addComponent(btnNewButton_2_4))))
+                    .addComponent(btnSpeakerUs).addComponent(btnSpeakerVn))))
         .addPreferredGap(ComponentPlacement.UNRELATED)
-        .addComponent(editorPane, GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+        .addComponent(PaneExplain, GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
         .addContainerGap()));
     panel.setLayout(gl_panel);
 
-    JLabel lblNewLabel_4_1 = new JLabel(convert("Từ trái nghĩa"));
-    JLabel lblNewLabel_4 = new JLabel(convert("Từ đồng nghĩa"));
+    JLabel lbAntonym = new JLabel(convert("Từ trái nghĩa"));
+    JLabel lbSynonym = new JLabel(convert("Từ đồng nghĩa"));
 
-
-    JTextArea textArea_1 = new JTextArea();
-    textArea_1.putClientProperty(FlatClientProperties.STYLE,
-        "" + "[light]foreground:darken(@background, 3%);"
-            + "[dark]foreground:lighten(@background, 3%);"
-            + "[light]background:darken(@background, 3%);"
+    txtAntonym = new JTextArea();
+    txtAntonym.setEditable(false);
+    txtAntonym.setFocusable(false);
+    txtAntonym.putClientProperty(FlatClientProperties.STYLE,
+        "" + "[light]background:darken(@background, 3%);"
             + "[dark]background:lighten(@background, 3%);");
     GroupLayout gl_panel_1_1 = new GroupLayout(panel_1_1);
-    gl_panel_1_1
-        .setHorizontalGroup(gl_panel_1_1.createParallelGroup(Alignment.LEADING)
-            .addGroup(gl_panel_1_1.createSequentialGroup().addContainerGap()
-                .addGroup(gl_panel_1_1.createParallelGroup(Alignment.LEADING)
-                    .addComponent(textArea_1, GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                    .addGroup(gl_panel_1_1.createSequentialGroup().addComponent(lblNewLabel_4_1,
-                        GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE).addGap(131)))
-                .addContainerGap()));
+    gl_panel_1_1.setHorizontalGroup(gl_panel_1_1.createParallelGroup(Alignment.LEADING)
+        .addGroup(gl_panel_1_1.createSequentialGroup().addContainerGap()
+            .addGroup(gl_panel_1_1.createParallelGroup(Alignment.LEADING)
+                .addComponent(txtAntonym, GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                .addGroup(gl_panel_1_1.createSequentialGroup()
+                    .addComponent(lbAntonym, GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                    .addGap(131)))
+            .addContainerGap()));
     gl_panel_1_1.setVerticalGroup(gl_panel_1_1.createParallelGroup(Alignment.LEADING)
         .addGroup(gl_panel_1_1.createSequentialGroup().addContainerGap()
-            .addComponent(lblNewLabel_4_1, GroupLayout.PREFERRED_SIZE, 29,
-                GroupLayout.PREFERRED_SIZE)
+            .addComponent(lbAntonym, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(ComponentPlacement.UNRELATED)
-            .addComponent(textArea_1, GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+            .addComponent(txtAntonym, GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
             .addContainerGap()));
     panel_1_1.setLayout(gl_panel_1_1);
-    JTextArea textArea = new JTextArea();
-    textArea.putClientProperty(FlatClientProperties.STYLE,
-        "" + "[light]foreground:darken(@background, 3%);"
-            + "[dark]foreground:lighten(@background, 3%);"
-            + "[light]background:darken(@background, 3%);"
+    txtSynonym = new JTextArea();
+    txtSynonym.setEditable(false);
+    txtSynonym.setFocusable(false);
+    txtSynonym.putClientProperty(FlatClientProperties.STYLE,
+        "" + "[light]background:darken(@background, 3%);"
             + "[dark]background:lighten(@background, 3%);");
     GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-    gl_panel_1
-        .setHorizontalGroup(
-            gl_panel_1.createParallelGroup(Alignment.LEADING)
-                .addGroup(gl_panel_1.createSequentialGroup().addContainerGap()
-                    .addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-                        .addComponent(textArea, GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                        .addGroup(gl_panel_1.createSequentialGroup().addComponent(lblNewLabel_4,
-                            GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE).addGap(131)))
-                    .addContainerGap()));
+    gl_panel_1.setHorizontalGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+        .addGroup(gl_panel_1.createSequentialGroup().addContainerGap()
+            .addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+                .addComponent(txtSynonym, GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                .addGroup(gl_panel_1.createSequentialGroup()
+                    .addComponent(lbSynonym, GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                    .addGap(131)))
+            .addContainerGap()));
     gl_panel_1.setVerticalGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
         .addGroup(gl_panel_1.createSequentialGroup().addContainerGap()
-            .addComponent(lblNewLabel_4, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+            .addComponent(lbSynonym, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(ComponentPlacement.UNRELATED)
-            .addComponent(textArea, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+            .addComponent(txtSynonym, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
             .addContainerGap()));
     panel_1.setLayout(gl_panel_1);
 
-    JLabel lblNewLabel_2 = new JLabel();
+    JLabel lbUser = new JLabel();
 
-    lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+    lbUser.setHorizontalAlignment(SwingConstants.CENTER);
     icon = new AvatarIcon(getClass().getResource("/image/user-img.png"), 40, 40, 999);
-    lblNewLabel_2.setIcon(icon);
-    JLabel lblNewLabel_2_1 = new JLabel();
-    lblNewLabel_2_1.setHorizontalAlignment(SwingConstants.CENTER);
+    lbUser.setIcon(icon);
+    JLabel lbCat = new JLabel();
+    lbCat.setHorizontalAlignment(SwingConstants.CENTER);
     icon = new AvatarIcon(getClass().getResource("/image/cat.png"), 61, 61, 0);
-    lblNewLabel_2_1.setIcon(icon);
+    lbCat.setIcon(icon);
 
-    JLabel lblNewLabel_3 = new JLabel(html);
+    JLabel lbUsename = new JLabel(html);
     GroupLayout gl_panel_1_2 = new GroupLayout(panel_1_2);
     gl_panel_1_2.setHorizontalGroup(gl_panel_1_2.createParallelGroup(Alignment.LEADING)
-        .addGroup(gl_panel_1_2.createSequentialGroup().addContainerGap().addComponent(lblNewLabel_2)
+        .addGroup(gl_panel_1_2.createSequentialGroup().addContainerGap().addComponent(lbUser)
             .addPreferredGap(ComponentPlacement.UNRELATED)
-            .addComponent(lblNewLabel_3, GroupLayout.PREFERRED_SIZE, 154,
-                GroupLayout.PREFERRED_SIZE)
+            .addComponent(lbUsename, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lblNewLabel_2_1, GroupLayout.PREFERRED_SIZE, 40,
-                GroupLayout.PREFERRED_SIZE)
+            .addComponent(lbCat, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
             .addGap(31)));
     gl_panel_1_2.setVerticalGroup(gl_panel_1_2.createParallelGroup(Alignment.TRAILING)
-        .addGroup(gl_panel_1_2.createSequentialGroup().addContainerGap()
-            .addGroup(gl_panel_1_2.createParallelGroup(Alignment.TRAILING)
-                .addComponent(lblNewLabel_2_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 61,
-                    Short.MAX_VALUE)
-                .addComponent(lblNewLabel_3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 61,
-                    Short.MAX_VALUE)
-                .addComponent(lblNewLabel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 61,
-                    Short.MAX_VALUE))
+        .addGroup(gl_panel_1_2.createSequentialGroup().addContainerGap().addGroup(gl_panel_1_2
+            .createParallelGroup(Alignment.TRAILING)
+            .addComponent(lbCat, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+            .addComponent(lbUsename, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 61,
+                Short.MAX_VALUE)
+            .addComponent(lbUser, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE))
             .addContainerGap()));
     panel_1_2.setLayout(gl_panel_1_2);
     setLayout(groupLayout);
@@ -575,29 +566,80 @@ public class Lookup extends JPanel {
   protected void handleOK() {
     if (data != null) {
       for (Word word : data) {
-        if (word.getWord().equals(text.getText())) {
-          lblNewLabel.setText(convert(word.getWord(), 20));
-          editorPane.setText(word.getMeaning());
+        if (word.getWord().equals(txtSearch.getText())) {
+          handleWord(convert(word.getWord(), 15), word.getMeaning(), word.getSynonym(),
+              word.getAntonym());
         }
       }
     }
   }
 
+  private void handleWord(String stringWord, String stringExplain, String stringSynonym,
+      String stringAntonym) {
+    lbWord.setText(stringWord);
+    PaneExplain.setText(stringExplain.replace("//", "/unknow/"));
+    if (stringAntonym == null || stringAntonym.isEmpty()) {
+      stringAntonym = "unknow";
+    }
+    if (stringSynonym == null || stringSynonym.isEmpty()) {
+      stringSynonym = "Unknow";
+    }
+    txtAntonym.setText(stringAntonym);
+    txtSynonym.setText(stringSynonym);
+  }
+
+  private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
+  private long delayMillis = 200;
+
   protected void speak(String language) {
-    new Thread(() -> {
+    scheduler.schedule(() -> {
       try {
-        Google.speak(language, text.getText());
+        Google.speak(language, deconvert(lbWord.getText()));
       } catch (IOException | URISyntaxException er) {
-        // TODO Auto-generated catch block
         er.printStackTrace();
       }
-    }).start();
+    }, delayMillis, TimeUnit.MILLISECONDS);
 
   }
+
+  private int rndRange(int range) {
+    Random rnd = new Random();
+    int index = Math.abs(rnd.nextInt() % range);
+    return index;
+  }
+
+  private String rndAlphabet() {
+    char value = (char) ((int) ('a') + rndRange(26));
+    return "" + value;
+  }
+
 
   private String rndColor() {
-    Random rnd = new Random();
-    int index = Math.abs(rnd.nextInt() % COLORS.length);
-    return COLORS[index];
+    return COLORS[rndRange(COLORS.length)];
   }
+
+  public class MyPanel extends JPanel {
+    private static final long serialVersionUID = 4799123527384112687L;
+    private int cornerRadius = 30;
+
+    public MyPanel() {
+      putClientProperty(FlatClientProperties.STYLE,
+          "" + "arc:25;" + "[light]foreground:darken(@background, 3%);"
+              + "[dark]foreground:lighten(@background, 3%);"
+              + "[light]background:darken(@background, 3%);"
+              + "[dark]background:lighten(@background, 3%);");
+    }
+
+    @Override
+    protected void paintBorder(Graphics g) {
+      Graphics2D g2 = (Graphics2D) g.create();
+      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+      g2.setColor(Color.decode("#e7e5e4"));
+      g2.draw(new RoundRectangle2D.Double(1, 1, getWidth() - 2, getHeight() - 2, cornerRadius,
+          cornerRadius));
+
+      g2.dispose();
+    }
+  };
+
 }
