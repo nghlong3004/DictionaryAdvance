@@ -1,7 +1,7 @@
 package repository.user;
 
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.List;
 import configuration.DatabaseConfiguration;
 import model.user.User;
@@ -62,7 +62,7 @@ public class UserDatabaseRepository extends DatabaseRepository implements UserRe
           user.setPassword((String) row.get(i));
           break;
         case "birthday":
-          user.setBirthday((LocalDate) row.get(i));
+          user.setBirthday(((Date) row.get(i)).toLocalDate());
           break;
         case "created":
           user.setCreated(((Timestamp) row.get(i)).toLocalDateTime());

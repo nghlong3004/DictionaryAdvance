@@ -26,6 +26,12 @@
 			<url>
 				file://${project.basedir}\libs\long_popup\swing-datetime-picker\</url>
 		</repository>
+		<repository>
+			<id>long_modal</id>
+			<name>Date Time</name>
+			<url>
+				file://${project.basedir}\libs\long_modal\modal-dialog-2.0\</url>
+		</repository>
 
 	</repositories>
 	<description> </description>
@@ -85,6 +91,11 @@
 			<groupId>long_popup</groupId>
 			<artifactId>swing-datetime-picker</artifactId>
 			<version>1_2_3</version>
+		</dependency>
+		<dependency>
+			<groupId>long_modal</groupId>
+			<artifactId>modal-dialog-2.0</artifactId>
+			<version>2_0</version>
 		</dependency>
 
 
