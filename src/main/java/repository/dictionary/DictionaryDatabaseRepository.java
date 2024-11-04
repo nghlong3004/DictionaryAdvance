@@ -83,7 +83,6 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
       }
 
     }
-    System.out.println(word);
     return word;
   }
 
