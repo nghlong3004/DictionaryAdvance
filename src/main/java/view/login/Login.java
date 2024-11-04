@@ -30,16 +30,15 @@ public class Login extends JPanel {
   private static final long serialVersionUID = -7766038430284342110L;
   public static final String ID = "login_id";
   private final UserController userController = ObjectContainer.getUserController();
-  
+
   private JTextField txtEmail;
   private JPasswordField txtPassword;
 
   public Login() {
     setLayout(new MigLayout("insets n 20 n 20,fillx,wrap,width 380", "[fill]"));
     initialized();
-    //putClientProperty(FlatClientProperties.STYLE, "background:null;");
-    JTextArea text = new JTextArea(
-        "Đăng nhập.");
+    // putClientProperty(FlatClientProperties.STYLE, "background:null;");
+    JTextArea text = new JTextArea("Đăng nhập.");
     text.setEditable(false);
     text.setFocusable(false);
     text.putClientProperty(FlatClientProperties.STYLE, "" + "border:0,0,0,0;" + "background:null;");
@@ -49,26 +48,29 @@ public class Login extends JPanel {
 
     JLabel lbEmail = new JLabel("Email");
     lbEmail.putClientProperty(FlatClientProperties.STYLE, "" + "font:bold;");
-    lbEmail.putClientProperty(FlatClientProperties.STYLE, "" + "border:0,0,0,0;" + "background:null;");
+    lbEmail.putClientProperty(FlatClientProperties.STYLE,
+        "" + "border:0,0,0,0;" + "background:null;");
     add(lbEmail);
 
     txtEmail.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập vào email của bạn");
-    
+
     add(txtEmail);
 
     JLabel lbPassword = new JLabel("Password");
     lbPassword.putClientProperty(FlatClientProperties.STYLE, "" + "font:bold;");
-    lbPassword.putClientProperty(FlatClientProperties.STYLE, "" + "border:0,0,0,0;" + "background:null;");
+    lbPassword.putClientProperty(FlatClientProperties.STYLE,
+        "" + "border:0,0,0,0;" + "background:null;");
     add(lbPassword, "gapy 10 n");
 
     txtPassword = new JPasswordField();
     installRevealButton(txtPassword);
     txtPassword.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập mật khẩu của bạn");
-    
+
     add(txtPassword);
-    
+
     JCheckBox remember = new JCheckBox("Nhớ mật khẩu");
-    remember.putClientProperty(FlatClientProperties.STYLE, "" + "border:0,0,0,0;" + "background:null;");
+    remember.putClientProperty(FlatClientProperties.STYLE,
+        "" + "border:0,0,0,0;" + "background:null;");
     add(remember, "split 2,gapy 10 10");
     ButtonLink cmdForgotPassword = new ButtonLink("Quên mật khẩu ?");
     add(cmdForgotPassword, "gapx push n");
@@ -78,7 +80,7 @@ public class Login extends JPanel {
     add(cmdLogin);
 
     add(new JSeparator(), "gapy 15 15");
-    
+
     add(callFBandGG());
 
     add(new JLabel("Không có tài khoản ?"), "split 2,gapx push n");
@@ -100,7 +102,7 @@ public class Login extends JPanel {
         NotificationUI.succes("Tài khoản hoặc mật khẩu không chính xác !");
       }
     });
-    
+
     cmdSignUp.addActionListener(actionEvent -> {
       String icon = "image/signup.svg";
       ModalDialog.pushModal(new CustomModalBorder(new Resigter(this), "Sign up", icon), ID);
@@ -116,10 +118,12 @@ public class Login extends JPanel {
       NotificationUI.succes("Forgot password!");
     });
   }
+
   private void initialized() {
     txtEmail = new JTextField();
-    
+
   }
+
   public void setPassword(String message) {
     if (message != null) {
       this.txtPassword.setText(message);
@@ -135,13 +139,13 @@ public class Login extends JPanel {
   public void register(User user) {
     userController.register(user);
   }
-  
+
   private ImageIcon getIcon(String path) {
     ImageIcon icon = new ImageIcon(path);
     Image scaledImage = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
     return new ImageIcon(scaledImage);
   }
-  
+
   private Component callFBandGG() {
     JButton buttonFb = new JButton(getIcon(IMAGE_PATH + IMAGE_FACEBOOK));
     JButton buttonGg = new JButton(getIcon(IMAGE_PATH + IMAGE_GOOGLE));
