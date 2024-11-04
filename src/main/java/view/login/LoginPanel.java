@@ -11,16 +11,16 @@ import model.user.User;
 import raven.modal.ModalDialog;
 import raven.modal.option.BorderOption;
 import raven.modal.option.Option;
+import util.Constants;
 import util.ObjectContainer;
 
 
 public class LoginPanel extends JPanel {
 
-  /**
-   * 
-   */
   private static final long serialVersionUID = 9112353425595838469L;
+
   private final UserController userController = ObjectContainer.getUserController();
+
   private ImageIcon icon;
 
   public LoginPanel() {
@@ -29,7 +29,7 @@ public class LoginPanel extends JPanel {
   }
 
   private void setting() {
-    icon = new ImageIcon("src/main/resources/gif/" + "giphy.gif");
+    icon = new ImageIcon(Constants.Image.IMAGE_PATH + "gif/giphy.gif");
     JButton button = new JButton("Đăng nhập");
     button.setContentAreaFilled(false);
     button.setCursor(new Cursor(Cursor.HAND_CURSOR));

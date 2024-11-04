@@ -20,16 +20,16 @@ import javax.swing.*;
 
 public class Resigter extends JPanel {
 
-  /**
-  * 
-  */
   private static final long serialVersionUID = -5725310224569743587L;
 
   private final UserController userController = ObjectContainer.getUserController();
+  
   private Login login;
+  
   private JTextField txtFullname;
   private JTextField txtEmail;
   private JTextField txtDateOfBirth;
+  
   private JPasswordField txtPassword;
   private JPasswordField txtRePassword;
 
@@ -37,9 +37,11 @@ public class Resigter extends JPanel {
   private ButtonLink cmdBackLogin;
 
   private ButtonGroup groupPeople;
+  
   private JRadioButton radioMale;
   private JRadioButton radioFemale;
   private JRadioButton radioDefault;
+  
   private int gender;
 
   public Resigter(Login login) {

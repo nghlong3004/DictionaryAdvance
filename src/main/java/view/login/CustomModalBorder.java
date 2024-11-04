@@ -9,11 +9,10 @@ import java.awt.*;
 
 public class CustomModalBorder extends Modal {
 
-  /**
-  * 
-  */
   private static final long serialVersionUID = -2003907442994656438L;
+  
   private final Component component;
+  
   private final String title;
   private final String icon;
 

@@ -8,9 +8,6 @@ import javax.swing.*;
 
 public class ForgotPassword extends JPanel {
 
-  /**
-  * 
-  */
   private static final long serialVersionUID = 1017710573385464160L;
 
   public ForgotPassword() {

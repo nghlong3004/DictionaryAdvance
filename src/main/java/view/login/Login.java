@@ -24,20 +24,18 @@ import java.awt.event.ActionListener;
 
 public class Login extends JPanel {
 
-  /**
-  * 
-  */
   private static final long serialVersionUID = -7766038430284342110L;
   public static final String ID = "login_id";
+
   private final UserController userController = ObjectContainer.getUserController();
 
   private JTextField txtEmail;
+
   private JPasswordField txtPassword;
 
   public Login() {
     setLayout(new MigLayout("insets n 20 n 20,fillx,wrap,width 380", "[fill]"));
     initialized();
-    // putClientProperty(FlatClientProperties.STYLE, "background:null;");
     JTextArea text = new JTextArea("Đăng nhập.");
     text.setEditable(false);
     text.setFocusable(false);
@@ -81,7 +79,7 @@ public class Login extends JPanel {
 
     add(new JSeparator(), "gapy 15 15");
 
-    add(callFBandGG());
+    add(callFbAndGg());
 
     add(new JLabel("Không có tài khoản ?"), "split 2,gapx push n");
     ButtonLink cmdSignUp = new ButtonLink("Sign up");
@@ -146,27 +144,23 @@ public class Login extends JPanel {
     return new ImageIcon(scaledImage);
   }
 
-  private Component callFBandGG() {
-    JButton buttonFb = new JButton(getIcon(IMAGE_PATH + IMAGE_FACEBOOK));
-    JButton buttonGg = new JButton(getIcon(IMAGE_PATH + IMAGE_GOOGLE));
+  private Component callExternalApi(String destination) {
+    JButton button = new JButton(getIcon(IMAGE_PATH + destination));
+    button.setFocusPainted(false);
+    button.putClientProperty(FlatClientProperties.STYLE,
+        "" + "[light]foreground:darken(@foreground, 80%);"
+            + "[dark]foreground:lighten(@foreground, 60%);"
+            + "[light]background:lighten(@background, 80%);"
+            + "[dark]background:lighten(@background, 60%);");
+    button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    return button;
+  }
+
+  private Component callFbAndGg() {
     JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
-    buttonFb.setFocusPainted(false);
-    buttonGg.setFocusPainted(false);
     panel.putClientProperty(FlatClientProperties.STYLE, "background:null;");
-    buttonFb.putClientProperty(FlatClientProperties.STYLE,
-        "" + "[light]foreground:darken(@foreground, 80%);"
-            + "[dark]foreground:lighten(@foreground, 60%);"
-            + "[light]background:lighten(@background, 80%);"
-            + "[dark]background:lighten(@background, 60%);");
-    buttonGg.putClientProperty(FlatClientProperties.STYLE,
-        "" + "[light]foreground:darken(@foreground, 80%);"
-            + "[dark]foreground:lighten(@foreground, 60%);"
-            + "[light]background:lighten(@background, 80%);"
-            + "[dark]background:lighten(@background, 60%);");
-    buttonFb.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    buttonGg.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    panel.add(buttonFb);
-    panel.add(buttonGg);
+    panel.add(callExternalApi(IMAGE_FACEBOOK));
+    panel.add(callExternalApi(IMAGE_GOOGLE));
     return panel;
   }
 

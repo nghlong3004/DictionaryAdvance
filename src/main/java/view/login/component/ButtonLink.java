@@ -6,9 +6,6 @@ import javax.swing.*;
 
 public class ButtonLink extends JButton {
 
-  /**
-  * 
-  */
   private static final long serialVersionUID = 6508990011264833135L;
 
   public ButtonLink(String text) {
