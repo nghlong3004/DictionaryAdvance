@@ -15,6 +15,14 @@ public class UserController {
   public User getUserByEmail(String username) {
     return userService.getUserByEmail(username);
   }
+  
+  public void updateUser(User user) {
+    userService.updateUser(user);
+  }
+  
+  public void deleteUser(User user) {
+    userService.deleteUser(user);
+  }
 
   public boolean login(User user) {
     return userService.login(user);

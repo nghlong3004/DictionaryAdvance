@@ -4,19 +4,25 @@
 # Member
 - [Nguyễn Hoàng Long](https://www.facebook.com/nghlong300405)
 
-## Công nghệ sử dụng: Java, JBDC, PostgerSQL
+## Công nghệ sử dụng: Java, PostgerSQL
 
 ### Đăng Nhập
-![image](https://github.com/user-attachments/assets/145c86d1-9ee4-4747-94aa-304912cdd8e5)
+![image](https://github.com/user-attachments/assets/66686bdf-bffe-49e1-8c88-1fffa141097e)
 
 ### Đăng ký
-![image](https://github.com/user-attachments/assets/25eb23db-5d0e-4f13-8398-7c3e74f3c3ad)
+![image](https://github.com/user-attachments/assets/31ec5176-5c7c-4d1f-be9f-d7a1b71cab2d)
+
+### Quên mật khẩu
+![image](https://github.com/user-attachments/assets/3313ca60-7681-4708-bd59-f45310ef3fe7)
 
 ### Tra từ
-![image](https://github.com/user-attachments/assets/cf5820ec-af08-41da-ac73-4a6278b0c377)
+![image](https://github.com/user-attachments/assets/6ff66611-5aa4-4272-b52c-d2d0562b5d09)
 
 ### Dịch văn bản
-![image](https://github.com/user-attachments/assets/f253411f-4e84-45d8-a7ff-c6ec2a9d999f)
+![image](https://github.com/user-attachments/assets/da6434ee-a813-4e10-bb13-07076fd64176)
 
 ### Từ vựng theo chuyên ngành
 ![image](https://github.com/user-attachments/assets/9015f24c-0475-49f5-89e6-2e4b3e8fdbbd)
+
+### Tài khoản
+![image](https://github.com/user-attachments/assets/591474a6-f18f-4c2e-aee1-d338771e603a)

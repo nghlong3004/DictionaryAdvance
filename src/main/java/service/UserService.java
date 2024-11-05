@@ -28,6 +28,14 @@ public class UserService {
   public User getUser() {
     return this.user;
   }
+  
+  public void updateUser(User user) {
+    userRepository.updateUser(user);
+  }
+  
+  public void deleteUser(User user) {
+    userRepository.deleteUser(user);
+  }
 
   public boolean login(User newUser) {
     User user = getUserByEmail(newUser.getEmail());
