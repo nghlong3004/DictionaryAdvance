@@ -3,7 +3,7 @@ package view.dictionary.components;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.util.UIScale;
-
+import util.view.NotificationUI;
 import view.ViewDictionary;
 import view.dictionary.components.home.Lookup;
 import view.dictionary.components.home.TechnicalVocabulary;
@@ -90,7 +90,11 @@ public class MainForm extends JLayeredPane {
               break;
           }
           break;
+        case 5:
+          ViewDictionary.showForm(new ProfileForm(loginPanel.getUser()));
+          break;
         case 6:
+          NotificationUI.goodbye();
           ViewDictionary.login();
           break;
       }

@@ -60,7 +60,7 @@ public class Login extends JPanel {
         "" + "border:0,0,0,0;" + "background:null;");
     add(lbPassword, "gapy 10 n");
 
-    txtPassword = new JPasswordField();
+    txtPassword = new JPasswordField("matkhau");
     installRevealButton(txtPassword);
     txtPassword.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập mật khẩu của bạn");
 
@@ -118,7 +118,7 @@ public class Login extends JPanel {
   }
 
   private void initialized() {
-    txtEmail = new JTextField();
+    txtEmail = new JTextField("nghlong3004@gmail.com");
 
   }
 
