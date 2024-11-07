@@ -22,7 +22,7 @@
 ![image](https://github.com/user-attachments/assets/da6434ee-a813-4e10-bb13-07076fd64176)
 
 ### Từ vựng theo chuyên ngành
-![image](https://github.com/user-attachments/assets/9015f24c-0475-49f5-89e6-2e4b3e8fdbbd)
+![image](https://github.com/user-attachments/assets/1c69ce31-89f3-4552-a856-fcf131ac8380)
 
 ### Tài khoản
 ![image](https://github.com/user-attachments/assets/591474a6-f18f-4c2e-aee1-d338771e603a)

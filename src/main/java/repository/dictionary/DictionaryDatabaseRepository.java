@@ -16,13 +16,8 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
   public DictionaryDatabaseRepository(DatabaseConfiguration databaseConfiguration) {
     super(databaseConfiguration);
   }
-
-  @Override
-  public List<Word> searchWordStartWithKey(String starting, String languageFrom,
-      String languageTo) {
-    String query =
-        String.format("SELECT * FROM %s WHERE word LIKE '%s' AND language = '%s' LIMIT 5",
-            tableName, starting + '%', languageFrom);
+  
+  private List<Word> selectDatabase(String query){
     List<Word> words = new ArrayList<Word>();
     List<List<Object>> data = databaseExecute(query);
     for (int i = 1; i < data.size(); ++i) {
@@ -32,9 +27,21 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
   }
 
   @Override
+  public List<Word> searchWordStartWithKey(String starting, String languageFrom,
+      String languageTo) {
+    String query = String.format(
+        "SELECT * FROM %s WHERE word LIKE '%s' AND language = '%s' ORDER BY word LIMIT 5",
+        tableName, starting + '%', languageFrom);
+    return selectDatabase(query);
+  }
+
+  @Override
   public List<Word> getSpecializedWord(String specialized) {
 
-    return null;
+    String query = String.format(
+        "SELECT * FROM dictionary WHERE specialized_id = (SELECT specialized_id FROM specialized WHERE name_specialized = '%s')",
+        specialized);
+    return selectDatabase(query);
   }
 
   @Override

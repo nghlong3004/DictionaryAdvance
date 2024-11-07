@@ -2,14 +2,19 @@ package view.dictionary.components.home;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-
+import controller.DictionaryController;
+import model.dictionary.Word;
+import util.ObjectContainer;
 import view.dictionary.swing.MyButtonAction;
-
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -26,19 +31,54 @@ public class TechnicalVocabulary extends JPanel {
    */
   private static final long serialVersionUID = -4246021878929953973L;
 
+  private final DictionaryController dictionaryController =
+      ObjectContainer.getDictionaryController();
+
+  private final String[] nameSpecialized =
+      {" xây dựng", " toán & tin", " vật lý", " y học", " điện lạnh", " hóa học & vật liệu",
+          " cơ khí & công trình", " điện tử & viễn thông", " điện", " giao thông & vận tải",
+          " đo lường & điều khiển", " ô tô", " môi trường", " dệt may", " thực phẩm"};
+
   private JSeparator jSeparator1;
+  
   private JPanel panel;
+  
   private JScrollPane scroll;
+  
   private JTable table;
+  
   private JLabel lbTitle;
+  
   private JTextField txtSearch;
+  
   private MyButtonAction btnDelete;
   private MyButtonAction btnEdit;
+  
   private JComboBox<Object> comboPosition;
+  
 
   public TechnicalVocabulary() {
     initComponents();
     init();
+  }
+
+  private void loadData(String specialized) {
+    try {
+      DefaultTableModel model = (DefaultTableModel) table.getModel();
+      if (table.isEditing()) {
+        table.getCellEditor().stopCellEditing();
+      }
+      model.setRowCount(0);
+      List<Word> list = dictionaryController.getSpecializedWord(specialized);
+      for (Word word : list) {
+        String meaning = word.getMeaning().substring(word.getMeaning().indexOf(';') + 10);
+        model.addRow(new Object[] {false, model.getRowCount() + 1, word.getWord(), word.getPronounce(),
+            word.getPartOfSpeech() == null ? "Chưa cập nhật" : word.getPartOfSpeech(), meaning.substring(0, meaning.indexOf('<')).replace(">", ""),
+            word.getDescription() == null ? "Chưa cập nhật" : word.getDescription(), "Chưa cập nhật"});
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   private void init() {
@@ -116,7 +156,25 @@ public class TechnicalVocabulary extends JPanel {
       table.getColumnModel().getColumn(6).setPreferredWidth(150);
       table.getColumnModel().getColumn(7).setPreferredWidth(150);
     }
-    // comboPosition.addItem(new LongDepTrai());
+    loadData(nameSpecialized[0]);
+    comboPosition.setModel(new DefaultComboBoxModel<Object>(nameSpecialized));
+    comboPosition.addActionListener(e -> {
+      String item = (String) comboPosition.getSelectedItem();
+      if (e.getModifiers() == 16) {
+        loadData(item);
+      }
+    });
+    table.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+          int row = table.rowAtPoint(e.getPoint());
+          int column = table.columnAtPoint(e.getPoint());
+          Object value = table.getValueAt(row, column);
+          if (value != null && value.toString().length() > 18) { 
+              JOptionPane.showMessageDialog(null, value.toString(), "Chi tiết", JOptionPane.INFORMATION_MESSAGE);
+          }
+      }
+  });
     lbTitle.setText("Từ vựng");
     btnDelete.setText("Delete");
     btnEdit.setText("Edit");
