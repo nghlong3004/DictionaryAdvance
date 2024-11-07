@@ -9,15 +9,11 @@ import static util.Constants.ColorApp.COLORS;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -104,6 +100,8 @@ public class Lookup extends JPanel {
       suggestionPopup.setVisible(false);
       return;
     }
+    
+    input = input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
 
     data = dictionaryController.searchWordStartWithKey(input, languageFrom, languageTo);
 
@@ -609,7 +607,7 @@ public class Lookup extends JPanel {
   }
 
   private String rndAlphabet() {
-    char value = (char) ((int) ('a') + rndRange(26));
+    char value = (char) ((int) ('A') + rndRange(26));
     return "" + value;
   }
 
@@ -620,7 +618,6 @@ public class Lookup extends JPanel {
 
   public class MyPanel extends JPanel {
     private static final long serialVersionUID = 4799123527384112687L;
-    private int cornerRadius = 30;
 
     public MyPanel() {
       putClientProperty(FlatClientProperties.STYLE,
@@ -630,16 +627,6 @@ public class Lookup extends JPanel {
               + "[dark]background:lighten(@background, 3%);");
     }
 
-    @Override
-    protected void paintBorder(Graphics g) {
-      Graphics2D g2 = (Graphics2D) g.create();
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-      g2.setColor(Color.decode("#e7e5e4"));
-      g2.draw(new RoundRectangle2D.Double(1, 1, getWidth() - 2, getHeight() - 2, cornerRadius,
-          cornerRadius));
-
-      g2.dispose();
-    }
   };
 
 }

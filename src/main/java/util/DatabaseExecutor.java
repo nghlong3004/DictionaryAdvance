@@ -70,42 +70,50 @@ public class DatabaseExecutor {
 
   public List<List<Object>> execute(String query) {
     LOGGER.info("DatabaseExecutor::Execute " + query);
+    String typeQuery = query.substring(0, query.indexOf(' '));
     try (Connection c = getConnection()) {
       if (c != null) {
         try (Statement statement = c.createStatement()) {
-          try (ResultSet resultSet = statement.executeQuery(query)) {
-            ResultSetMetaData md = resultSet.getMetaData();
-            int numCols = md.getColumnCount();
-            List<String> colNames = IntStream.range(0, numCols).mapToObj(i -> {
-              try {
-                return md.getColumnName(i + 1);
-              } catch (SQLException e) {
-                LOGGER.error("DatabaseExecutor::Error ResultSetMetaData get column name!", e);
-                return "?";
-              }
-            }).collect(Collectors.toList());
-            List<List<Object>> result = new ArrayList<List<Object>>();
-            List<Object> nameCol = new ArrayList<Object>();
-            colNames.forEach(value -> {
-              nameCol.add(toCamelCase(value));
-            });
-            result.add(nameCol);
-            while (resultSet.next()) {
-              List<Object> row = new ArrayList<Object>();
-              colNames.forEach(cn -> {
+          if(typeQuery.contains("SELECT")) {
+            try (ResultSet resultSet = statement.executeQuery(query)) {
+              ResultSetMetaData md = resultSet.getMetaData();
+              int numCols = md.getColumnCount();
+              List<String> colNames = IntStream.range(0, numCols).mapToObj(i -> {
                 try {
-                  row.add(resultSet.getObject(cn));
+                  return md.getColumnName(i + 1);
                 } catch (SQLException e) {
-                  e.printStackTrace();
+                  LOGGER.error("DatabaseExecutor::Error ResultSetMetaData get column name!", e);
+                  return "?";
                 }
+              }).collect(Collectors.toList());
+              List<List<Object>> result = new ArrayList<List<Object>>();
+              List<Object> nameCol = new ArrayList<Object>();
+              colNames.forEach(value -> {
+                nameCol.add(toCamelCase(value));
               });
+              result.add(nameCol);
+              while (resultSet.next()) {
+                List<Object> row = new ArrayList<Object>();
+                colNames.forEach(cn -> {
+                  try {
+                    row.add(resultSet.getObject(cn));
+                  } catch (SQLException e) {
+                    e.printStackTrace();
+                  }
+                });
+                result.add(row);
+              }
               LOGGER.info(String.format("DatabaseExecutor::%s It's been successful!",
-                  query.substring(0, query.indexOf(' '))));
-              result.add(row);
+                  typeQuery));
+              return result;
+            } catch (Exception e) {
+              LOGGER.error("DatabaseExecutor::Error result statement executing query", e);
             }
-            return result;
-          } catch (Exception e) {
-            LOGGER.error("DatabaseExecutor::Error result statement executing query", e);
+          }
+          else {
+            statement.executeUpdate(query);
+            LOGGER.info(String.format("DatabaseExecutor::%s It's been successful!",
+                typeQuery));
           }
         } catch (Exception e) {
           LOGGER.error("DatabaseExecutor::Error statement executing query", e);
