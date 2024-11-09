@@ -48,6 +48,21 @@ public class DictionaryService {
     return dictionaryRepository.getHistoryByDate(data);
   }
 
+  public void editWord(Word word, String currentWord) {
+    List<Word> currentWords = searchWordStartWithKey(currentWord, "en", "vi");
+    Word cuWord = currentWords.get(0);
+    String meaning = cuWord.getMeaning().substring(cuWord.getMeaning().indexOf(';') + 10);
+    meaning = meaning.substring(0, meaning.indexOf('<')).replace(">", "");
+    word.setMeaning(
+        cuWord.getMeaning().replace(meaning, word.getMeaning()).replaceAll("'", "\'\'"));
+    word.setPronounce(word.getPronounce().replaceAll("'", "\'\'"));
+    dictionaryRepository.updateWord(word, currentWord);
+  }
+  
+  public void deleteWord(String word) {
+    dictionaryRepository.deleteWordByWord(word);
+  }
+
 
 
 }

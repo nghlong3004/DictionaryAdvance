@@ -38,6 +38,18 @@ public class DictionaryFileRepository extends FileRepository implements Dictiona
     return null;
   }
 
+  @Override
+  public void updateWord(Word word, String currentKey) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void deleteWordByWord(String word) {
+    // TODO Auto-generated method stub
+
+  }
+
 
 
 }

@@ -1,6 +1,8 @@
 package repository.dictionary;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import configuration.DatabaseConfiguration;
@@ -16,8 +18,8 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
   public DictionaryDatabaseRepository(DatabaseConfiguration databaseConfiguration) {
     super(databaseConfiguration);
   }
-  
-  private List<Word> selectDatabase(String query){
+
+  private List<Word> selectDatabase(String query) {
     List<Word> words = new ArrayList<Word>();
     List<List<Object>> data = databaseExecute(query);
     for (int i = 1; i < data.size(); ++i) {
@@ -91,6 +93,21 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
 
     }
     return word;
+  }
+
+  @Override
+  public void updateWord(Word word, String currentKey) {
+    String query = String.format(
+        "UPDATE dictionary SET word = '%s', meaning = '%s', description = '%s', pronounce = '%s', updated = '%s' WHERE word = '%s'",
+        word.getWord(), word.getMeaning(), word.getDescription(), word.getPronounce(),
+        Timestamp.valueOf(LocalDateTime.now()), currentKey);
+    databaseExecute(query);
+  }
+
+  @Override
+  public void deleteWordByWord(String word) {
+    String query = String.format("DELETE FROM dictionary WHERE word = '%s'", word);
+    databaseExecute(query);
   }
 
 

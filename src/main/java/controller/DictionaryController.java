@@ -16,10 +16,6 @@ public class DictionaryController {
     return dictionaryService.searchWordStartWithKey(key, languageForm, languageTo);
   }
 
-  public String textTranslator(String key, String languageForm, String languageTo) {
-    return dictionaryService.textTranslator(key, languageForm, languageTo);
-  }
-
   public List<Word> getSpecializedWord(String specialized) {
     return dictionaryService.getSpecializedWord(specialized);
   }
@@ -30,6 +26,18 @@ public class DictionaryController {
 
   public List<Word> getHistoryByDate(LocalDate data) {
     return dictionaryService.getHistoryByDate(data);
+  }
+
+  public String textTranslator(String key, String languageForm, String languageTo) {
+    return dictionaryService.textTranslator(key, languageForm, languageTo);
+  }
+
+  public void editWord(Word word, String currentWord) {
+    dictionaryService.editWord(word, currentWord);
+  }
+
+  public void deleteWord(String word) {
+    dictionaryService.deleteWord(word);
   }
 
   public DictionaryService getDictionaryService() {

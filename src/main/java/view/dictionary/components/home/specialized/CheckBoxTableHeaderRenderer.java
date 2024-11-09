@@ -1,4 +1,4 @@
-package view.dictionary.components.home;
+package view.dictionary.components.home.specialized;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.util.UIScale;
@@ -17,9 +17,6 @@ import javax.swing.table.TableCellRenderer;
 
 public class CheckBoxTableHeaderRenderer extends JCheckBox implements TableCellRenderer {
 
-  /**
-   * 
-   */
   private static final long serialVersionUID = -515754905627525593L;
   private final JTable table;
   private final int column;

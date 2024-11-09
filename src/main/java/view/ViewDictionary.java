@@ -34,7 +34,7 @@ public class ViewDictionary extends JFrame {
 
   private ViewDictionary() {
     initComponents();
-    setSize(new Dimension(1368, 768));
+    setSize(new Dimension(1368, 700));
     setLocationRelativeTo(null);
     loginPanel = new LoginPanel();
     setContentPane(loginPanel);

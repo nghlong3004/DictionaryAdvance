@@ -6,8 +6,8 @@ import com.formdev.flatlaf.util.UIScale;
 import util.view.NotificationUI;
 import view.ViewDictionary;
 import view.dictionary.components.home.Lookup;
-import view.dictionary.components.home.TechnicalVocabulary;
 import view.dictionary.components.home.TextTranslator;
+import view.dictionary.components.home.specialized.WordSpecialized;
 import view.dictionary.menu.Menu;
 import view.dictionary.menu.MenuAction;
 import view.login.LoginPanel;
@@ -86,7 +86,7 @@ public class MainForm extends JLayeredPane {
               ViewDictionary.showForm(new TextTranslator());
               break;
             case 3:
-              ViewDictionary.showForm(new TechnicalVocabulary());
+              ViewDictionary.showForm(new WordSpecialized());
               break;
           }
           break;
