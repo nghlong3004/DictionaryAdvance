@@ -9,6 +9,7 @@ import raven.popup.component.SimplePopupBorder;
 import util.ObjectContainer;
 import view.dictionary.swing.MyButtonAction;
 import view.notifications.Notification;
+import view.notifications.Notification.Type;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -180,7 +181,7 @@ public class WordSpecialized extends JPanel {
             mapWords.put((String) comboPosition.getSelectedItem(), null);
             loadData((String) comboPosition.getSelectedItem());
             p.closePopup();
-            Notification.getInstance().show(Notification.Type.SUCCESS, "Successfully!");
+            Notification.getInstance().show(Notification.Type.SUCCESS, "Sửa thành công!");
           } else {
             p.closePopup();
           }
@@ -440,6 +441,7 @@ public class WordSpecialized extends JPanel {
       words.forEach(word -> {
         dictionaryController.deleteWord(word.getWord());
       });
+      Notification.getInstance().show(Type.SUCCESS, String.format("Xoá thành công %s từ", words.size()));
       mapWords.put((String) comboPosition.getSelectedItem(), null);
       loadData((String) comboPosition.getSelectedItem());
     }
