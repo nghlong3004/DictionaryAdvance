@@ -1,4 +1,4 @@
-package view.dictionary.components.home;
+package view.dictionary.components.home.specialized;
 
 import java.awt.Component;
 import javax.swing.JLabel;

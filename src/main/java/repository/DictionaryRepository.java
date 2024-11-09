@@ -14,4 +14,8 @@ public interface DictionaryRepository {
 
   public List<Word> getLovelyByEmail(String email);
 
+  public void updateWord(Word word, String currentKey);
+
+  public void deleteWordByWord(String word);
+
 }

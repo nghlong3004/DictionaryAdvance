@@ -18,6 +18,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 import util.repository.Google;
 import util.view.ImageUtil;
+import view.dictionary.components.home.specialized.TableHeaderAlignment;
 
 public class TextTranslator extends JPanel {
 
@@ -89,10 +90,10 @@ public class TextTranslator extends JPanel {
     JLabel removelb = new JLabel("Xóa lịch sử");
     table = new JTable();
     remove.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
-        
+
       }
     });
 
@@ -207,10 +208,9 @@ public class TextTranslator extends JPanel {
     JLabel left = new JLabel("EngLish", JLabel.CENTER);
     JButton trans = new JButton();
     trans.setIcon(new ImageUtil().getAvatarIcon("reverse_icon.png", 30, 30, 999));
-    trans.putClientProperty(FlatClientProperties.STYLE, "" + 
-        "[light]background:darken(@background, 15%);"
-        + "[dark]background:lighten(@background, 15%);" +
-                                         "arc:999;");
+    trans.putClientProperty(FlatClientProperties.STYLE,
+        "" + "[light]background:darken(@background, 15%);"
+            + "[dark]background:lighten(@background, 15%);" + "arc:999;");
     JLabel right = new JLabel("VietNamese", JLabel.CENTER);
     trans.addActionListener(new ActionListener() {
 
