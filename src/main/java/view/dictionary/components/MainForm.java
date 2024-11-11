@@ -90,6 +90,12 @@ public class MainForm extends JLayeredPane {
               break;
           }
           break;
+        case 1:
+          ViewDictionary.showForm(new HistoryForm());
+          break;
+        case 2:
+          ViewDictionary.showForm(new FavouriteForm());
+          break;
         case 5:
           ViewDictionary.showForm(new ProfileForm(loginPanel.getUser()));
           break;

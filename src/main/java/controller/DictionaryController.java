@@ -20,11 +20,11 @@ public class DictionaryController {
     return dictionaryService.getSpecializedWord(specialized);
   }
 
-  public List<Word> getLovelyByEmail(String email) {
-    return dictionaryService.getLovelyByEmail(email);
+  public List<Word> getFavouriteByEmail() {
+    return dictionaryService.getFavouriteByEmail();
   }
 
-  public List<Word> getHistoryByDate(LocalDate data) {
+  public List<String[]> getHistoryByDate(LocalDate data) {
     return dictionaryService.getHistoryByDate(data);
   }
 
@@ -40,7 +40,17 @@ public class DictionaryController {
     dictionaryService.deleteWord(word);
   }
 
-  public DictionaryService getDictionaryService() {
-    return dictionaryService;
+  public void processWord(String word, boolean isStarOrFlag) {
+    dictionaryService.processWord(word, isStarOrFlag);
   }
+
+  public void saveWordToHistory(String word, String meaning) {
+    dictionaryService.saveWordToHistory(word, meaning);
+  }
+
+  public void deleteWordHistoryByEmail(String word) {
+    dictionaryService.deleteWordHistoryByEmail(word);
+    
+  }
+
 }

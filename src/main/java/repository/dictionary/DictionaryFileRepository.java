@@ -15,13 +15,13 @@ public class DictionaryFileRepository extends FileRepository implements Dictiona
   }
 
   @Override
-  public List<Word> getHistoryByDate(LocalDate date) {
+  public List<String[]> getHistoryByDate(String email, LocalDate date) {
 
     return null;
   }
 
   @Override
-  public List<Word> getLovelyByEmail(String email) {
+  public List<Word> getFavouriteByEmail(String email) {
 
     return null;
   }
@@ -48,6 +48,30 @@ public class DictionaryFileRepository extends FileRepository implements Dictiona
   public void deleteWordByWord(String word) {
     // TODO Auto-generated method stub
 
+  }
+
+  @Override
+  public void processWord(String email, String word) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void nonProcessWord(String email, String word) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void saveWordToHistory(String email, String word, String meaning) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void deleteWordHistoryByEmail(String email, String word) {
+    // TODO Auto-generated method stub
+    
   }
 
 

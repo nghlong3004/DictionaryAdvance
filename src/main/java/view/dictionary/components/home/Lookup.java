@@ -16,7 +16,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -52,7 +54,7 @@ public class Lookup extends JPanel {
   private JTextField txtSearch;
 
   private JPopupMenu suggestionPopup;
-
+  
   private List<Word> data;
 
   private JPanel panel;
@@ -77,6 +79,7 @@ public class Lookup extends JPanel {
 
   private JTextArea txtAntonym;
   private JTextArea txtSynonym;
+  private Map<String, Boolean> mapFavourite;
 
   private int selectedIndex = 0;
 
@@ -171,7 +174,14 @@ public class Lookup extends JPanel {
             + "borderColor:null;" + "borderInsets:5, 5, 5, 5;");
     languageFrom = "en";
     languageTo = "vi";
-
+    mapFavourite = new HashMap<String, Boolean>();
+    List<Word> words = dictionaryController.getFavouriteByEmail();
+    if(words != null) {
+      words.forEach(word -> {
+        mapFavourite.put(word.getWord(), true);
+      });
+    }
+    
     String html = "<html>" + "<div style='text-align: center;'>" + "<table>"
         + "<tr><td style='text-align: left;'>Xin chào</td></tr>"
         + "<tr><td style='text-align: left; font-size: 15px; color: " + rndColor() + ";'>"
@@ -380,7 +390,6 @@ public class Lookup extends JPanel {
     btnStart = new JButton();
     btnSpeakerUs = new JButton("US");
     btnSpeakerVn = new JButton("VN");
-    // lbWord.setHorizontalAlignment(SwingConstants.LEADING);
     btnSpeakerUs.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         speak("en");
@@ -409,26 +418,28 @@ public class Lookup extends JPanel {
     icon = new AvatarIcon(getClass().getResource("/image/star.png"), 25, 25, 0);
     btnStart.setIcon(icon);
     btnStart.addActionListener(actionEvent -> {
-      String bland = "";
-      isStar = !isStar;
+      processStar();
       if (isStar) {
-        bland = "1";
+        if(!lbWord.getText().isEmpty())
+          dictionaryController.processWord(txtSearch.getText(), isStar);
       }
-      final AvatarIcon iconFlag =
-          new AvatarIcon(getClass().getResource("/image/star" + bland + ".png"), 25, 25, 0);
-      btnStart.setIcon(iconFlag);
+      else {
+        if(!lbWord.getText().isEmpty())
+          dictionaryController.processWord(txtSearch.getText(), isStar);
+      }
     });
     icon = new AvatarIcon(getClass().getResource("/image/flag.png"), 30, 30, 0);
     btnFlag.setIcon(icon);
     btnFlag.addActionListener(actionEvent -> {
-      String bland = "";
-      isFlag = !isFlag;
+      processFlag();
       if (isFlag) {
-        bland = "1";
+        if(!lbWord.getText().isEmpty())
+          dictionaryController.processWord(txtSearch.getText(), isFlag);
       }
-      final AvatarIcon iconFlag =
-          new AvatarIcon(getClass().getResource("/image/flag" + bland + ".png"), 25, 25, 0);
-      btnFlag.setIcon(iconFlag);
+      else {
+        if(!lbWord.getText().isEmpty())
+          dictionaryController.processWord(txtSearch.getText(), isFlag);
+      }
     });
     icon = new AvatarIcon(getClass().getResource("/image/speaker.png"), 25, 25, 999);
     btnSpeakerUs.setIcon(icon);
@@ -560,11 +571,49 @@ public class Lookup extends JPanel {
     setLayout(groupLayout);
 
   }
+  private void processFlag() {
+    String bland = "";
+    isFlag = !isFlag;
+    if(isFlag) {
+      bland = "1";
+    }
+    System.out.println(isFlag);
+    final AvatarIcon iconFlag =
+        new AvatarIcon(getClass().getResource("/image/flag" + bland + ".png"), 25, 25, 0);
+    btnFlag.setIcon(iconFlag);
+    repaint();
+  }
+
+  private void processStar() {
+    String bland = "";
+    isStar = !isStar;
+    if (isStar) {
+      bland = "1";
+    }
+    final AvatarIcon iconFlag =
+        new AvatarIcon(getClass().getResource("/image/star" + bland + ".png"), 25, 25, 0);
+    btnStart.setIcon(iconFlag);
+    repaint();
+  }
+
+  private String convertMeaning(String wordMeaning) {
+    String meaning = wordMeaning.substring(wordMeaning.indexOf(';') + 10);
+    int idx = meaning.indexOf('<');
+    return meaning.substring(0, Math.max(0, idx == -1 ? meaning.length() : idx)).replace(">", "");
+  }
 
   protected void handleOK() {
     if (data != null) {
       for (Word word : data) {
         if (word.getWord().equals(txtSearch.getText())) {
+          if(mapFavourite.get(word.getWord()) != null && mapFavourite.get(word.getWord())) {
+            isStar = false;
+          }
+          else {
+            isStar = true;
+          }
+          processStar();
+          dictionaryController.saveWordToHistory(txtSearch.getText(), convertMeaning(word.getMeaning()));
           handleWord(convert(word.getWord(), 15), word.getMeaning(), word.getSynonym(),
               word.getAntonym());
         }
@@ -628,5 +677,6 @@ public class Lookup extends JPanel {
     }
 
   };
+
 
 }
