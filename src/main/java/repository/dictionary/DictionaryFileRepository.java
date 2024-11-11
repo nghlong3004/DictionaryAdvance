@@ -74,6 +74,18 @@ public class DictionaryFileRepository extends FileRepository implements Dictiona
     
   }
 
+  @Override
+  public boolean isWordInHistory(String email, String word) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+  
+  @Override
+  public void updateTimeHistory(String email, String word) {
+    // TODO Auto-generated method stub
+    
+  }
+
 
 
 }

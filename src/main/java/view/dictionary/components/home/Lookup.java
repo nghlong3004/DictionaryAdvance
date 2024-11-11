@@ -35,7 +35,8 @@ import model.dictionary.Word;
 import util.ObjectContainer;
 import util.extral.AvatarIcon;
 import util.repository.Google;
-
+import view.notifications.Notification;
+import view.notifications.Notification.Type;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -54,7 +55,7 @@ public class Lookup extends JPanel {
   private JTextField txtSearch;
 
   private JPopupMenu suggestionPopup;
-  
+
   private List<Word> data;
 
   private JPanel panel;
@@ -103,7 +104,7 @@ public class Lookup extends JPanel {
       suggestionPopup.setVisible(false);
       return;
     }
-    
+
     input = input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
 
     data = dictionaryController.searchWordStartWithKey(input, languageFrom, languageTo);
@@ -176,12 +177,12 @@ public class Lookup extends JPanel {
     languageTo = "vi";
     mapFavourite = new HashMap<String, Boolean>();
     List<Word> words = dictionaryController.getFavouriteByEmail();
-    if(words != null) {
+    if (words != null) {
       words.forEach(word -> {
         mapFavourite.put(word.getWord(), true);
       });
     }
-    
+
     String html = "<html>" + "<div style='text-align: center;'>" + "<table>"
         + "<tr><td style='text-align: left;'>Xin chào</td></tr>"
         + "<tr><td style='text-align: left; font-size: 15px; color: " + rndColor() + ";'>"
@@ -303,6 +304,7 @@ public class Lookup extends JPanel {
                 languageTo);
           }
           Word data = datas.get(rndRange(datas.size()));
+          settingWord(data);
           handleWord(convert(data.getWord(), 20), data.getMeaning(), data.getSynonym(),
               data.getAntonym());
         }
@@ -408,38 +410,48 @@ public class Lookup extends JPanel {
     AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/copy1.png"), 25, 25, 0);
     btnCoppy.setIcon(icon);
     btnCoppy.addActionListener(actionEvent -> {
-      if (lbWord.getText() != null || !lbWord.getText().isEmpty()) {
+      if (lbWord.getText() != null && !lbWord.getText().isEmpty()) {
+        Notification.getInstance().show(Type.SUCCESS, "Đã Coppy");
         String myString = deconvert(lbWord.getText());
         StringSelection stringSelection = new StringSelection(myString);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
       }
+      else {
+        Notification.getInstance().show(Type.ERROR, "không có từ để Coppy");
+      }
     });
     icon = new AvatarIcon(getClass().getResource("/image/star.png"), 25, 25, 0);
     btnStart.setIcon(icon);
     btnStart.addActionListener(actionEvent -> {
-      processStar();
-      if (isStar) {
-        if(!lbWord.getText().isEmpty())
-          dictionaryController.processWord(txtSearch.getText(), isStar);
+      if (!lbWord.getText().isEmpty()) {
+        processStar();
+        scheduler.schedule(() -> {
+          dictionaryController.processWord(deconvert(lbWord.getText()), isStar);
+        }, delayMillis, TimeUnit.MILLISECONDS);
+        if (isStar) {
+          Notification.getInstance().show(Type.SUCCESS, "Thêm từ vào mục yêu thích");
+        } else {
+          Notification.getInstance().show(Type.INFO, "Xoá từ khỏi mục yêu thích");
+        }
       }
       else {
-        if(!lbWord.getText().isEmpty())
-          dictionaryController.processWord(txtSearch.getText(), isStar);
+        Notification.getInstance().show(Type.ERROR, "Không có từ để thêm");
       }
     });
     icon = new AvatarIcon(getClass().getResource("/image/flag.png"), 30, 30, 0);
     btnFlag.setIcon(icon);
     btnFlag.addActionListener(actionEvent -> {
-      processFlag();
-      if (isFlag) {
-        if(!lbWord.getText().isEmpty())
-          dictionaryController.processWord(txtSearch.getText(), isFlag);
+      if(!lbWord.getText().isEmpty()) {
+        processFlag();
+        scheduler.schedule(() -> {
+          dictionaryController.processWord(deconvert(lbWord.getText()), isFlag);
+        }, delayMillis, TimeUnit.MILLISECONDS);
       }
       else {
-        if(!lbWord.getText().isEmpty())
-          dictionaryController.processWord(txtSearch.getText(), isFlag);
+        Notification.getInstance().show(Notification.Type.ERROR, "Không có từ để gắn cờ");
       }
+
     });
     icon = new AvatarIcon(getClass().getResource("/image/speaker.png"), 25, 25, 999);
     btnSpeakerUs.setIcon(icon);
@@ -571,20 +583,25 @@ public class Lookup extends JPanel {
     setLayout(groupLayout);
 
   }
+
   private void processFlag() {
+    if (lbWord.getText().isEmpty()) {
+      return;
+    }
     String bland = "";
     isFlag = !isFlag;
-    if(isFlag) {
+    if (isFlag) {
       bland = "1";
     }
-    System.out.println(isFlag);
     final AvatarIcon iconFlag =
         new AvatarIcon(getClass().getResource("/image/flag" + bland + ".png"), 25, 25, 0);
     btnFlag.setIcon(iconFlag);
-    repaint();
   }
 
   private void processStar() {
+    if (lbWord.getText().isEmpty()) {
+      return;
+    }
     String bland = "";
     isStar = !isStar;
     if (isStar) {
@@ -593,32 +610,34 @@ public class Lookup extends JPanel {
     final AvatarIcon iconFlag =
         new AvatarIcon(getClass().getResource("/image/star" + bland + ".png"), 25, 25, 0);
     btnStart.setIcon(iconFlag);
-    repaint();
-  }
-
-  private String convertMeaning(String wordMeaning) {
-    String meaning = wordMeaning.substring(wordMeaning.indexOf(';') + 10);
-    int idx = meaning.indexOf('<');
-    return meaning.substring(0, Math.max(0, idx == -1 ? meaning.length() : idx)).replace(">", "");
   }
 
   protected void handleOK() {
     if (data != null) {
       for (Word word : data) {
         if (word.getWord().equals(txtSearch.getText())) {
-          if(mapFavourite.get(word.getWord()) != null && mapFavourite.get(word.getWord())) {
-            isStar = false;
-          }
-          else {
-            isStar = true;
-          }
-          processStar();
-          dictionaryController.saveWordToHistory(txtSearch.getText(), convertMeaning(word.getMeaning()));
+          settingWord(word);
           handleWord(convert(word.getWord(), 15), word.getMeaning(), word.getSynonym(),
               word.getAntonym());
         }
       }
     }
+  }
+
+  private void settingWord(Word word) {
+    scheduler.schedule(() -> {
+      if (mapFavourite.get(word.getWord()) != null && mapFavourite.get(word.getWord())) {
+        isStar = false;
+      } else {
+        isStar = true;
+      }
+      processStar();
+      
+        dictionaryController.saveWordToHistory(deconvert(lbWord.getText()),
+            word.getMeaning().replaceAll("'", "''"));
+      
+    }, delayMillis, TimeUnit.MILLISECONDS);
+    
   }
 
   private void handleWord(String stringWord, String stringExplain, String stringSynonym,
@@ -636,7 +655,7 @@ public class Lookup extends JPanel {
   }
 
   private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
-  private long delayMillis = 200;
+  private long delayMillis = 100;
 
   protected void speak(String language) {
     scheduler.schedule(() -> {

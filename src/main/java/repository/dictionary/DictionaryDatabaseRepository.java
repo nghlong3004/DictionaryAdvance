@@ -3,7 +3,6 @@ package repository.dictionary;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import configuration.DatabaseConfiguration;
@@ -67,10 +66,24 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
 
   @Override
   public List<Word> getFavouriteByEmail(String email) {
-    String query = String.format("SELECT d.word " + "FROM dictionary d "
+    String query = String.format("SELECT d.word, d.meaning " + "FROM dictionary d "
         + "JOIN favourite f ON d.dictionary_id = f.dictionary_id "
         + "JOIN userinfo u ON f.user_id = u.user_id " + "WHERE u.email = '%s'", email);
     return selectDatabase(query);
+  }
+
+  @Override
+  public boolean isWordInHistory(String email, String word) {
+    String query = String.format(
+        "SELECT word FROM history WHERE user_id = (SELECT user_id FROM userinfo WHERE email = '%s') AND word = '%s'",
+        email, word);
+    List<List<Object>> data = databaseExecute(query);
+    if (data.size() == 2) {
+      if (!((String) data.get(1).get(0)).isEmpty()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
@@ -107,15 +120,24 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
   @Override
   public void saveWordToHistory(String email, String word, String meaning) {
     String query = String.format(
-        "INSERT INTO history(user_id, word, meaning, updated) VALUES((SELECT user_id FROM userinfo WHERE email = '%s'), '%s', '%s', '%s')",
-        email, word, meaning,
-        LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+        "INSERT INTO history(user_id, word, meaning, updated) VALUES((SELECT user_id FROM userinfo WHERE email = '%s'), '%s', '%s', NOW())",
+        email, word, meaning);
     databaseExecute(query);
   }
-  
+
   @Override
   public void deleteWordHistoryByEmail(String email, String word) {
-    String query = String.format("DELETE FROM history WHERE user_id = (SELECT user_id FROM userinfo WHERE email = '%s') AND word = '%s'", email, word);
+    String query = String.format(
+        "DELETE FROM history WHERE user_id = (SELECT user_id FROM userinfo WHERE email = '%s') AND word = '%s'",
+        email, word);
+    databaseExecute(query);
+  }
+
+  @Override
+  public void updateTimeHistory(String email, String word) {
+    String query = String.format(
+        "UPDATE history SET updated = NOW() WHERE user_id = (SELECT user_id FROM userinfo WHERE email = '%s') AND word = '%s'",
+        email, word);
     databaseExecute(query);
   }
 

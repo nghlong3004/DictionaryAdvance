@@ -152,7 +152,7 @@ public class HistoryForm extends JPanel {
 
   private String textLblCmd(int size, String message) {
     String htmlText = "<html>" + "<div style='text-align: center;'>" + "<table>"
-        + "<tr><td style='text-align: left; font-size:" + size + "px; color: " + "#f5f5f5" + ";'>"
+        + "<tr><td style='text-align: left; font-size:" + size + "px; color: " + "#9333ea" + ";'>"
         + message + "</td></tr>" + "</table>" + "</div>" + "</html>";
     return htmlText;
   }
@@ -160,7 +160,7 @@ public class HistoryForm extends JPanel {
   private JComponent PanelHistory(JComponent items) {
 
     JPanel panelHistory = new JPanel();
-    lblCmd = new JLabel(textLblCmd(14, "Tất cả"));
+    lblCmd = new JLabel(textLblCmd(17, "Tất cả"));
     lblCmd.setHorizontalAlignment(SwingConstants.CENTER);
 
     JButton cmdDelete = new JButton("Xoá dữ liệu");
@@ -223,8 +223,7 @@ public class HistoryForm extends JPanel {
     public MyButton(String title, LocalDate localDate) {
       super(title);
       addActionListener(actionEven -> {
-        System.out.println(localDate);
-        lblCmd.setText(textLblCmd(14, title));
+        lblCmd.setText(textLblCmd(17, title));
         items = dictionaryController.getHistoryByDate(localDate);
         if(!mapHistory.isEmpty()) {
           mapHistory.clear();
@@ -245,6 +244,11 @@ public class HistoryForm extends JPanel {
     private static final long serialVersionUID = 8577439679825743429L;
 
     public HistoryPanel(List<String[]> items) {
+      putClientProperty(FlatClientProperties.STYLE,
+          "" + "arc:25;" + "[light]foreground:darken(@background, 3%);"
+              + "[dark]foreground:lighten(@background, 3%);"
+              + "[light]background:darken(@background, 3%);"
+              + "[dark]background:lighten(@background, 3%);");
       setLayout(new MigLayout("wrap, height 200, fillx", "[]"));
       repaintItem(items);
     }
@@ -264,17 +268,23 @@ public class HistoryForm extends JPanel {
     private JPanel createItemPanel(String[] item) {
       JPanel itemPanel = new JPanel();
       itemPanel.putClientProperty(FlatClientProperties.STYLE,
-          "" + "arc:25;" + "[light]foreground:darken(@background, 3%);"
-              + "[dark]foreground:lighten(@background, 3%);"
-              + "[light]background:darken(@background, 3%);"
-              + "[dark]background:lighten(@background, 3%);");
+          "" + "arc:25;");
       itemPanel.setLayout(new MigLayout("height 60!, fill"));
       JCheckBox checkBox = new JCheckBox();
       checkBox.addActionListener(actioneEven -> {
         mapHistory.put(item, !mapHistory.get(item));
       });
+      JLabel label = new JLabel("<html>"
+          + "<span style='font-size:12px; color:black;'>" + item[2].substring(0, item[2].indexOf(".")) + "</span><br>"
+          + "<span style='font-size:16px; color:blue;'>" + item[0] + "</span><br>" // item[0] lớn hơn và có màu xanh
+          + "<span style='font-size:16px; color:green;'>" + item[1] + "</span>"    // item[1] lớn hơn và có màu xanh lá
+          + "</html>");
+      JScrollPane scrollPane = new JScrollPane(label);
+      scrollPane.putClientProperty(FlatClientProperties.STYLE, 
+          "border:null;");
+      
       itemPanel.add(checkBox, "dock west, center");
-      itemPanel.add(new JLabel("<html>" + item[2] + "<br>" + item[1] + "</html>"), "wrap");
+      itemPanel.add(scrollPane, "grow, wrap");
 
       return itemPanel;
     }

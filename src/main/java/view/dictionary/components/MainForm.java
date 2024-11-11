@@ -11,7 +11,8 @@ import view.dictionary.components.home.specialized.WordSpecialized;
 import view.dictionary.menu.Menu;
 import view.dictionary.menu.MenuAction;
 import view.login.LoginPanel;
-
+import view.notifications.Notification;
+import view.notifications.Notification.Type;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
@@ -91,12 +92,18 @@ public class MainForm extends JLayeredPane {
           }
           break;
         case 1:
+          Notification.getInstance().clearAll();
+          Notification.getInstance().show(Type.INFO, "Lịch sử");
           ViewDictionary.showForm(new HistoryForm());
           break;
         case 2:
-          ViewDictionary.showForm(new FavouriteForm());
+          Notification.getInstance().clearAll();
+          Notification.getInstance().show(Type.INFO, "Yêu thích");
+          ViewDictionary.showForm(new FavoriteForm());
           break;
         case 5:
+          Notification.getInstance().clearAll();
+          Notification.getInstance().show(Type.INFO, "Tài khoản");
           ViewDictionary.showForm(new ProfileForm(loginPanel.getUser()));
           break;
         case 6:

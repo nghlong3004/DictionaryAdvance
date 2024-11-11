@@ -50,7 +50,6 @@ public class DictionaryController {
 
   public void deleteWordHistoryByEmail(String word) {
     dictionaryService.deleteWordHistoryByEmail(word);
-    
   }
 
 }

@@ -25,7 +25,7 @@ import util.ObjectContainer;
 import util.view.ImageUtil;
 import view.notifications.Notification;
 
-public class FavouriteForm extends JPanel {
+public class FavoriteForm extends JPanel {
 
   private static final long serialVersionUID = 1L;
   
@@ -37,7 +37,7 @@ public class FavouriteForm extends JPanel {
   
   private List<Word> items;
 
-  public FavouriteForm() {
+  public FavoriteForm() {
 
     JPanel panel = new JPanel();
     JPanel panel_1 = new JPanel();
@@ -140,6 +140,11 @@ public class FavouriteForm extends JPanel {
     private static final long serialVersionUID = 8577439679825743429L;
 
     public FavouritePanel(List<Word> items) {
+      putClientProperty(FlatClientProperties.STYLE,
+          "" + "arc:25;" + "[light]foreground:darken(@background, 3%);"
+              + "[dark]foreground:lighten(@background, 3%);"
+              + "[light]background:darken(@background, 3%);"
+              + "[dark]background:lighten(@background, 3%);");
       setLayout(new MigLayout("wrap 6", ""));
       repaintItem(items);
     }
@@ -156,7 +161,7 @@ public class FavouriteForm extends JPanel {
       for (Word item : items) {
         ++i;
         String constraints = "grow, gapleft 5, gapright 10, width 200!, height 150!" ;
-        add(createItemPanel(i, item.getWord()), constraints);
+        add(createItemPanel(i, item.getWord(), item.getMeaning()), constraints);
       }
       lblNumber.setText("<html>" + "<div style='text-align: center;'>" + "<table>"
           + "<tr><td style='text-align: left; font-size:" + 17 + "px; color: " + "#22c55e" + ";'>"
@@ -172,24 +177,23 @@ public class FavouriteForm extends JPanel {
       return html;
     }
 
-    private JPanel createItemPanel(int i, String message) {
+    private JPanel createItemPanel(int i, String message, String meaning) {
       JPanel itemPanel = new JPanel();
       itemPanel.setLayout(new MigLayout("fill"));
       itemPanel.putClientProperty(FlatClientProperties.STYLE,
-          "" + "arc:25;" + "[light]foreground:darken(@background, 3%);"
-              + "[dark]foreground:lighten(@background, 3%);"
-              + "[light]background:darken(@background, 3%);"
-              + "[dark]background:lighten(@background, 3%);");
+          "" + "arc:25;");
       JLabel lblNo = new JLabel(htmlText("No." + i));
-      JButton cmdEdit = new JButton("Ghi chú");
-      cmdEdit.putClientProperty(FlatClientProperties.STYLE,
-          "" + "arc:25;" + "[light]background:darken(@background, 30%);"
-              + "[dark]background:lighten(@background, 30%);");
       lblNo.setHorizontalTextPosition(SwingConstants.CENTER);
       lblNo.setVerticalTextPosition(SwingConstants.TOP);
-      itemPanel.add(cmdEdit, "gap 5, dock south");
-      itemPanel.add(lblNo, "gap 5, dock west, width 50!");
-      itemPanel.add(new JLabel(message), "grow");
+      JLabel label = new JLabel("<html>"
+          + "<span style='font-size:16px; color:blue;'>" + message + "</span><br>" // item[0] lớn hơn và có màu xanh
+          + "<span style='font-size:16px; color:green;'>" + meaning + "</span>"    // item[1] lớn hơn và có màu xanh lá
+          + "</html>");
+      JScrollPane scrollPane = new JScrollPane(label);
+      scrollPane.putClientProperty(FlatClientProperties.STYLE, 
+          "border:null;");
+      itemPanel.add(lblNo, "gap 5, dock west, width 60!");
+      itemPanel.add(scrollPane, "grow");
 
 
       return itemPanel;

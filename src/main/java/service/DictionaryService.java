@@ -41,11 +41,13 @@ public class DictionaryService {
   }
 
   public List<Word> getFavouriteByEmail() {
-    return dictionaryRepository.getFavouriteByEmail(ObjectContainer.getUserController().getUser().getEmail());
+    return dictionaryRepository
+        .getFavouriteByEmail(ObjectContainer.getUserController().getUser().getEmail());
   }
 
   public List<String[]> getHistoryByDate(LocalDate data) {
-    return dictionaryRepository.getHistoryByDate(ObjectContainer.getUserController().getUser().getEmail(), data);
+    return dictionaryRepository
+        .getHistoryByDate(ObjectContainer.getUserController().getUser().getEmail(), data);
   }
 
   public void editWord(Word word, String currentWord) {
@@ -64,21 +66,29 @@ public class DictionaryService {
   }
 
   public void processWord(String word, boolean isStarOrFlag) {
-    if(isStarOrFlag) {
-      dictionaryRepository.processWord(ObjectContainer.getUserController().getUser().getEmail(), word);
-    }
-    else {
+    if (isStarOrFlag) {
+      dictionaryRepository.processWord(ObjectContainer.getUserController().getUser().getEmail(),
+          word);
+    } else {
       dictionaryRepository.nonProcessWord(ObjectContainer.getUserController().getUser().getEmail(),
           word);
     }
   }
 
   public void saveWordToHistory(String word, String meaning) {
-    dictionaryRepository.saveWordToHistory(ObjectContainer.getUserController().getUser().getEmail(), word, meaning);
+    if (dictionaryRepository
+        .isWordInHistory(ObjectContainer.getUserController().getUser().getEmail(), word)) {
+      dictionaryRepository
+          .updateTimeHistory(ObjectContainer.getUserController().getUser().getEmail(), word);
+    } else {
+      dictionaryRepository.saveWordToHistory(
+          ObjectContainer.getUserController().getUser().getEmail(), word, meaning);
+    }
   }
 
   public void deleteWordHistoryByEmail(String word) {
-    dictionaryRepository.deleteWordHistoryByEmail(ObjectContainer.getUserController().getUser().getEmail(), word);
+    dictionaryRepository
+        .deleteWordHistoryByEmail(ObjectContainer.getUserController().getUser().getEmail(), word);
   }
 
 }
