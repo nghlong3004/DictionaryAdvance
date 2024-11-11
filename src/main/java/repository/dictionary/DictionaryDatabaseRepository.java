@@ -47,15 +47,98 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
   }
 
   @Override
-  public List<Word> getHistoryByDate(LocalDate date) {
+  public List<String[]> getHistoryByDate(String email, LocalDate date) {
+    String query = String.format(
+        "SELECT word, meaning, updated FROM history WHERE updated >= '%s' AND user_id = (SELECT user_id FROM userinfo WHERE email = '%s')",
+        date, email);
+    List<String[]> historyList = new ArrayList<String[]>();
+    List<List<Object>> data = databaseExecute(query);
 
-    return null;
+    for (int i = 1; i < data.size(); ++i) {
+      if (data.get(i).size() == 3) {
+        historyList.add(new String[] {(String) data.get(i).get(0), (String) data.get(i).get(1),
+            ((Timestamp) data.get(i).get(2)).toString()});
+      }
+    }
+
+    return historyList;
   }
 
   @Override
-  public List<Word> getLovelyByEmail(String email) {
+  public List<Word> getFavouriteByEmail(String email) {
+    String query = String.format("SELECT d.word, d.meaning " + "FROM dictionary d "
+        + "JOIN favourite f ON d.dictionary_id = f.dictionary_id "
+        + "JOIN userinfo u ON f.user_id = u.user_id " + "WHERE u.email = '%s'", email);
+    return selectDatabase(query);
+  }
 
-    return null;
+  @Override
+  public boolean isWordInHistory(String email, String word) {
+    String query = String.format(
+        "SELECT word FROM history WHERE user_id = (SELECT user_id FROM userinfo WHERE email = '%s') AND word = '%s'",
+        email, word);
+    List<List<Object>> data = databaseExecute(query);
+    if (data.size() == 2) {
+      if (!((String) data.get(1).get(0)).isEmpty()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void updateWord(Word word, String currentKey) {
+    String query = String.format(
+        "UPDATE dictionary SET word = '%s', meaning = '%s', description = '%s', pronounce = '%s', updated = '%s' WHERE word = '%s'",
+        word.getWord(), word.getMeaning(), word.getDescription(), word.getPronounce(),
+        Timestamp.valueOf(LocalDateTime.now()), currentKey);
+    databaseExecute(query);
+  }
+
+  @Override
+  public void deleteWordByWord(String word) {
+    String query = String.format("DELETE FROM dictionary WHERE word = '%s'", word);
+    databaseExecute(query);
+  }
+
+  @Override
+  public void processWord(String email, String word) {
+    String query = String.format(
+        "INSERT INTO favourite(dictionary_id, user_id) VALUES((SELECT dictionary_id FROM dictionary WHERE word = '%s'), (SELECT user_id FROM userinfo WHERE email = '%s'))",
+        word, email);
+    databaseExecute(query);
+  }
+
+  @Override
+  public void nonProcessWord(String email, String word) {
+    String query = String.format(
+        "DELETE FROM favourite WHERE dictionary_id = (SELECT dictionary_id FROM dictionary WHERE word = '%s') AND user_id = (SELECT user_id FROM userinfo WHERE email = '%s')",
+        word, email);
+    databaseExecute(query);
+  }
+
+  @Override
+  public void saveWordToHistory(String email, String word, String meaning) {
+    String query = String.format(
+        "INSERT INTO history(user_id, word, meaning, updated) VALUES((SELECT user_id FROM userinfo WHERE email = '%s'), '%s', '%s', NOW())",
+        email, word, meaning);
+    databaseExecute(query);
+  }
+
+  @Override
+  public void deleteWordHistoryByEmail(String email, String word) {
+    String query = String.format(
+        "DELETE FROM history WHERE user_id = (SELECT user_id FROM userinfo WHERE email = '%s') AND word = '%s'",
+        email, word);
+    databaseExecute(query);
+  }
+
+  @Override
+  public void updateTimeHistory(String email, String word) {
+    String query = String.format(
+        "UPDATE history SET updated = NOW() WHERE user_id = (SELECT user_id FROM userinfo WHERE email = '%s') AND word = '%s'",
+        email, word);
+    databaseExecute(query);
   }
 
   private Word mapperDictionary(List<Object> column, List<Object> row) {
@@ -93,21 +176,6 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
 
     }
     return word;
-  }
-
-  @Override
-  public void updateWord(Word word, String currentKey) {
-    String query = String.format(
-        "UPDATE dictionary SET word = '%s', meaning = '%s', description = '%s', pronounce = '%s', updated = '%s' WHERE word = '%s'",
-        word.getWord(), word.getMeaning(), word.getDescription(), word.getPronounce(),
-        Timestamp.valueOf(LocalDateTime.now()), currentKey);
-    databaseExecute(query);
-  }
-
-  @Override
-  public void deleteWordByWord(String word) {
-    String query = String.format("DELETE FROM dictionary WHERE word = '%s'", word);
-    databaseExecute(query);
   }
 
 

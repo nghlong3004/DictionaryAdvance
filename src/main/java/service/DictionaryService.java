@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 import repository.DictionaryRepository;
 import repository.DictionaryRepositoryFactory;
-
+import util.ObjectContainer;
 import util.repository.Google;
 
 public class DictionaryService {
@@ -40,12 +40,14 @@ public class DictionaryService {
     return dictionaryRepository.getSpecializedWord(specialized);
   }
 
-  public List<Word> getLovelyByEmail(String email) {
-    return dictionaryRepository.getLovelyByEmail(email);
+  public List<Word> getFavouriteByEmail() {
+    return dictionaryRepository
+        .getFavouriteByEmail(ObjectContainer.getUserController().getUser().getEmail());
   }
 
-  public List<Word> getHistoryByDate(LocalDate data) {
-    return dictionaryRepository.getHistoryByDate(data);
+  public List<String[]> getHistoryByDate(LocalDate data) {
+    return dictionaryRepository
+        .getHistoryByDate(ObjectContainer.getUserController().getUser().getEmail(), data);
   }
 
   public void editWord(Word word, String currentWord) {
@@ -58,11 +60,35 @@ public class DictionaryService {
     word.setPronounce(word.getPronounce().replaceAll("'", "\'\'"));
     dictionaryRepository.updateWord(word, currentWord);
   }
-  
+
   public void deleteWord(String word) {
     dictionaryRepository.deleteWordByWord(word);
   }
 
+  public void processWord(String word, boolean isStarOrFlag) {
+    if (isStarOrFlag) {
+      dictionaryRepository.processWord(ObjectContainer.getUserController().getUser().getEmail(),
+          word);
+    } else {
+      dictionaryRepository.nonProcessWord(ObjectContainer.getUserController().getUser().getEmail(),
+          word);
+    }
+  }
 
+  public void saveWordToHistory(String word, String meaning) {
+    if (dictionaryRepository
+        .isWordInHistory(ObjectContainer.getUserController().getUser().getEmail(), word)) {
+      dictionaryRepository
+          .updateTimeHistory(ObjectContainer.getUserController().getUser().getEmail(), word);
+    } else {
+      dictionaryRepository.saveWordToHistory(
+          ObjectContainer.getUserController().getUser().getEmail(), word, meaning);
+    }
+  }
+
+  public void deleteWordHistoryByEmail(String word) {
+    dictionaryRepository
+        .deleteWordHistoryByEmail(ObjectContainer.getUserController().getUser().getEmail(), word);
+  }
 
 }
