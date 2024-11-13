@@ -101,7 +101,12 @@ public class MainForm extends JLayeredPane {
           Notification.getInstance().show(Type.INFO, "Yêu thích");
           ViewDictionary.showForm(new FavoriteForm());
           break;
-        case 5:
+        case 3:
+          Notification.getInstance().clearAll();
+          Notification.getInstance().show(Type.INFO, "Mini Game");
+          ViewDictionary.showForm(new MiniGameForm());
+          break;
+        case 4:
           Notification.getInstance().clearAll();
           Notification.getInstance().show(Type.INFO, "Tài khoản");
           ViewDictionary.showForm(new ProfileForm(loginPanel.getUser()));

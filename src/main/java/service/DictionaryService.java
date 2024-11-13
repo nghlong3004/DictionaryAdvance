@@ -1,7 +1,7 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import model.dictionary.Word;
 
 import java.io.IOException;
@@ -89,6 +89,46 @@ public class DictionaryService {
   public void deleteWordHistoryByEmail(String word) {
     dictionaryRepository
         .deleteWordHistoryByEmail(ObjectContainer.getUserController().getUser().getEmail(), word);
+  }
+
+  public List<Word> getQuestionMinigame() {
+//    int totalQuestionMinigame = 0;
+//    int totalQuestionDatabase = 0;
+//    int totalQuestionHistory = 0;   
+
+    List<Word> listQuestionMinigame = new ArrayList<Word>();
+//    List<Word> listHistory = getHistoryByDate(LocalDate.EPOCH);
+//    List<Word> listDatabase = new ArrayList<Word>();
+//    
+//    totalQuestionHistory = Math.min(10, listHistory.size());
+//    totalQuestionDatabase = Math.max(0, 10 - listHistory.size());
+//    totalQuestionMinigame = totalQuestionDatabase + totalQuestionHistory;
+//    
+//    if(totalQuestionDatabase > 0) {
+//      listDatabase = rollListWordDatabase(totalQuestionDatabase);
+//      listHistory.forEach(word -> {
+//        listQuestionMinigame.add(word);
+//      });
+//      listDatabase.forEach(word -> {
+//        listQuestionMinigame.add(word);
+//      });
+//      return listQuestionMinigame;
+//    }
+//    List<Boolean> isAdd = new ArrayList<Boolean>();
+//    for(int i = 0; i < listHistory.size(); ++i) {
+//      isAdd.add(false);
+//    }
+//    while(listQuestionMinigame.size() != totalQuestionMinigame) {
+//      Random random = new Random();
+//      int i = random.nextInt() % listHistory.size();
+//      i = Math.abs(i);
+//      while(isAdd.get(i)) {
+//        i = random.nextInt() % listHistory.size();
+//        i = Math.abs(i);
+//      }
+//      listQuestionMinigame.add(listHistory.get(i));
+//    }
+    return listQuestionMinigame;
   }
 
 }

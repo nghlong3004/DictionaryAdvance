@@ -42,7 +42,7 @@ public class MenuItem extends JPanel {
   private boolean menuShow;
   private float animate;
   private String[] menuImage = {"home.svg", "history.svg", "lovely.svg", "minigame.svg",
-      "setting.svg", "account.svg", "logout.svg"};
+      "account.svg", "logout.svg"};
 
   private PopupSubmenu popup;
 
