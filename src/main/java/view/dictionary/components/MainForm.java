@@ -28,10 +28,8 @@ import javax.swing.border.EmptyBorder;
 
 public class MainForm extends JLayeredPane {
 
-  /**
-   * 
-   */
   private static final long serialVersionUID = 3011069027149983587L;
+  
   private final LoginPanel loginPanel;
 
   public MainForm(LoginPanel loginPanel) {
@@ -111,7 +109,7 @@ public class MainForm extends JLayeredPane {
           Notification.getInstance().show(Type.INFO, "Tài khoản");
           ViewDictionary.showForm(new ProfileForm(loginPanel.getUser()));
           break;
-        case 6:
+        case 5:
           NotificationUI.goodbye();
           ViewDictionary.login();
           break;
