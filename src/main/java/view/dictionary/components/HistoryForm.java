@@ -20,7 +20,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,25 +42,6 @@ public class HistoryForm extends JPanel {
   private Map<String[], Boolean> mapHistory;
   private HistoryPanel historyPanel;
   private List<String[]> items;
-  
-  private Comparator<String[]> compare = new Comparator<String[]>() {
-    
-    @Override
-    public int compare(String[] o1, String[] o2) {
-      if(o1.length != 2) {
-        return 0;
-      }
-      for(int i = 0; i < o1[2].length(); ++i) {
-        int a = (int) (o1[2].charAt(i));
-        int b = (int) (o2[2].charAt(i));
-        if(a >= b) {
-          return 1;
-        }
-      }
-      return 0;
-      
-    }
-  };
 
   public HistoryForm() {
     setLayout(new MigLayout("fill", "", ""));
@@ -71,8 +51,19 @@ public class HistoryForm extends JPanel {
     mapHistory = new HashMap<String[], Boolean>();
     items = new ArrayList<>();
     items = dictionaryController.getHistoryByDate(LocalDate.EPOCH);
-    Collections.sort(items, compare);
-    items = items.reversed();
+    Collections.sort(items, (o1, o2) -> {
+      if(o1.length != 3) {
+        return 0;
+      }
+      for(int i = 0; i < o1[2].length(); ++i) {
+        int a = (int) (o1[2].charAt(i));
+        int b = (int) (o2[2].charAt(i));
+        if(a - b != 0) {
+          return b - a;
+        }
+      }
+      return 0;
+    });
     items.forEach(item -> {
       mapHistory.put(item, true);
     });

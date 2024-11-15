@@ -1,7 +1,8 @@
 package service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
 import model.dictionary.Word;
 
 import java.io.IOException;
@@ -89,6 +90,44 @@ public class DictionaryService {
   public void deleteWordHistoryByEmail(String word) {
     dictionaryRepository
         .deleteWordHistoryByEmail(ObjectContainer.getUserController().getUser().getEmail(), word);
+  }
+
+  public List<Word> getQuestionMinigame() {
+    List<String[]> listHistory = getHistoryByDate(LocalDate.EPOCH);
+    if (listHistory.size() < 15) {
+      int n = listHistory.size();
+      dictionaryRepository.getWordMinigameRandom("en", 15 - listHistory.size()).forEach(word -> {
+        boolean flag = true;
+        for (int i = 0; i < n; ++i) {
+          if (listHistory.get(i)[0].equals(word.getWord())) {
+            flag = false;
+            break;
+          }
+        }
+        if (flag) {
+          listHistory
+              .add(new String[] {word.getWord(), word.getMeaning(), "", word.getPronounce()});
+        }
+      });
+    }
+    Collections.shuffle(listHistory);
+    List<Word> listQuestion = new ArrayList<Word>();
+    listHistory.forEach(data -> {
+      Word word = new Word();
+      word.setWord(data[0]);
+      word.setMeaning(data[1]);
+      word.setPronounce(data[3]);
+      listQuestion.add(word);
+    });
+    return listQuestion;
+  }
+
+  public List<Word> getWordMinigameByRandom() {
+    return dictionaryRepository.getWordMinigameRandom("en", 1 << 5);
+  }
+
+  public List<String> getNameSpecialized() {
+    return dictionaryRepository.getNameSpecialized();
   }
 
 }

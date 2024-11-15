@@ -46,7 +46,7 @@ public class Menu extends JPanel {
 
   private final String menuItems[][] =
       {{"~MAIN~"}, {"Trang chủ", "Tra từ", "Dịch văn bản", "Từ vựng theo chuyên ngành"},
-          {"~OTHER~"}, {"Lịch sử"}, {"Yêu thích"}, {"Mini Game"}, {"Cài đặt"}, {"~ACCOUNT~"},
+          {"~OTHER~"}, {"Lịch sử"}, {"Yêu thích"}, {"Mini Game"}, {"~ACCOUNT~"},
           {"Tài khoản"}, {"Đăng xuất"}};
 
   public boolean isMenuFull() {

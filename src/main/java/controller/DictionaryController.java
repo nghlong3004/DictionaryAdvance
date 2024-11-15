@@ -52,4 +52,8 @@ public class DictionaryController {
     dictionaryService.deleteWordHistoryByEmail(word);
   }
 
+  public List<Word> getQuestionMinigame() {
+    return dictionaryService.getQuestionMinigame();
+  }
+
 }
