@@ -26,6 +26,17 @@ public class PropertyHelper {
       e.printStackTrace();
     }
   }
+  
+  public Properties getProperties() {
+    return properties;
+  }
+  
+  public String getMailUsername() {
+    return getPropertyValue("mail.username");
+  }
+  public String getMailPassword() {
+    return getPropertyValue("mail.password");
+  }
 
   public String getType() {
     return getPropertyValue("data.source");

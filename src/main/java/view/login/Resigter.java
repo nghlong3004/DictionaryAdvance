@@ -1,6 +1,7 @@
 package view.login;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import controller.UserController;
 import model.user.User;
 import net.miginfocom.swing.MigLayout;
@@ -9,9 +10,12 @@ import util.ObjectContainer;
 import util.view.NotificationUI;
 import view.login.component.ButtonLink;
 import view.notifications.Notification;
+import view.notifications.Notification.Type;
 import static util.HelpMethod.isValidPassword;
 import static util.HelpMethod.isValidUsername;
 import static util.repository.Utils.nowTime;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.time.LocalDate;
@@ -75,13 +79,15 @@ public class Resigter extends JPanel {
     lbPassword.putClientProperty(FlatClientProperties.STYLE, "" + "font:bold;");
     add(lbPassword, "gapy 10 n");
 
-    txtPassword.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tối thiểu 8 kí tự");
+    txtPassword.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tối thiểu 6 kí tự");
     add(txtPassword);
 
     JLabel lbRePassword = new JLabel("Tạo mật khẩu mới");
     lbRePassword.putClientProperty(FlatClientProperties.STYLE, "" + "font:bold;");
     add(lbRePassword, "gapy 10 n");
-
+    
+    installRevealButton(txtPassword);
+    installRevealButton(txtRePassword);
     txtRePassword.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập lại mật khẩu");
     add(txtRePassword);
 
@@ -118,7 +124,7 @@ public class Resigter extends JPanel {
     cmdSignUp.putClientProperty(FlatClientProperties.STYLE, "" + "foreground:#FFFFFF;");
     add(cmdSignUp);
 
-    add(new JSeparator(), "gapy 15 15");
+    add(new JSeparator(), "gapy 5 5");
 
     add(new JLabel("Đã có tài khoản ?"), "split 2, gapx push n");
 
@@ -131,6 +137,8 @@ public class Resigter extends JPanel {
 
   private void action() {
     cmdBackLogin.addActionListener(actionEvent -> {
+      Notification.getInstance().clearAll();
+      Notification.getInstance().show(Type.INFO, "Đăng nhập!");
       ModalDialog.popModel(Login.ID);
     });
     cmdSignUp.addActionListener(actionEvent -> {
@@ -191,6 +199,34 @@ public class Resigter extends JPanel {
 
     gender = -1;
 
+  }
+  
+  private void installRevealButton(JPasswordField txt) {
+    FlatSVGIcon iconEye = new FlatSVGIcon("image/eye.svg", 0.3f);
+    FlatSVGIcon iconHide = new FlatSVGIcon("image/hide.svg", 0.3f);
 
+    JToolBar toolBar = new JToolBar();
+    toolBar.putClientProperty(FlatClientProperties.STYLE, "" + "margin:0,0,0,5;");
+    JButton button = new JButton(iconEye);
+
+    button.addActionListener(new ActionListener() {
+
+      private char defaultEchoChart = txt.getEchoChar();
+      private boolean show;
+
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+        show = !show;
+        if (show) {
+          button.setIcon(iconHide);
+          txt.setEchoChar((char) 0);
+        } else {
+          button.setIcon(iconEye);
+          txt.setEchoChar(defaultEchoChart);
+        }
+      }
+    });
+    toolBar.add(button);
+    txt.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
   }
 }

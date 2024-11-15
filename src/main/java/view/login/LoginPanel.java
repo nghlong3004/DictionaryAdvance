@@ -44,7 +44,7 @@ public class LoginPanel extends JPanel {
     Option option = ModalDialog.createOption().setCloseOnPressedEscape(false)
         .setAnimationEnabled(true).setOpacity(0.5f).setSliderDuration(600);
     String icon = "image/account.svg";
-    ModalDialog.showModal(this, new CustomModalBorder(new Login(), "Login", icon), option,
+    ModalDialog.showModal(this, new CustomModalBorder(new Login(), "Đăng nhập", icon), option,
         Login.ID);
   }
 
