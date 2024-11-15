@@ -46,23 +46,6 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
     return selectDatabase(query);
   }
 
-  @Override
-  public List<String[]> getHistoryByDate(String email, LocalDate date) {
-    String query = String.format(
-        "SELECT word, meaning, updated FROM history WHERE updated >= '%s' AND user_id = (SELECT user_id FROM userinfo WHERE email = '%s')",
-        date, email);
-    List<String[]> historyList = new ArrayList<String[]>();
-    List<List<Object>> data = databaseExecute(query);
-
-    for (int i = 1; i < data.size(); ++i) {
-      if (data.get(i).size() == 3) {
-        historyList.add(new String[] {(String) data.get(i).get(0), (String) data.get(i).get(1),
-            ((Timestamp) data.get(i).get(2)).toString()});
-      }
-    }
-
-    return historyList;
-  }
 
   @Override
   public List<Word> getFavouriteByEmail(String email) {
@@ -70,6 +53,47 @@ public class DictionaryDatabaseRepository extends DatabaseRepository
         + "JOIN favourite f ON d.dictionary_id = f.dictionary_id "
         + "JOIN userinfo u ON f.user_id = u.user_id " + "WHERE u.email = '%s'", email);
     return selectDatabase(query);
+  }
+
+  @Override
+  public List<Word> getWordMinigameRandom(String languageTarget, int size) {
+    String query =
+        String.format("SELECT * FROM dictionary WHERE language = '%s' ORDER BY RANDOM() LIMIT %s",
+            languageTarget, size);
+    return selectDatabase(query);
+  }
+
+  @Override
+  public List<String[]> getHistoryByDate(String email, LocalDate date) {
+    String query = String.format(
+        "SELECT word, meaning, updated, pronounce FROM history WHERE updated >= '%s' AND user_id = (SELECT user_id FROM userinfo WHERE email = '%s')",
+        date, email);
+    List<String[]> historyList = new ArrayList<String[]>();
+    List<List<Object>> data = databaseExecute(query);
+
+    for (int i = 1; i < data.size(); ++i) {
+      if (data.get(i).size() == 4) {
+        historyList.add(new String[] {(String) data.get(i).get(0), (String) data.get(i).get(1),
+            ((Timestamp) data.get(i).get(2)).toString(), (String) data.get(i).get(3)});
+      }
+    }
+
+    return historyList;
+  }
+
+  @Override
+  public List<String> getNameSpecialized() {
+    String query = "SELECT name_specialized FROM specialized";
+    List<List<Object>> datas = databaseExecute(query);
+    List<String> names = new ArrayList<String>();
+    if (datas.size() > 1) {
+      for (int i = 1; i < datas.size(); ++i) {
+        datas.get(i).forEach(data -> {
+          names.add((String) data);
+        });
+      }
+    }
+    return names;
   }
 
   @Override

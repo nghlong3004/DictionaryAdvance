@@ -11,9 +11,13 @@ public interface DictionaryRepository {
   public List<Word> getSpecializedWord(String specialized);
 
   public List<Word> getFavouriteByEmail(String email);
-  
+
+  public List<Word> getWordMinigameRandom(String languageTarget, int size);
+
   public List<String[]> getHistoryByDate(String email, LocalDate date);
-  
+
+  public List<String> getNameSpecialized();
+
   public boolean isWordInHistory(String email, String word);
 
   public void updateWord(Word word, String currentKey);
@@ -27,7 +31,7 @@ public interface DictionaryRepository {
   public void saveWordToHistory(String email, String word, String meaning);
 
   public void deleteWordHistoryByEmail(String email, String word);
-  
+
   public void updateTimeHistory(String email, String word);
 
 }

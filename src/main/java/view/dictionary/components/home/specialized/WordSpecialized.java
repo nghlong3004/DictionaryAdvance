@@ -46,10 +46,7 @@ public class WordSpecialized extends JPanel {
   private final DictionaryController dictionaryController =
       ObjectContainer.getDictionaryController();
 
-  private final String[] nameSpecialized =
-      {" xây dựng", " toán & tin", " vật lý", " y học", " điện lạnh", " hóa học & vật liệu",
-          " cơ khí & công trình", " điện tử & viễn thông", " điện", " giao thông & vận tải",
-          " đo lường & điều khiển", " ô tô", " môi trường", " dệt may", " thực phẩm"};
+  private String[] nameSpecialized;
 
   private JSeparator jSeparator1;
 
@@ -79,9 +76,7 @@ public class WordSpecialized extends JPanel {
   }
 
   private String convertMeaning(String wordMeaning) {
-    String meaning = wordMeaning.substring(wordMeaning.indexOf(';') + 10);
-    int idx = meaning.indexOf('<');
-    return meaning.substring(0, Math.max(0, idx == -1 ? meaning.length() : idx)).replace(">", "");
+    return wordMeaning;
   }
 
   private void highlightItem() {
@@ -251,6 +246,12 @@ public class WordSpecialized extends JPanel {
     txtSearch = new JTextField();
     suggestionPopup = new JPopupMenu();
     mapWords = new TreeMap<String, List<Word>>();
+    List<String> names = dictionaryController.getNameSpecialized();
+    nameSpecialized = new String[names.size()];
+    for (int i = 0; i < names.size(); ++i) {
+      nameSpecialized[i] = names.get(i);
+      System.out.println(nameSpecialized[i]);
+    }
     chooseComboBox = nameSpecialized[0];
 
     suggestionPopup.putClientProperty(FlatClientProperties.STYLE,
@@ -441,7 +442,8 @@ public class WordSpecialized extends JPanel {
       words.forEach(word -> {
         dictionaryController.deleteWord(word.getWord());
       });
-      Notification.getInstance().show(Type.SUCCESS, String.format("Xoá thành công %s từ", words.size()));
+      Notification.getInstance().show(Type.SUCCESS,
+          String.format("Xoá thành công %s từ", words.size()));
       mapWords.put((String) comboPosition.getSelectedItem(), null);
       loadData((String) comboPosition.getSelectedItem());
     }

@@ -24,6 +24,10 @@ public class DictionaryController {
     return dictionaryService.getFavouriteByEmail();
   }
 
+  public List<Word> getWordMinigameByRandom() {
+    return dictionaryService.getWordMinigameByRandom();
+  }
+
   public List<String[]> getHistoryByDate(LocalDate data) {
     return dictionaryService.getHistoryByDate(data);
   }
@@ -54,6 +58,10 @@ public class DictionaryController {
 
   public List<Word> getQuestionMinigame() {
     return dictionaryService.getQuestionMinigame();
+  }
+
+  public List<String> getNameSpecialized() {
+    return dictionaryService.getNameSpecialized();
   }
 
 }
