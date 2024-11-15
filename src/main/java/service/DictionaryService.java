@@ -1,6 +1,7 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import model.dictionary.Word;
 
@@ -92,43 +93,41 @@ public class DictionaryService {
   }
 
   public List<Word> getQuestionMinigame() {
-//    int totalQuestionMinigame = 0;
-//    int totalQuestionDatabase = 0;
-//    int totalQuestionHistory = 0;   
+    List<String[]> listHistory = getHistoryByDate(LocalDate.EPOCH);
+    if (listHistory.size() < 15) {
+      int n = listHistory.size();
+      dictionaryRepository.getWordMinigameRandom("en", 15 - listHistory.size()).forEach(word -> {
+        boolean flag = true;
+        for (int i = 0; i < n; ++i) {
+          if (listHistory.get(i)[0].equals(word.getWord())) {
+            flag = false;
+            break;
+          }
+        }
+        if (flag) {
+          listHistory
+              .add(new String[] {word.getWord(), word.getMeaning(), "", word.getPronounce()});
+        }
+      });
+    }
+    Collections.shuffle(listHistory);
+    List<Word> listQuestion = new ArrayList<Word>();
+    listHistory.forEach(data -> {
+      Word word = new Word();
+      word.setWord(data[0]);
+      word.setMeaning(data[1]);
+      word.setPronounce(data[3]);
+      listQuestion.add(word);
+    });
+    return listQuestion;
+  }
 
-    List<Word> listQuestionMinigame = new ArrayList<Word>();
-//    List<Word> listHistory = getHistoryByDate(LocalDate.EPOCH);
-//    List<Word> listDatabase = new ArrayList<Word>();
-//    
-//    totalQuestionHistory = Math.min(10, listHistory.size());
-//    totalQuestionDatabase = Math.max(0, 10 - listHistory.size());
-//    totalQuestionMinigame = totalQuestionDatabase + totalQuestionHistory;
-//    
-//    if(totalQuestionDatabase > 0) {
-//      listDatabase = rollListWordDatabase(totalQuestionDatabase);
-//      listHistory.forEach(word -> {
-//        listQuestionMinigame.add(word);
-//      });
-//      listDatabase.forEach(word -> {
-//        listQuestionMinigame.add(word);
-//      });
-//      return listQuestionMinigame;
-//    }
-//    List<Boolean> isAdd = new ArrayList<Boolean>();
-//    for(int i = 0; i < listHistory.size(); ++i) {
-//      isAdd.add(false);
-//    }
-//    while(listQuestionMinigame.size() != totalQuestionMinigame) {
-//      Random random = new Random();
-//      int i = random.nextInt() % listHistory.size();
-//      i = Math.abs(i);
-//      while(isAdd.get(i)) {
-//        i = random.nextInt() % listHistory.size();
-//        i = Math.abs(i);
-//      }
-//      listQuestionMinigame.add(listHistory.get(i));
-//    }
-    return listQuestionMinigame;
+  public List<Word> getWordMinigameByRandom() {
+    return dictionaryRepository.getWordMinigameRandom("en", 1 << 5);
+  }
+
+  public List<String> getNameSpecialized() {
+    return dictionaryRepository.getNameSpecialized();
   }
 
 }

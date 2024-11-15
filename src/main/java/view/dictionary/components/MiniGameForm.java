@@ -5,6 +5,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -13,16 +18,24 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import com.formdev.flatlaf.FlatClientProperties;
+import controller.DictionaryController;
+import model.dictionary.Word;
 import net.miginfocom.swing.MigLayout;
+import util.ObjectContainer;
 import util.extral.AvatarIcon;
 
 public class MiniGameForm extends JPanel {
 
   private static final long serialVersionUID = 8554949034694373332L;
 
+  private final DictionaryController dictionaryController =
+      ObjectContainer.getDictionaryController();
+
+  private List<Word> listQuestion;
+  private List<List<String>> listMeanings;
   private boolean[][] isClick;
   private int column;
-  
+
   private LocalDateTime playGame;
   private LocalDateTime endGame;
 
@@ -45,12 +58,13 @@ public class MiniGameForm extends JPanel {
         new AvatarIcon(getClass().getResource("/image/mainminigame.png"), 500, 600, 0);
     lbMainMinigame.setIcon(icon);
     panel.add(lbMainMinigame, "split 2, gapx push n");
-    panel.add(panelDescription(), "gapx n push, width 400:450");
+    panel.add(panelDescription(), "gapx n push, width 400:500");
     JButton cmdStart = new JButton("Bắt đầu");
     cmdStart.addActionListener(actionEven -> {
       card.next(this);
       setupPlayGame();
     });
+    cmdStart.putClientProperty(FlatClientProperties.STYLE, "arc:999;");
     panel.add(cmdStart, "width 300!, gapy 0 20, center,dock south");
     return panel;
   }
@@ -61,9 +75,12 @@ public class MiniGameForm extends JPanel {
     JLabel lbBook = new JLabel();
     JLabel lbCat = new JLabel();
     JLabel lbDes = new JLabel("Cách chơi", SwingConstants.CENTER);
-    lbDes.setForeground(Color.black);
     lbDes.setFont(new Font("Arial", Font.PLAIN, 16));
-    lbDes.putClientProperty(FlatClientProperties.STYLE, "arc:999;" + "background:#facc15");
+    lbDes.putClientProperty(FlatClientProperties.STYLE,
+        "" + "arc:999;" + "[dark]foreground:darken(@background, 30%);"
+            + "[light]foreground:lighten(@background, 30%);"
+            + "[light]background:darken(@background, 3%);"
+            + "[dark]background:lighten(@background, 3%);");
     AvatarIcon icon =
         new AvatarIcon(getClass().getResource("/image/bookminigame.png"), 100, 100, 0);
     lbBook.setIcon(icon);
@@ -94,9 +111,18 @@ public class MiniGameForm extends JPanel {
     JLabel lbThree = new JLabel("<html><body style='width: 320px;'>"
         + "<p style='color: black;'>Bạn nên sử dụng trí nhớ của mình, không nên sử dụng chức năng Tra từ và Dịch của ứng dụng khác để giải.</p>"
         + "</body></html>");
-    lbOne.setFont(new Font("Arial", Font.PLAIN, 14));
-    lbTwo.setFont(new Font("Arial", Font.PLAIN, 14));
-    lbThree.setFont(new Font("Arial", Font.PLAIN, 14));
+    AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/one.png"), 50, 50, 0);
+    lbOne.setIcon(icon);
+    lbOne.setHorizontalAlignment(SwingConstants.CENTER);
+    icon = new AvatarIcon(getClass().getResource("/image/two.png"), 50, 50, 0);
+    lbTwo.setIcon(icon);
+    lbTwo.setHorizontalAlignment(SwingConstants.CENTER);
+    icon = new AvatarIcon(getClass().getResource("/image/three.png"), 50, 50, 0);
+    lbThree.setIcon(icon);
+    lbThree.setHorizontalAlignment(SwingConstants.CENTER);
+    lbOne.putClientProperty(FlatClientProperties.STYLE, "" + "font:bold +6;");
+    lbTwo.putClientProperty(FlatClientProperties.STYLE, "" + "font:bold +6;");
+    lbThree.putClientProperty(FlatClientProperties.STYLE, "" + "font:bold +6;");
     panel.add(lbOne, "height 100!,grow");
     panel.add(lbTwo, "height 100!,grow");
     panel.add(lbThree, "height 100!,grow, center");
@@ -138,7 +164,7 @@ public class MiniGameForm extends JPanel {
     panelMeaning.add(lbPoser, "height 50!, width 40!, gapx 20 20");
     panelMeaning.add(lbQuestion, "height 60!, growx, gapx 20 20, gapy 20 20");
     for (int i = 0; i < cmdMeanings.length; ++i) {
-      cmdMeanings[i] = new JButton("AAAAAAAA" + i);
+      cmdMeanings[i] = new JButton();
       final int j = i;
       cmdMeanings[i].addActionListener(actionEven -> {
         solveClickMeaning(cmdMeanings[j].getText());
@@ -146,7 +172,7 @@ public class MiniGameForm extends JPanel {
       panelMeaning.add(cmdMeanings[i], "growx, height 40!, gapx 20 20, gapy 20 10");
     }
 
-    panel.add(lbProgress, "gapx push n");
+    panel.add(lbProgress, "gapx push n, gapright 5");
     panel.add(panelMeaning, "grow");
     setupProgress();
     setupPoser();
@@ -167,10 +193,10 @@ public class MiniGameForm extends JPanel {
     panel.setLayout(new MigLayout("fill, wrap"));
 
     cmdDone.addActionListener(actionEven -> {
-      endMinigame();
+      setUpEndGame();
     });
     cmdExit.addActionListener(actionEven -> {
-      endMinigame();
+      setUpEndGame();
     });
 
     AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/quiz1.png"), 300, 50, 25);
@@ -180,11 +206,15 @@ public class MiniGameForm extends JPanel {
     icon = new AvatarIcon(getClass().getResource("/image/countdown.png"), 25, 25, 25);
     lbTime.setIcon(icon);
     lbTime.setHorizontalTextPosition(SwingConstants.RIGHT);
+    for (int i = 0; i < cmdMeanings.length; ++i) {
+      cmdMeanings[i].putClientProperty(FlatClientProperties.STYLE, "" + "font:bold +3;");
+    }
     for (int i = 1; i < cmdQuestion.length; ++i) {
       String title = "";
       if (i < 10)
         title = "0";
       cmdQuestion[i] = new JButton(title + i);
+      cmdQuestion[i].putClientProperty(FlatClientProperties.STYLE, "" + "font:bold +8;");
       final int j = i;
       cmdQuestion[i].addActionListener(actionEven -> {
         solveClickinQuestion(j);
@@ -205,6 +235,11 @@ public class MiniGameForm extends JPanel {
   }
 
   private void solveClickMeaning(String text) {
+    AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/success.png"), 25, 25, 25);
+    cmdQuestion[column].setIcon(icon);
+    cmdQuestion[column].setHorizontalTextPosition(SwingConstants.CENTER);
+    cmdQuestion[column].setVerticalTextPosition(SwingConstants.CENTER);
+    cmdQuestion[column].setText("");
     for (int i = 0; i < cmdMeanings.length; ++i) {
       if (isClick[column][i]) {
         cmdMeanings[i].setBackground(cmdMeanings[(i + 1) % cmdMeanings.length].getBackground());
@@ -219,6 +254,8 @@ public class MiniGameForm extends JPanel {
   }
 
   private void setupPlayGame() {
+    listQuestion = dictionaryController.getQuestionMinigame();
+    listMeanings = new ArrayList<List<String>>();
     cmdQuestion[0] = new JButton();
     cmdQuestion[1].setBackground(Color.decode("#ef4444"));
     playGame = LocalDateTime.now();
@@ -228,13 +265,30 @@ public class MiniGameForm extends JPanel {
       long second = duration.getSeconds();
       int seconds = (int) second % 60;
       int minutes = (int) (second / 60) % 60;
+      String zero = ":";
+      if (seconds < 10) {
+        zero = ":0";
+      }
       lbTime.setText("<html>Thời gian còn lại <span style='color: orange; font-weight: bold;'>"
-          + minutes + ":" + seconds + "</span></html>");
+          + minutes + zero + seconds + "</span></html>");
       if (minutes == seconds && minutes == 0) {
-        endMinigame();
+        setUpEndGame();
       }
     });
     timer.start();
+    List<Word> allQuestions = dictionaryController.getWordMinigameByRandom();
+    for (int i = 1; i < 16; ++i) {
+      listMeanings.add(generateOptions(allQuestions, listQuestion.get(i - 1).getMeaning(), 4));
+    }
+    setupTextMeaning(0);
+  }
+
+  private void setupTextMeaning(int j) {
+    lbQuestion.setText(String.format("Hãy chọn nghĩa đúng của từ %s",
+        listQuestion.get(j).getWord().toUpperCase()));
+    for (int i = 0; i < cmdMeanings.length; ++i) {
+      cmdMeanings[i].setText(listMeanings.get(j).get(i));
+    }
   }
 
   private void setupColorinMeaning() {
@@ -266,7 +320,7 @@ public class MiniGameForm extends JPanel {
     lbPoser.setText(title + column);
   }
 
-  private void endMinigame() {
+  private void setUpEndGame() {
     card.previous(this);
     for (int i = 0; i < isClick.length; ++i) {
       cmdQuestion[i].setBackground(cmdQuestion[0].getBackground());
@@ -287,8 +341,25 @@ public class MiniGameForm extends JPanel {
     cmdQuestion[column].setBackground(cmdQuestion[j].getBackground());
     cmdQuestion[j].setBackground(Color.decode("#ef4444"));
     column = j;
+    setupTextMeaning(j - 1);
     setupColorinMeaning();
     setupPoser();
+  }
+
+  private List<String> generateOptions(List<Word> allQuestions, String correctAnswer,
+      int numOptions) {
+    HashSet<String> options = new HashSet<>();
+    options.add(correctAnswer);
+
+    Random random = new Random();
+    while (options.size() < numOptions) {
+      String randomAnswer = allQuestions.get(random.nextInt(allQuestions.size())).getMeaning();
+      options.add(randomAnswer);
+    }
+
+    List<String> optionList = new ArrayList<>(options);
+    Collections.shuffle(optionList);
+    return optionList;
   }
 
   private void initializedInPlay() {
@@ -302,7 +373,7 @@ public class MiniGameForm extends JPanel {
 
     lbTitle = new JLabel();
     lbTime = new JLabel();
-    lbQuestion = new JLabel("Hãy chọn nghĩa đúng của từ");
+    lbQuestion = new JLabel();
     lbPoser = new JLabel();
     lbProgress = new JLabel();
 
