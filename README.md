@@ -16,13 +16,17 @@
 ![image](https://github.com/user-attachments/assets/3313ca60-7681-4708-bd59-f45310ef3fe7)
 
 ### Tra từ
-![image](https://github.com/user-attachments/assets/6ff66611-5aa4-4272-b52c-d2d0562b5d09)
+![image](https://github.com/user-attachments/assets/3b7bea06-7f8d-46a8-844d-56b0242075fd)
 
 ### Dịch văn bản
 ![image](https://github.com/user-attachments/assets/da6434ee-a813-4e10-bb13-07076fd64176)
 
 ### Từ vựng theo chuyên ngành
-![image](https://github.com/user-attachments/assets/1c69ce31-89f3-4552-a856-fcf131ac8380)
+![image](https://github.com/user-attachments/assets/480f5357-8af2-48a7-b94f-4a774cabb8c9)
+
+### Minigame
+![image](https://github.com/user-attachments/assets/07501d42-bbab-4c9d-89f3-5526e0a8e488)
+![image](https://github.com/user-attachments/assets/5b1252aa-2165-4164-ab3d-c40308a9f99f)
 
 ### Tài khoản
 ![image](https://github.com/user-attachments/assets/591474a6-f18f-4c2e-aee1-d338771e603a)
