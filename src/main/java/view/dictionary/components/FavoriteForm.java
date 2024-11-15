@@ -28,20 +28,21 @@ import view.notifications.Notification;
 public class FavoriteForm extends JPanel {
 
   private static final long serialVersionUID = 1L;
-  
-  private final DictionaryController dictionaryController = ObjectContainer.getDictionaryController();
+
+  private final DictionaryController dictionaryController =
+      ObjectContainer.getDictionaryController();
 
   private FavouritePanel favouritePanel;
-  
+
   private JLabel lblNumber;
-  
+
   private List<Word> items;
 
   public FavoriteForm() {
 
     JPanel panel = new JPanel();
     JPanel panel_1 = new JPanel();
-    
+
     panel_1.setLayout(new MigLayout("fill"));
     items = new ArrayList<>();
     items = dictionaryController.getFavouriteByEmail();
@@ -105,13 +106,13 @@ public class FavoriteForm extends JPanel {
     cmdDelete.addActionListener(actionEven -> {
       int choice = JOptionPane.showConfirmDialog(null, "Bạn có muốn Xoá tất cả các từ yêu thích?",
           "Xoá từ yêu thích", JOptionPane.YES_NO_OPTION);
-      if(choice == JOptionPane.YES_OPTION) {
+      if (choice == JOptionPane.YES_OPTION) {
         items.forEach(item -> {
           dictionaryController.processWord(item.getWord(), false);
         });
         items = new ArrayList<Word>();
         favouritePanel.repaintItem(new ArrayList<Word>());
-        
+
         Notification.getInstance().show(Notification.Type.SUCCESS, "Đã xoá tất cả từ yêu thích");
       }
     });
@@ -128,7 +129,7 @@ public class FavoriteForm extends JPanel {
   protected void repaintStartWithText(String text) {
     List<Word> newItems = new ArrayList<Word>();
     items.forEach(item -> {
-      if(item.getWord().startsWith(text)) {
+      if (item.getWord().startsWith(text)) {
         newItems.add(item);
       }
     });
@@ -151,7 +152,7 @@ public class FavoriteForm extends JPanel {
 
     public void repaintItem(List<Word> items) {
       int i = 0;
-      if(items == null) {
+      if (items == null) {
         items = new ArrayList<Word>();
       }
       Component[] componentList = getComponents();
@@ -160,7 +161,7 @@ public class FavoriteForm extends JPanel {
       }
       for (Word item : items) {
         ++i;
-        String constraints = "grow, gapleft 5, gapright 10, width 200!, height 150!" ;
+        String constraints = "grow, gapleft 5, gapright 10, width 200!, height 150!";
         add(createItemPanel(i, item.getWord(), item.getMeaning()), constraints);
       }
       lblNumber.setText("<html>" + "<div style='text-align: center;'>" + "<table>"
@@ -180,20 +181,17 @@ public class FavoriteForm extends JPanel {
     private JPanel createItemPanel(int i, String message, String meaning) {
       JPanel itemPanel = new JPanel();
       itemPanel.setLayout(new MigLayout("fill"));
-      itemPanel.putClientProperty(FlatClientProperties.STYLE,
-          "" + "arc:25;");
+      itemPanel.putClientProperty(FlatClientProperties.STYLE, "" + "arc:25;");
       JLabel lblNo = new JLabel(htmlText("No." + i));
       lblNo.setHorizontalTextPosition(SwingConstants.CENTER);
       lblNo.setVerticalTextPosition(SwingConstants.TOP);
       JLabel label = new JLabel("<html>"
-          + "<span style='font-size:16px; color:blue;'>" + message + "</span><br>" // item[0] lớn hơn và có màu xanh
-          + "<span style='font-size:16px; color:green;'>" + meaning + "</span>"    // item[1] lớn hơn và có màu xanh lá
-          + "</html>");
-      JScrollPane scrollPane = new JScrollPane(label);
-      scrollPane.putClientProperty(FlatClientProperties.STYLE, 
-          "border:null;");
-      itemPanel.add(lblNo, "gap 5, dock west, width 60!");
-      itemPanel.add(scrollPane, "grow");
+          + "<span style='font-size:14px; color:blue; word-wrap: break-word; width:180px; display:inline-block;'>"
+          + message + "</span><br>"
+          + "<span style='font-size:12px; color:green; word-wrap: break-word; width:180px; display:inline-block;'>"
+          + meaning + "</span>" + "</html>");
+      itemPanel.add(lblNo, "gap 5, dock west, width 55!");
+      itemPanel.add(label, "width 100!");
 
 
       return itemPanel;

@@ -297,16 +297,17 @@ public class Lookup extends JPanel {
           btnVietAnh.setBackground(Color.decode("#22c55e"));
           btnRandom.setBackground(Color.decode("#4ade80"));
         } else if (e.getSource() == btnRandom) {
-          List<Word> datas =
+          List<Word> words =
               dictionaryController.searchWordStartWithKey(rndAlphabet(), languageFrom, languageTo);
-          while (datas == null) {
-            datas = dictionaryController.searchWordStartWithKey(rndAlphabet(), languageFrom,
+          while (words == null) {
+            words = dictionaryController.searchWordStartWithKey(rndAlphabet(), languageFrom,
                 languageTo);
           }
-          Word data = datas.get(rndRange(datas.size()));
-          settingWord(data);
-          handleWord(convert(data.getWord(), 20), data.getMeaning(), data.getSynonym(),
-              data.getAntonym());
+          Word word = words.get(rndRange(words.size()));
+          settingWord(word);
+          handleWord(convert(word.getWord(), 20),
+              "<html>" + word.getMeaning() + "<br>" + word.getDescription() + "</html>",
+              word.getSynonym(), word.getAntonym());
         }
       }
     };
@@ -416,8 +417,7 @@ public class Lookup extends JPanel {
         StringSelection stringSelection = new StringSelection(myString);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
-      }
-      else {
+      } else {
         Notification.getInstance().show(Type.ERROR, "không có từ để Coppy");
       }
     });
@@ -434,21 +434,19 @@ public class Lookup extends JPanel {
         } else {
           Notification.getInstance().show(Type.INFO, "Xoá từ khỏi mục yêu thích");
         }
-      }
-      else {
+      } else {
         Notification.getInstance().show(Type.ERROR, "Không có từ để thêm");
       }
     });
     icon = new AvatarIcon(getClass().getResource("/image/flag.png"), 30, 30, 0);
     btnFlag.setIcon(icon);
     btnFlag.addActionListener(actionEvent -> {
-      if(!lbWord.getText().isEmpty()) {
+      if (!lbWord.getText().isEmpty()) {
         processFlag();
         scheduler.schedule(() -> {
           dictionaryController.processWord(deconvert(lbWord.getText()), isFlag);
         }, delayMillis, TimeUnit.MILLISECONDS);
-      }
-      else {
+      } else {
         Notification.getInstance().show(Notification.Type.ERROR, "Không có từ để gắn cờ");
       }
 
@@ -617,8 +615,9 @@ public class Lookup extends JPanel {
       for (Word word : data) {
         if (word.getWord().equals(txtSearch.getText())) {
           settingWord(word);
-          handleWord(convert(word.getWord(), 15), word.getMeaning(), word.getSynonym(),
-              word.getAntonym());
+          handleWord(convert(word.getWord(), 20),
+              "<html>" + word.getMeaning() + "<br>" + word.getDescription() + "</html>",
+              word.getSynonym(), word.getAntonym());
         }
       }
     }
@@ -632,18 +631,17 @@ public class Lookup extends JPanel {
         isStar = true;
       }
       processStar();
-      
-        dictionaryController.saveWordToHistory(deconvert(lbWord.getText()),
-            word.getMeaning().replaceAll("'", "''"));
-      
+
+      dictionaryController.saveWordToHistory(deconvert(lbWord.getText()), word.getMeaning());
+
     }, delayMillis, TimeUnit.MILLISECONDS);
-    
+
   }
 
   private void handleWord(String stringWord, String stringExplain, String stringSynonym,
       String stringAntonym) {
     lbWord.setText(stringWord);
-    PaneExplain.setText(stringExplain.replace("//", "/unknow/"));
+    PaneExplain.setText(stringExplain);
     if (stringAntonym == null || stringAntonym.isEmpty()) {
       stringAntonym = "unknow";
     }

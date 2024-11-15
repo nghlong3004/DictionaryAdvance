@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -35,9 +36,10 @@ import javax.swing.SwingConstants;
 public class HistoryForm extends JPanel {
 
   private static final long serialVersionUID = 1L;
-  
-  private final DictionaryController dictionaryController = ObjectContainer.getDictionaryController();
-  
+
+  private final DictionaryController dictionaryController =
+      ObjectContainer.getDictionaryController();
+
   private JTextField txtSearch;
   private Map<String[], Boolean> mapHistory;
   private HistoryPanel historyPanel;
@@ -52,13 +54,13 @@ public class HistoryForm extends JPanel {
     items = new ArrayList<>();
     items = dictionaryController.getHistoryByDate(LocalDate.EPOCH);
     Collections.sort(items, (o1, o2) -> {
-      if(o1.length != 3) {
+      if (o1.length != 3) {
         return 0;
       }
-      for(int i = 0; i < o1[2].length(); ++i) {
+      for (int i = 0; i < o1[2].length(); ++i) {
         int a = (int) (o1[2].charAt(i));
         int b = (int) (o2[2].charAt(i));
-        if(a - b != 0) {
+        if (a - b != 0) {
           return b - a;
         }
       }
@@ -105,7 +107,8 @@ public class HistoryForm extends JPanel {
 
     JButton cmdYesterday = new MyButton("Hôm qua", LocalDate.now().minusDays(1));
 
-    JButton cmdThisWeek = new MyButton("Tuần này", LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)));
+    JButton cmdThisWeek = new MyButton("Tuần này",
+        LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)));
 
     JButton cmdThisMonth = new MyButton("Tháng này", LocalDate.now().withDayOfMonth(1));
 
@@ -177,23 +180,33 @@ public class HistoryForm extends JPanel {
     lblCmd = new JLabel(textLblCmd(17, "Tất cả"));
     lblCmd.setHorizontalAlignment(SwingConstants.CENTER);
 
-    JButton cmdDelete = new JButton("Xoá dữ liệu");
+    JButton cmdDelete = new JButton("Xoá Lịch sử");
     cmdDelete.setIcon(new ImageUtil().getAvatarIcon("remove_icon.png", 25, 25, 0));
     cmdDelete.setContentAreaFilled(false);
     cmdDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
     cmdDelete.addActionListener(actionEven -> {
       if (isSelectData()) {
-        List<String[]> keys = new ArrayList<String[]>();
+        int total = 0;
         for (Map.Entry<String[], Boolean> entry : mapHistory.entrySet()) {
-          if (entry.getValue()) {
-            keys.add(entry.getKey());
-          }
-          else {
-            dictionaryController.deleteWordHistoryByEmail(entry.getKey()[0]);
+          if (!entry.getValue()) {
+            ++total;
           }
         }
-        historyPanel.repaintItem(keys);
-        Notification.getInstance().show(Notification.Type.SUCCESS, "Xoá thành công");
+        int choose = JOptionPane.showConfirmDialog(this,
+            "Bạn có chắc chắn xoá " + total + " từ trong lịch sử không ?", "Xoá lịch sử",
+            JOptionPane.YES_NO_OPTION);
+        if (choose == JOptionPane.YES_OPTION) {
+          List<String[]> keys = new ArrayList<String[]>();
+          for (Map.Entry<String[], Boolean> entry : mapHistory.entrySet()) {
+            if (entry.getValue()) {
+              keys.add(entry.getKey());
+            } else {
+              dictionaryController.deleteWordHistoryByEmail(entry.getKey()[0]);
+            }
+          }
+          historyPanel.repaintItem(keys);
+          Notification.getInstance().show(Notification.Type.SUCCESS, "Xoá thành công");
+        }
       } else {
         Notification.getInstance().show(Notification.Type.ERROR, "Vui lòng chọn từ để xoá");
       }
@@ -239,7 +252,7 @@ public class HistoryForm extends JPanel {
       addActionListener(actionEven -> {
         lblCmd.setText(textLblCmd(17, title));
         items = dictionaryController.getHistoryByDate(localDate);
-        if(!mapHistory.isEmpty()) {
+        if (!mapHistory.isEmpty()) {
           mapHistory.clear();
         }
         items.forEach(item -> {
@@ -273,7 +286,7 @@ public class HistoryForm extends JPanel {
         remove(component);
       }
       for (String[] item : items) {
-        add(createItemPanel(item), "growx, gapleft 5, gapright 10, height 150!");
+        add(createItemPanel(item), "growx, gapleft 5, gapright 10, height 150!, width 700:750");
       }
       revalidate();
       repaint();
@@ -281,24 +294,23 @@ public class HistoryForm extends JPanel {
 
     private JPanel createItemPanel(String[] item) {
       JPanel itemPanel = new JPanel();
-      itemPanel.putClientProperty(FlatClientProperties.STYLE,
-          "" + "arc:25;");
+      itemPanel.putClientProperty(FlatClientProperties.STYLE, "" + "arc:25;");
       itemPanel.setLayout(new MigLayout("height 60!, fill"));
       JCheckBox checkBox = new JCheckBox();
       checkBox.addActionListener(actioneEven -> {
         mapHistory.put(item, !mapHistory.get(item));
       });
-      JLabel label = new JLabel("<html>"
-          + "<span style='font-size:12px; color:black;'>" + item[2].substring(0, item[2].indexOf(".")) + "</span><br>"
-          + "<span style='font-size:16px; color:blue;'>" + item[0] + "</span><br>" // item[0] lớn hơn và có màu xanh
-          + "<span style='font-size:16px; color:green;'>" + item[1] + "</span>"    // item[1] lớn hơn và có màu xanh lá
+      JLabel label = new JLabel("<html>" + "<span style='font-size:12px; color:black;'>"
+          + item[2].substring(0, item[2].indexOf(".")) + "</span><br>"
+          + "<span style='font-size:16px; color:blue;'>" + item[0] + "</span><br>" // item[0] lớn
+                                                                                   // hơn và có màu
+                                                                                   // xanh
+          + "<span style='font-size:16px; color:green;'>" + item[1] + "</span>" // item[1] lớn hơn
+                                                                                // và có màu xanh lá
           + "</html>");
-      JScrollPane scrollPane = new JScrollPane(label);
-      scrollPane.putClientProperty(FlatClientProperties.STYLE, 
-          "border:null;");
-      
+
       itemPanel.add(checkBox, "dock west, center");
-      itemPanel.add(scrollPane, "grow, wrap");
+      itemPanel.add(label, "grow, wrap");
 
       return itemPanel;
     }

@@ -86,6 +86,18 @@ public class DictionaryFileRepository extends FileRepository implements Dictiona
     
   }
 
+  @Override
+  public List<Word> getWordMinigameRandom(String languageTarget, int size) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<String> getNameSpecialized() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 
 
 }
