@@ -11,6 +11,7 @@ import util.view.NotificationUI;
 import view.ViewDictionary;
 import view.login.component.ButtonLink;
 import view.notifications.Notification;
+import view.notifications.Notification.Type;
 import javax.swing.*;
 import static util.Constants.Image.IMAGE_FACEBOOK;
 import static util.Constants.Image.IMAGE_GOOGLE;
@@ -103,17 +104,17 @@ public class Login extends JPanel {
 
     cmdSignUp.addActionListener(actionEvent -> {
       String icon = "image/signup.svg";
-      ModalDialog.pushModal(new CustomModalBorder(new Resigter(this), "Sign up", icon), ID);
+      ModalDialog.pushModal(new CustomModalBorder(new Resigter(this), "Đăng ký", icon), ID);
       Notification.getInstance().clearAll();
-      NotificationUI.succes("Sign up!");
+      Notification.getInstance().show(Type.INFO, "Đăng Ký!");
     });
 
     cmdForgotPassword.addActionListener(actionEvent -> {
       String icon = "image/forgot_password.svg";
-      ModalDialog.pushModal(new CustomModalBorder(new ForgotPassword(), "Forgot password", icon),
+      ModalDialog.pushModal(new CustomModalBorder(new ForgotPassword(), "Quên mật khẩu", icon),
           ID);
       Notification.getInstance().clearAll();
-      NotificationUI.succes("Forgot password!");
+      Notification.getInstance().show(Type.INFO, "Quên mật khẩu!");
     });
   }
 

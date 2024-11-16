@@ -50,5 +50,9 @@ public class ObjectContainer {
   public static DictionaryController getDictionaryController() {
     return dictionaryController;
   }
+  
+  public static PropertyHelper getPropertyHelper() {
+    return PROPERTY_HELPER;
+  }
 
 }
