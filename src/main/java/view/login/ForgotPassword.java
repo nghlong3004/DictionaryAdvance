@@ -211,6 +211,7 @@ public class ForgotPassword extends JPanel {
           Notification.getInstance().clearAll();
           NotificationUI.warning("Mật khẩu không khớp nhau!");
         } else {
+          user.setPassword(txtPassword.getPassword().toString());
           new Thread(() -> {
             userController.updatePasswordByUser(user);
           }).start();
