@@ -2,6 +2,7 @@ package controller;
 
 import model.user.User;
 import service.UserService;
+import util.EnumContainer.ExternalApi;
 
 public class UserController {
 
@@ -50,6 +51,10 @@ public class UserController {
 
   public User getUser() {
     return userService.getUser();
+  }
+
+  public String[] loginWithCallApi(ExternalApi api) {
+    return userService.loginWithCallApi(api);
   }
 
 }

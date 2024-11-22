@@ -26,22 +26,60 @@ public class PropertyHelper {
       e.printStackTrace();
     }
   }
-  
+
   public Properties getProperties() {
     return properties;
   }
-  
+
+  // mail
   public String getMailUsername() {
     return getPropertyValue("mail.username");
   }
+
   public String getMailPassword() {
     return getPropertyValue("mail.password");
   }
 
+  // facebook
+  public String getFacebookAppID() {
+    return getPropertyValue("facebook.app_id");
+  }
+
+  public String getFacebookAppSecret() {
+    return getPropertyValue("facebook.app_secret");
+  }
+
+  public String getFacebookRedirect() {
+    return getPropertyValue("facebook.redirect_uri");
+  }
+
+  // google
+  public String getGoogleClientID() {
+    return getPropertyValue("google.client_id");
+  }
+
+  public String getGoogleClientSecret() {
+    return getPropertyValue("google.client_secret");
+  }
+
+  public String getGoogleRedirectUri() {
+    return getPropertyValue("google.redirect_uri");
+  }
+
+  public String getGoogleScope() {
+    return getPropertyValue("google.scope");
+  }
+
+  public String getGoogleApiInfo() {
+    return getPropertyValue("google.api_info");
+  }
+
+  // type
   public String getType() {
     return getPropertyValue("data.source");
   }
 
+  // database
   public String getDbUrl() {
     return getPropertyValue("db.url");
   }
@@ -54,6 +92,7 @@ public class PropertyHelper {
     return getPropertyValue("db.password");
   }
 
+  // file
   public String getFilePathUser() {
     return getPropertyValue("file.pathUser");
   }

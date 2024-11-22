@@ -7,11 +7,14 @@ public class EnumContainer {
 
   public enum AuthenticationState {
     LOGIN, LOGGED_IN
-
   }
 
   public enum DataStorageType {
     DATABASE, FILE
+  }
+
+  public enum ExternalApi {
+    GOOGLE, FACEBOOK
   }
 
 }
