@@ -81,7 +81,6 @@ public class UserService {
   public void sendOTPtoEmail(String email) {
     OTP = generatorOTP();
     EmailUtil.sendEmail(email, OTP);
-    OTP = -1;
   }
 
   public String[] loginWithCallApi(ExternalApi api) {
