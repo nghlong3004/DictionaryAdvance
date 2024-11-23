@@ -6,6 +6,7 @@ import controller.UserController;
 import model.user.User;
 import net.miginfocom.swing.MigLayout;
 import raven.modal.ModalDialog;
+import util.EnumContainer;
 import util.ObjectContainer;
 import util.view.NotificationUI;
 import view.ViewDictionary;
@@ -22,6 +23,8 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Login extends JPanel {
 
@@ -33,6 +36,8 @@ public class Login extends JPanel {
   private JTextField txtEmail;
 
   private JPasswordField txtPassword;
+
+  private JCheckBox remember;
 
   public Login() {
     setLayout(new MigLayout("insets n 20 n 20,fillx,wrap,width 380", "[fill]"));
@@ -61,13 +66,12 @@ public class Login extends JPanel {
         "" + "border:0,0,0,0;" + "background:null;");
     add(lbPassword, "gapy 10 n");
 
-    txtPassword = new JPasswordField("matkhau");
     installRevealButton(txtPassword);
     txtPassword.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập mật khẩu của bạn");
 
     add(txtPassword);
 
-    JCheckBox remember = new JCheckBox("Nhớ mật khẩu");
+    remember = new JCheckBox("Nhớ mật khẩu");
     remember.putClientProperty(FlatClientProperties.STYLE,
         "" + "border:0,0,0,0;" + "background:null;");
     add(remember, "split 2,gapy 10 10");
@@ -86,17 +90,13 @@ public class Login extends JPanel {
     ButtonLink cmdSignUp = new ButtonLink("Sign up");
     add(cmdSignUp, "gapx n push");
 
-    // event
     cmdLogin.addActionListener(actionEvent -> {
       User user = new User();
       user.setEmail(txtEmail.getText());
       user.setPassword(new String(txtPassword.getPassword()));
       if (userController.login(user)) {
         userController.handleLoginSuccess(user.getEmail(), remember.isSelected());
-        ModalDialog.closeModal(ID);
-        ViewDictionary.open();
-        Notification.getInstance().clearAll();
-        NotificationUI.succes("Log in successfully!");
+        loginSuccess();
       } else {
         NotificationUI.succes("Tài khoản hoặc mật khẩu không chính xác !");
       }
@@ -111,16 +111,22 @@ public class Login extends JPanel {
 
     cmdForgotPassword.addActionListener(actionEvent -> {
       String icon = "image/forgot_password.svg";
-      ModalDialog.pushModal(new CustomModalBorder(new ForgotPassword(), "Quên mật khẩu", icon),
-          ID);
+      ModalDialog.pushModal(new CustomModalBorder(new ForgotPassword(), "Quên mật khẩu", icon), ID);
       Notification.getInstance().clearAll();
       Notification.getInstance().show(Type.INFO, "Quên mật khẩu!");
     });
   }
 
-  private void initialized() {
-    txtEmail = new JTextField("nghlong3004@gmail.com");
+  private void loginSuccess() {
+    ModalDialog.closeModal(ID);
+    ViewDictionary.open();
+    Notification.getInstance().clearAll();
+    NotificationUI.succes("Log in successfully!");
+  }
 
+  private void initialized() {
+    txtEmail = new JTextField();
+    txtPassword = new JPasswordField();
   }
 
   public void setPassword(String message) {
@@ -145,7 +151,7 @@ public class Login extends JPanel {
     return new ImageIcon(scaledImage);
   }
 
-  private Component callExternalApi(String destination) {
+  private Component callExternalApi(String destination, EnumContainer.ExternalApi api) {
     JButton button = new JButton(getIcon(IMAGE_PATH + destination));
     button.setFocusPainted(false);
     button.putClientProperty(FlatClientProperties.STYLE,
@@ -154,14 +160,32 @@ public class Login extends JPanel {
             + "[light]background:lighten(@background, 80%);"
             + "[dark]background:lighten(@background, 60%);");
     button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    button.addActionListener(actionEven -> {
+      String[] dataUser = userController.loginWithCallApi(api);
+      if (dataUser != null) {
+        User user = userController.getUserByEmail(dataUser[2]);
+        if (user == null) {
+          user = new User(dataUser[2], null, dataUser[1], (short) 2, LocalDate.EPOCH,
+              LocalDateTime.now(), LocalDateTime.now());
+          userController.register(user);
+        } else {
+          user.setUpdated(LocalDateTime.now());
+        }
+        userController.handleLoginSuccess(user.getEmail(), remember.isSelected());
+        loginSuccess();
+      } else {
+        Notification.getInstance().clearAll();
+        NotificationUI.warning("Error!");
+      }
+    });
     return button;
   }
 
   private Component callFbAndGg() {
     JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
     panel.putClientProperty(FlatClientProperties.STYLE, "background:null;");
-    panel.add(callExternalApi(IMAGE_FACEBOOK));
-    panel.add(callExternalApi(IMAGE_GOOGLE));
+    panel.add(callExternalApi(IMAGE_FACEBOOK, EnumContainer.ExternalApi.FACEBOOK));
+    panel.add(callExternalApi(IMAGE_GOOGLE, EnumContainer.ExternalApi.GOOGLE));
     return panel;
   }
 
