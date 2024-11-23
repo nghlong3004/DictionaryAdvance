@@ -1,6 +1,8 @@
 *.mdj
 *.class
 *.settings
+.classpath
+.project
 target/*
 /target/
 data/*
