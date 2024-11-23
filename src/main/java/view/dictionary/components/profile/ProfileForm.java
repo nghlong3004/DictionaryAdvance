@@ -143,7 +143,7 @@ public class ProfileForm extends JPanel {
     panel.putClientProperty(FlatClientProperties.STYLE,
         "" + "arc:25;" + "[light]background:#fef3c7;" + "[dark]background:#f5f5f4;");
     panel.setLayout(new MigLayout("insets n 20 n 20,fillx,wrap,width 300", "[fill]"));
-    AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/profile.jpg"), 100, 100, 999);
+    AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/user-img.png"), 100, 100, 999);
     lbAvatar.setIcon(icon);
     lbAvatar.putClientProperty(FlatClientProperties.STYLE,
         "" + "font:$Menu.header.font;" + "foreground:$Menu.foreground");

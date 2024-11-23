@@ -97,6 +97,7 @@ public class FacebookOAuth2 {
         }
       }
     }
+    LOGGER.debug("FacebookOAuth2::extractAuthorizationCode Failed to obtain authorization code.");
     return null;
   }
 
@@ -116,10 +117,15 @@ public class FacebookOAuth2 {
         if (line.trim().isEmpty())
           break;
       }
-      client.getOutputStream()
-          .write(("HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n\r\n"
-              + "<h1>Login successful!!</h1> <br> <h2> You can close this window </h2>")
-                  .getBytes());
+      if (authorizationCode != null && extractAuthorizationCode(authorizationCode) != null) {
+        client.getOutputStream()
+            .write(("HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n\r\n"
+                + "<h1>Login successful!!</h1> <br> <h2> You can close this window </h2>")
+                    .getBytes());
+      } else {
+        client.getOutputStream().write(("HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n\r\n"
+            + "<h1>Login failed!!!</h1> <br> <h2> You can close this window </h2>").getBytes());
+      }
       client.getOutputStream().flush();
       client.close();
 
