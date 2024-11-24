@@ -13,6 +13,7 @@ import view.notifications.Notification;
 import view.notifications.Notification.Type;
 import static util.HelpMethod.isValidPassword;
 import static util.HelpMethod.isValidUsername;
+import static util.HelpMethod.isDate;
 import static util.repository.Utils.nowTime;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,19 +22,21 @@ import java.awt.event.ItemListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class Resigter extends JPanel {
 
   private static final long serialVersionUID = -5725310224569743587L;
 
   private final UserController userController = ObjectContainer.getUserController();
-  
+
   private Login login;
-  
+
   private JTextField txtFullname;
   private JTextField txtEmail;
   private JTextField txtDateOfBirth;
-  
+
   private JPasswordField txtPassword;
   private JPasswordField txtRePassword;
 
@@ -41,11 +44,11 @@ public class Resigter extends JPanel {
   private ButtonLink cmdBackLogin;
 
   private ButtonGroup groupPeople;
-  
+
   private JRadioButton radioMale;
   private JRadioButton radioFemale;
   private JRadioButton radioDefault;
-  
+
   private int gender;
 
   public Resigter(Login login) {
@@ -85,7 +88,7 @@ public class Resigter extends JPanel {
     JLabel lbRePassword = new JLabel("Tạo mật khẩu mới");
     lbRePassword.putClientProperty(FlatClientProperties.STYLE, "" + "font:bold;");
     add(lbRePassword, "gapy 10 n");
-    
+
     installRevealButton(txtPassword);
     installRevealButton(txtRePassword);
     txtRePassword.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập lại mật khẩu");
@@ -97,6 +100,30 @@ public class Resigter extends JPanel {
 
     txtDateOfBirth = new JTextField();
     txtDateOfBirth.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "MM / DD / YYYY");
+    txtDateOfBirth.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void removeUpdate(DocumentEvent e) {}
+
+      private void assistDateText() {
+        Runnable doAssist = new Runnable() {
+          @Override
+          public void run() {
+            if(txtDateOfBirth.getText().length() == 2 || txtDateOfBirth.getText().length() == 5) {
+              txtDateOfBirth.setText(txtDateOfBirth.getText() + (char)47);
+            }
+          }
+        };
+        SwingUtilities.invokeLater(doAssist);
+      }
+
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        assistDateText();
+      }
+
+      @Override
+      public void changedUpdate(DocumentEvent e) {}
+    });
     add(txtDateOfBirth);
 
     JLabel lbNote =
@@ -144,11 +171,15 @@ public class Resigter extends JPanel {
     cmdSignUp.addActionListener(actionEvent -> {
       String email = txtEmail.getText();
       String password = new String(txtPassword.getPassword());
-      String rePassword = new String(txtPassword.getPassword());
+      String rePassword = new String(txtRePassword.getPassword());
       String fullname = txtFullname.getText();
+      Notification.getInstance().clearAll();
       if (!password.equals(rePassword)) {
         NotificationUI.warning("Mật khẩu mới không khớp!");
-      } else if (!isValidUsername(email)) {
+      } else if(!isDate(txtDateOfBirth.getText())) {
+        NotificationUI.warning("Ngày sinh không hợp lệ!");
+      }
+      else if (!isValidUsername(email)) {
         NotificationUI.warning("Tên đăng nhập không hợp lệ!");
       } else if (userController.getUserByEmail(email) != null) {
         NotificationUI.warning("Tên đăng nhập đã tồn tại!");
@@ -156,7 +187,6 @@ public class Resigter extends JPanel {
           && userController.getUserByEmail(email) == null && gender >= 0) {
         login.setEmail(email);
         login.setPassword(password);
-        Notification.getInstance().clearAll();
         NotificationUI.succes("Registered successfully!!");
         User user = new User(email, password, fullname, gender,
             LocalDate.parse(txtDateOfBirth.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
@@ -200,7 +230,7 @@ public class Resigter extends JPanel {
     gender = -1;
 
   }
-  
+
   private void installRevealButton(JPasswordField txt) {
     FlatSVGIcon iconEye = new FlatSVGIcon("image/eye.svg", 0.3f);
     FlatSVGIcon iconHide = new FlatSVGIcon("image/hide.svg", 0.3f);

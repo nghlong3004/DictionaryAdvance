@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 public class Login extends JPanel {
 
@@ -165,7 +166,7 @@ public class Login extends JPanel {
       if (dataUser != null) {
         User user = userController.getUserByEmail(dataUser[2]);
         if (user == null) {
-          user = new User(dataUser[2], null, dataUser[1], (short) 2, LocalDate.EPOCH,
+          user = new User(dataUser[2], generatingPassword(20), dataUser[1], (short) 2, LocalDate.EPOCH,
               LocalDateTime.now(), LocalDateTime.now());
           userController.register(user);
         } else {
@@ -217,4 +218,24 @@ public class Login extends JPanel {
     toolBar.add(button);
     txt.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
   }
+
+  private String generatingPassword(int len) {
+    String Capital_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    String Small_chars = "abcdefghijklmnopqrstuvwxyz";
+    String numbers = "0123456789";
+    String symbols = "!@#$%^&*_=+-/.?<>)";
+
+
+    String values = Capital_chars + Small_chars + numbers + symbols;
+
+    Random rndm_method = new Random();
+
+    char[] password = new char[len];
+
+    for (int i = 0; i < len; i++) {
+      password[i] = values.charAt(rndm_method.nextInt(values.length()));
+    }
+    return new String(password);
+  }
+
 }

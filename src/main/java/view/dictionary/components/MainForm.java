@@ -8,6 +8,7 @@ import view.ViewDictionary;
 import view.dictionary.components.home.Lookup;
 import view.dictionary.components.home.TextTranslator;
 import view.dictionary.components.home.specialized.WordSpecialized;
+import view.dictionary.components.profile.ProfileForm;
 import view.dictionary.menu.Menu;
 import view.dictionary.menu.MenuAction;
 import view.login.LoginPanel;

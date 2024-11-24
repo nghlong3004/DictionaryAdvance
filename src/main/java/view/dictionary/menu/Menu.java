@@ -95,7 +95,7 @@ public class Menu extends JPanel {
     putClientProperty(FlatClientProperties.STYLE,
         "" + "border:20,2,2,2;" + "background:$Menu.background;" + "arc:10");
     header = new JLabel(headerName);
-    AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/profile.jpg"), 40, 40, 999);
+    AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/user-img.png"), 40, 40, 999);
     header.setIcon(icon);
     header.putClientProperty(FlatClientProperties.STYLE,
         "" + "font:$Menu.header.font;" + "foreground:$Menu.foreground");

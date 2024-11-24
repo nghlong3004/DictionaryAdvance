@@ -1,6 +1,5 @@
-package view.dictionary.components;
+package view.dictionary.components.profile;
 
-import java.awt.Graphics;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -18,11 +17,17 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import com.formdev.flatlaf.FlatClientProperties;
 import controller.UserController;
 import model.user.User;
 import net.miginfocom.swing.MigLayout;
+import raven.popup.GlassPanePopup;
+import raven.popup.component.SimplePopupBorder;
 import util.ObjectContainer;
 import util.extral.AvatarIcon;
 import util.view.NotificationUI;
@@ -88,9 +93,9 @@ public class ProfileForm extends JPanel {
                 .addComponent(panelUser, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
                     Short.MAX_VALUE)
                 .addComponent(panelSystem, GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
-            .addGap(90)
+            .addGap(30)
             .addComponent(panelDescription, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
-            .addGap(32).addComponent(cmdSaveChange).addGap(31)));
+            .addGap(10).addComponent(cmdSaveChange).addGap(31)));
     setLayout(groupLayout);
   }
 
@@ -138,7 +143,7 @@ public class ProfileForm extends JPanel {
     panel.putClientProperty(FlatClientProperties.STYLE,
         "" + "arc:25;" + "[light]background:#fef3c7;" + "[dark]background:#f5f5f4;");
     panel.setLayout(new MigLayout("insets n 20 n 20,fillx,wrap,width 300", "[fill]"));
-    AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/profile.jpg"), 100, 100, 999);
+    AvatarIcon icon = new AvatarIcon(getClass().getResource("/image/user-img.png"), 100, 100, 999);
     lbAvatar.setIcon(icon);
     lbAvatar.putClientProperty(FlatClientProperties.STYLE,
         "" + "font:$Menu.header.font;" + "foreground:$Menu.foreground");
@@ -168,6 +173,19 @@ public class ProfileForm extends JPanel {
     panel.add(cmdAvatar, "gapx push n");
     return panel;
   }
+  
+  private String timeUsed() {
+    Duration duration = Duration.between(user.getUpdated(), util.repository.Utils.nowTime());
+    long second = duration.getSeconds();
+    String htmlString = "<html>"
+        + "<div style='padding: 10px; border-radius: 5px; color: #333; font-family: Arial;'>"
+        + "<p style='font-size: 14px;'>Thời gian sử dụng trong ngày</p>"
+        + "<p style='font-size: 10px;'>Hôm nay bạn đã sử dụng từ điển trong <span style='color: #a8a29e;'>"
+        + (second / 60 / 60) % 24 + "</span> tiếng <span style='color: #a8a29e;'>"
+        + (second / 60) % 60 + "</span> phút <span style='color: #a8a29e;'>" + second % 60
+        + "</span> giây.</p>" + "</div>" + "</html>";
+    return htmlString;
+  }
 
   private JComponent infoSystem() {
     JPanel panel = new JPanel();
@@ -183,7 +201,11 @@ public class ProfileForm extends JPanel {
         + "</html>";
     lbAvatar = new JLabel();
     lbCreationDate = new JLabel(htmlText);
-    lbUsageTime = new JLabel();
+    lbUsageTime = new JLabel(timeUsed());
+    Timer timer = new Timer(100, e -> {
+      lbUsageTime.setText(timeUsed());
+    });
+    timer.start();
     htmlText = "<html>"
         + "<div style='padding: 10px; border-radius: 5px; color: #333; font-family: Arial;'>"
         + "<p style='font-size: 14px;'>Số lần tìm kiếm từ trong ngày</p>"
@@ -298,6 +320,30 @@ public class ProfileForm extends JPanel {
     panel.add(lbDateOfBirth, "gapy 10 n");
 
     panel.add(txtDateOfBirth, "split 2");
+    txtDateOfBirth.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void removeUpdate(DocumentEvent e) {}
+
+      private void assistDateText() {
+        Runnable doAssist = new Runnable() {
+          @Override
+          public void run() {
+            if(txtDateOfBirth.getText().length() == 2 || txtDateOfBirth.getText().length() == 5) {
+              txtDateOfBirth.setText(txtDateOfBirth.getText() + (char)47);
+            }
+          }
+        };
+        SwingUtilities.invokeLater(doAssist);
+      }
+
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        assistDateText();
+      }
+
+      @Override
+      public void changedUpdate(DocumentEvent e) {}
+    });
 
     JButton cmdDateOfBirth = new MyJButton(icon);
     cmdDateOfBirth.addActionListener(actionEvent -> {
@@ -314,26 +360,13 @@ public class ProfileForm extends JPanel {
     cmdChangePassword.putClientProperty(FlatClientProperties.STYLE,
         "" + "[dark]foreground:#FFFFFF;" + "[light]foreground:#57534e;"
             + "[dark]background:#ef4444;" + "[light]background:#34d399;");
+    cmdChangePassword.addActionListener(actionEven -> {
+      GlassPanePopup.showPopup(new SimplePopupBorder(new ChangePassword(), "Đổi mật khẩu"));
+    });
     panel.add(cmdChangePassword);
 
     return panel;
 
-  }
-
-  @Override
-  protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    Duration duration = Duration.between(user.getUpdated(), util.repository.Utils.nowTime());
-    long second = duration.getSeconds();
-    String htmlText = "<html>"
-        + "<div style='padding: 10px; border-radius: 5px; color: #333; font-family: Arial;'>"
-        + "<p style='font-size: 14px;'>Thời gian sử dụng trong ngày</p>"
-        + "<p style='font-size: 10px;'>Hôm nay bạn đã sử dụng từ điển trong <span style='color: #a8a29e;'>"
-        + (second / 60 / 60) % 24 + "</span> tiếng <span style='color: #a8a29e;'>"
-        + (second / 60) % 60 + "</span> phút <span style='color: #a8a29e;'>" + second % 60
-        + "</span> giây.</p>" + "</div>" + "</html>";
-    lbUsageTime.setText(htmlText);
-    repaint();
   }
 
   private void initialized() {
